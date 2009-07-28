@@ -1,0 +1,7 @@
+lib/odf-report.rb
+odf-report.gemspec
+Rakefile
+README.textile
+test/test.odt
+test/test.rb
+Manifest
