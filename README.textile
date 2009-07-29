@@ -66,9 +66,14 @@ end
 and considering you have a table like this in your template
 
 <pre>
-----------------------------
-| [ITEM_ID] | [DESCRIPTON] |
-----------------------------
+---------------------------------
+|  [ITEM_ID]  |  [DESCRIPTION]  |
+---------------------------------
+
+* this is my lame attempt to draw a table. 
+  you don't suppose to type this. 
+  you have to use an actual table. 
+  i don't know... just thought I'd mention it ;-)
 </pre>
 
 and a collection @list_of_itens, it will be created one row for each item in the collection, and the replacement will take place accordingly.
