@@ -93,6 +93,8 @@ In a controller, you can have a code like this:
 <pre>
 def print
 
+  @ticket = Ticket.find(params[:id])
+
   report = ODFReport.new("#{RAILS_ROOT}/app/reports/ticket.odt") do |r|
    
     r.add_field(:id, @ticket.id.to_s)
@@ -153,3 +155,10 @@ h3. REQUIREMENTS
 *rubyzip*: for manipulating the contents of the odt file, since it's actually a zip file.
 
 
+<hr/>
+
+h3. THE FUTURE
+
+Well, this is my first attempt. This gem was extracted from an actual project we developed internally, to fulfill our specific needs.
+
+That said, I would really appreciate any input you can come up with. Critics, suggestions, bug reports are welcome and will be thoroughly examined.
