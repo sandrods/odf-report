@@ -154,7 +154,7 @@ private
 
   def hash_gsub!(_text, hash_of_values)
     hash_of_values.each do |key, val|
-      _text.gsub!("[#{key.to_s.upcase}]", val.to_s) unless val.nil?
+      _text.gsub!("[#{key.to_s.upcase}]", html_escape(val)) unless val.nil?
     end
   end
 
@@ -169,6 +169,13 @@ private
       return filename unless opts[:verify] && File.exists?(filename)
     end
     nil
+  end
+
+  HTML_ESCAPE = { '&' => '&amp;',  '>' => '&gt;',   '<' => '&lt;', '"' => '&quot;' }
+
+  def html_escape(s)
+    return "" unless s
+    s.to_s.gsub(/[&"><]/) { |special| HTML_ESCAPE[special] }
   end
 
 end
