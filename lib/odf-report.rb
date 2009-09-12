@@ -3,10 +3,10 @@ require 'zip/zipfilesystem'
 require 'fileutils'
 
 class ODFReport
-  
+
   def initialize(template_name, &block)
     @template = template_name
-    @data={:values=>{}, :tables=>{}}
+    @data={:values=>{}, :tables=>{}, :images => {} }
 
     @tmp_dir = Dir.tmpdir + "/" + random_filename(:prefix=>'odt_')
     Dir.mkdir(@tmp_dir) unless File.exists? @tmp_dir
@@ -27,11 +27,15 @@ class ODFReport
       yield(row, item)
       @data[:tables][table_tag] << row
     end
-    
+
+  end
+
+  def add_image(name, path)
+    @data[:images][name] = path
   end
 
   def generate(dest = nil)
-    
+
     if dest
 
       FileUtils.cp(@template, dest)
@@ -45,14 +49,21 @@ class ODFReport
     end
 
     %w(content.xml styles.xml).each do |content_file|
-    
+
       update_file_from_zip(new_file, content_file) do |txt|
 
-        replace_fields!(txt) 
-        replace_tables!(txt)      
-
+        replace_fields!(txt)
+        replace_tables!(txt)
+        replace_image_refs!(txt)
       end
-    
+
+    end
+
+    unless @data[:images].empty?
+      image_dir_name = "Pictures"
+      dir = File.join("#{@tmp_dir}", image_dir_name)
+      add_image_files_to_dir(dir)
+      add_dir_to_zip(new_file, dir, image_dir_name)
     end
 
     new_file
@@ -61,13 +72,26 @@ class ODFReport
 
 private
 
+  def add_image_files_to_dir(dir)
+    FileUtils.mkdir(dir)
+    @data[:images].each_pair do |name, path|
+      FileUtils.cp(path, File.join(dir, File.basename(path)))
+    end
+  end
+
+  def add_dir_to_zip(zip_file, dir, entry)
+    Zip::ZipFile.open(zip_file, true) do |z|
+      Dir["#{dir}/**/*"].each { |f| z.add("#{entry}/#{File.basename(f)}", f) }
+    end
+  end
+
   def update_file_from_zip(zip_file, content_file, &block)
 
-    Zip::ZipFile.open(zip_file) do |z|            
+    Zip::ZipFile.open(zip_file) do |z|
       cont = "#{@tmp_dir}/#{content_file}"
-      
+
       z.extract(content_file, cont)
-    
+
       txt = ''
 
       File.open(cont, "r") do |f|
@@ -90,6 +114,19 @@ private
     hash_gsub!(content, @data[:values])
   end
 
+  def replace_image_refs!(content)
+    @data[:images].each_pair do |image_name, path|
+      #Set the new image path
+      new_path = File.join("Pictures", File.basename(path))
+      #Search for the image
+      image_rgx = Regexp.new("draw:name=\"#{image_name}\".*?><draw:image.*?xlink:href=\"([^\s]*)\" .*?/></draw:frame>")
+      content_match = content.match(image_rgx)
+      if content_match
+        replace_path = content_match[1]
+        content.gsub!(content_match[0], content_match[0].gsub(replace_path, new_path))
+      end
+    end
+  end
 
   def replace_tables!(content)
 
@@ -114,8 +151,8 @@ private
 
         unless row_match.empty?
 
-          # If there more than one line in the table, takes the second entry (row_match[1]) 
-          # since the first one represents the column header. 
+          # If there more than one line in the table, takes the second entry (row_match[1])
+          # since the first one represents the column header.
           # If there just one line, takes the first line. Besides, since the entry is an Array itself,
           # takes the entry's first element ( entry[0] )
           model_row = (row_match[1] || row_match[0])[0]
@@ -136,7 +173,7 @@ private
             hash_gsub!(tmp_row, _values)
 
             new_rows << tmp_row
-          end 
+          end
 
           # replace back the lines into the table
           table.gsub!("[ROW_#{table_name}]", new_rows)

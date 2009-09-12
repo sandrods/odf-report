@@ -31,7 +31,9 @@ report = ODFReport.new("test.odt") do |r|
     row["FIELD_07"] = item[:phone]
     row["FIELD_08"] = item[:zip]
   end
-  
+
+  r.add_image("graphics1", File.join(Dir.pwd, 'piriapolis.jpg'))
+
 end
 
 report.generate("result.odt")
