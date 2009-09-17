@@ -1,6 +1,6 @@
 h1. ODF-REPORT
 
-Gem for generating .odt files by making strings substitution in a previously created .odt file.
+Gem for generating .odt files by making strings, images and tables substitutions in a previously created .odt file.
 
 <hr/>
 
@@ -18,7 +18,7 @@ First of all, you need to create a .odt file to serve as a template
 
 Templates are normal .odt files with placeholders for Substitutions
 
-There are two kinds of substitutions available: *fields* and *tables*
+There are now three kinds of substitutions available: *fields*, *tables* and *images*.
 
 h4. Fields placeholders
 
@@ -80,6 +80,23 @@ and a collection @list_of_itens, it will be created one row for each item in the
 
 Any format applied to the fields in the template will be preserved.
 
+h4. Images
+
+You must put a mock image in your odt template and give it a name. That name will be used to replace the mock image for the actual image.
+You can also assign any properties you want to the mock image and they will be kept once the image is replaced.
+
+An image replace would look like this:
+
+<pre>
+report = ODFReport.new("Users/john/my_template.odt") do |r|
+
+  r.add_image :graphics1, "/path/to/the/image.jpg"
+
+end
+</pre>
+
+And that's it.
+
 <hr/><br/>
 
 h4. Step 2  --  generating the document 
@@ -102,7 +119,7 @@ def print
     r.add_field(:created_at, @ticket.created_at.strftime("%d/%m/%Y - %H:%M"))
     r.add_field(:type, @ticket.type.name)
     r.add_field(:status, @ticket.status_text)
-    r.add_field(:date, Time.now.strftime("%d/%m/%Y - %H:%M"))                  
+    r.add_field(:date, Time.now.strftime("%d/%m/%Y - %H:%M"))
     r.add_field(:solution, (@ticket.solution || ''))
 
     r.add_table("OPERATORS", @ticket.operators) do | row, op |
@@ -118,7 +135,7 @@ def print
         row["FIELD_NAME"] = field.name
         row["FIELD_VALUE"] = field.text_value || ''
       end
-     
+
     end
 
   end
