@@ -2,13 +2,11 @@ h1. ODF-REPORT
 
 Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
 
-<hr/>
 
 h2. INSTALL
 
 (sudo) gem install odf-report
 
-<hr/>
 
 h2. USAGE
 
@@ -20,7 +18,7 @@ Templates are normal .odt files with placeholders for Substitutions
 
 There are now *four* kinds of substitutions available: *fields*, *tables*, *images* and *sections*.
 
-h4. Fields placeholders
+h3. Fields placeholders
 
 It's just an upcase sentence, surrounded by brackets. It will be replaced for wathever value you supply.
 
@@ -39,7 +37,8 @@ All occurences of @[USER_NAME]@ found in the file will be replaced by the value 
 
 It's as simple as that.
 
-h4. Table placeholders
+
+h3. Table placeholders
 
 To use table placeholders, you should create a Table in your document and give it a name. In OpenOffice, it's just a matter of right-clicking the table you just created, choose _Table Properties..._ and type a name in the Name field.
 
@@ -80,7 +79,8 @@ and a collection @list_of_itens, it will be created one row for each item in the
 
 Any format applied to the fields in the template will be preserved.
 
-h4. Images
+
+h3. Images
 
 You must put a mock image in your odt template and give it a name. That name will be used to replace the mock image for the actual image.
 You can also assign any properties you want to the mock image and they will be kept once the image is replaced.
@@ -95,11 +95,12 @@ report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
 end
 </pre>
 
-h4. Sections (NEW!)
+
+h3. Sections (NEW!)
 
 Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. Now you can make a Section in your template and use it in this situations. Creating a Session in OpenOffice is as easy as select menu *Insert* and then *Section...*, and then choose a name for it.
 
-*Section*'s are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside it, even Tables, as long as you pass the appropriate data structure.
+*Section* 's are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside it, even Tables, as long as you pass the appropriate data structure.
 
 Let's see an example:
 
