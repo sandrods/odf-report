@@ -1,7 +1,12 @@
 lib/odf-report.rb
+lib/odf-report/report.rb
+lib/odf-report/table.rb
+lib/odf-report/section.rb
+lib/odf-report/file_ops.rb
+lib/odf-report/hash_gsub.rb
 odf-report.gemspec
-Rakefile
 README.textile
 test/test.odt
+test/sections.odt
 test/test.rb
 Manifest
