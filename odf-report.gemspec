@@ -2,21 +2,20 @@
 
 Gem::Specification.new do |s|
   s.name = %q{odf-report}
-  s.version = "0.1.3"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sandro Duarte"]
-  s.date = %q{2009-07-28}
+  s.date = %q{2010-05-18}
   s.description = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
   s.email = %q{sandrods@gmail.com}
   s.extra_rdoc_files = ["lib/odf-report.rb", "README.textile"]
-  s.files = ["lib/odf-report.rb", "odf-report.gemspec", "Rakefile", "README.textile", "test/test.odt", "test/test.rb", "Manifest"]
-  s.has_rdoc = true
+  s.files = %w{lib/odf-report.rb odf-report.gemspec README.textile test/test.odt test/test.rb Manifest lib/odf-report/report.rb lib/odf-report/table.rb lib/odf-report/section.rb lib/odf-report/file_ops.rb lib/odf-report/hash_gsub.rb }
+  s.has_rdoc = false
   s.homepage = %q{}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Odf-report", "--main", "README.textile"]
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{odf-report}
-  s.rubygems_version = %q{1.3.1}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
 
   if s.respond_to? :specification_version then
