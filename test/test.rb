@@ -11,6 +11,7 @@ col2 = []
 col2 << OpenStruct.new({:name=>"josh harnet",   :id=>"02", :address=>"testing <&> ",                 :phone=>99025668, :zip=>"90420-002"})
 col2 << OpenStruct.new({:name=>"sandro duarte", :id=>"45", :address=>"address with &",               :phone=>88774451, :zip=>"90490-002"})
 col2 << OpenStruct.new({:name=>"ellen bicca",   :id=>"77", :address=>"<address with escaped html>",  :phone=>77025668, :zip=>"94420-002"})
+col2 << OpenStruct.new({:name=>"luiz garcia",   :id=>"88", :address=>"address with\nlinebreak",      :phone=>27025668, :zip=>"94520-025"})
 
 report = ODFReport::Report.new("test.odt") do |r|
 
