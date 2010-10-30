@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{odf-report}
-  s.version = "0.3.1"
+  s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sandro Duarte"]
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Odf-report", "--main", "README.textile"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
 
   if s.respond_to? :specification_version then
@@ -23,11 +23,11 @@ Gem::Specification.new do |s|
     s.specification_version = 2
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rubyzip>, [">= 0", "= 0.9.1"])
+      s.add_runtime_dependency(%q<rubyzip>, [">= 0", ">= 0.9.4"])
     else
-      s.add_dependency(%q<rubyzip>, [">= 0", "= 0.9.1"])
+      s.add_dependency(%q<rubyzip>, [">= 0", ">= 0.9.4"])
     end
   else
-    s.add_dependency(%q<rubyzip>, [">= 0", "= 0.9.1"])
+    s.add_dependency(%q<rubyzip>, [">= 0", ">= 0.9.4"])
   end
 end
