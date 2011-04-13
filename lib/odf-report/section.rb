@@ -3,7 +3,7 @@ module ODFReport
 class Section
   include HashGsub
 
-  attr_accessor :fields, :tables, :data, :name
+  attr_accessor :fields, :tables, :data, :name, :subdocs
 
   def initialize(name)
     @name = name
@@ -11,6 +11,11 @@ class Section
     @fields = {}
     @data = []
     @tables = []
+    @subdocs = {}
+  end
+
+  def add_subdoc(name, &block)
+    @subdocs[name] = block
   end
 
   def add_field(name, field=nil, &block)
@@ -41,6 +46,11 @@ class Section
       @tables.each do |table|
         collection = get_collection_from_item(item, table.collection_field)
         row[:tables][table.name] = table.values(collection)
+      end
+
+      #Replace the Subdocument tag with nil in the actual odt file
+      @subdocs.each do |subdoc_name, block1|
+        row[subdoc_name] = block1.call(item)
       end
 
       @data << row
@@ -84,6 +94,18 @@ class Section
       content.gsub!("[SECTION_#{@name}]", new_content)
 
     end # if table match
+
+    #Replace the subdocuments
+    subdoc_rgx = Regexp.new("(<text:p.*?>SD:[A-Za-z0-9]*<\/text:p>)", "m")
+    subdoc_matches = content.scan(subdoc_rgx)
+    for match in subdoc_matches
+      str = match[0].slice(0, match[0].rindex(/<text/))
+      filename = match[0].scan(/SD:[A-Za-z0-9]*/)[0].gsub("SD:","")
+      xml = "<text:section text:name=\"#{filename}.odt\" text:protected=\"true\"><text:section-source xlink:href=\"/home/msw/source/odf-report/test/#{filename}.odt\" text:filter-name=\"writer8\"/></text:section>"
+      str = str + xml
+      orig_tag = match[0].slice(match[0].rindex(/<text/), match[0].length - match[0].rindex(/<text/) )
+      content.gsub!(orig_tag, xml)
+    end
 
   end # replace_section
 

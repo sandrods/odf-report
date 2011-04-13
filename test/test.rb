@@ -41,18 +41,19 @@ end
 report.generate("result.odt")
 
 class Item
-  attr_accessor :name, :sid, :children
-  def initialize(_name, _sid, _children=[])
+  attr_accessor :name, :sid, :children, :subdoc
+  def initialize(_name, _sid, _children=[], _subdoc)
     @name=_name
     @sid=_sid
     @children=_children
+    @subdoc=_subdoc
   end
 end
 
 items = []
-items << Item.new("Dexter Morgan",  '007', %w(sawyer juliet hurley locke jack freckles))
-items << Item.new("Danny Crane",   '302', %w(sidney sloane jack michael marshal))
-items << Item.new("Coach Taylor",  '220', %w(meredith christina izzie alex george))
+items << Item.new("Dexter Morgan",  '007', %w(sawyer juliet hurley locke jack freckles), 'subdocument1')
+items << Item.new("Danny Crane",   '302', %w(sidney sloane jack michael marshal), 'subdocument2')
+items << Item.new("Coach Taylor",  '220', %w(meredith christina izzie alex george), 'subdocument3')
 
 report = ODFReport::Report.new("sections.odt") do |r|
 
@@ -76,3 +77,25 @@ report = ODFReport::Report.new("sections.odt") do |r|
 end
 
 report.generate("section_result.odt")
+
+report = ODFReport::Report.new("master_document.odm") do |r|
+
+  r.add_section("Section1", items) do |s|
+
+    s.add_field('NAME') do |i|
+      i.name
+    end
+
+    s.add_table('TABLE_S1', :children, :header=>true) do |t|
+      t.add_column('NAME1') { |item| "-> #{item}" }
+      t.add_column('INV')   { |item| item.to_s.reverse.upcase }
+    end
+
+    s.add_subdoc('SD') do |i|
+      "SD:#{i.subdoc}"
+    end
+
+  end
+
+end
+report.generate("master_document.odt")
