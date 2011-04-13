@@ -96,12 +96,11 @@ class Section
     end # if table match
 
     #Replace the subdocuments
-    subdoc_rgx = Regexp.new("(<text:p.*?>SD:[A-Za-z0-9]*<\/text:p>)", "m")
-    subdoc_matches = content.scan(subdoc_rgx)
+    subdoc_matches = content.scan(/(<text:p.*?>SD:[A-Za-z0-9\.\/\-_]*<\/text:p>)/)
     for match in subdoc_matches
       str = match[0].slice(0, match[0].rindex(/<text/))
-      filename = match[0].scan(/SD:[A-Za-z0-9]*/)[0].gsub("SD:","")
-      xml = "<text:section text:name=\"#{filename}.odt\" text:protected=\"true\"><text:section-source xlink:href=\"/home/msw/source/odf-report/test/#{filename}.odt\" text:filter-name=\"writer8\"/></text:section>"
+      filename = match[0].scan(/SD:[A-Za-z0-9\.\/\-_]*/)[0].gsub("SD:","")
+      xml = "<text:section text:name=\"#{filename}\" text:protected=\"true\"><text:section-source xlink:href=\"#{filename}\" text:filter-name=\"writer8\"/></text:section>"
       str = str + xml
       orig_tag = match[0].slice(match[0].rindex(/<text/), match[0].length - match[0].rindex(/<text/) )
       content.gsub!(orig_tag, xml)

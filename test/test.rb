@@ -51,9 +51,9 @@ class Item
 end
 
 items = []
-items << Item.new("Dexter Morgan",  '007', %w(sawyer juliet hurley locke jack freckles), 'subdocument1')
-items << Item.new("Danny Crane",   '302', %w(sidney sloane jack michael marshal), 'subdocument2')
-items << Item.new("Coach Taylor",  '220', %w(meredith christina izzie alex george), 'subdocument3')
+items << Item.new("Dexter Morgan",  '007', %w(sawyer juliet hurley locke jack freckles), "#{Dir.pwd}/subdocument1.odt")
+items << Item.new("Danny Crane",   '302', %w(sidney sloane jack michael marshal), "#{Dir.pwd}/subdocument2.odt")
+items << Item.new("Coach Taylor",  '220', %w(meredith christina izzie alex george), "#{Dir.pwd}/subdocument3.odt")
 
 report = ODFReport::Report.new("sections.odt") do |r|
 
