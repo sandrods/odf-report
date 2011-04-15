@@ -3,7 +3,7 @@ module ODFReport
 class Report
   include HashGsub, FileOps
 
-  attr_accessor :values, :tables, :images, :sections
+  attr_accessor :values, :tables, :images, :sections, :settings
 
   def initialize(template_name, &block)
     @template = template_name
@@ -13,6 +13,7 @@ class Report
     @images = {}
     @image_names_replacements = {}
     @sections = []
+    @settings = {}
 
     @tmp_dir = Dir.tmpdir + "/" + random_filename(:prefix=>'odt_')
     Dir.mkdir(@tmp_dir) unless File.exists? @tmp_dir
@@ -49,6 +50,10 @@ class Report
     @images[name] = path
   end
 
+  def change_setting(name, value)
+    @settings[name] = [value[0], value[1]]
+  end
+
   def generate(dest = nil)
 
     if dest
@@ -76,6 +81,10 @@ class Report
 
     end
 
+    update_file_from_zip(new_file, 'settings.xml') do |txt|
+      replace_settings!(txt)
+    end
+
     unless @images.empty?
       image_dir_name = "Pictures"
       FileUtils.mkdir(File.join("#{@tmp_dir}", image_dir_name))
@@ -92,6 +101,16 @@ class Report
   end
 
 private
+
+  def replace_settings!(content)
+    puts "Changed settings: #{@settings}"
+    @settings.each do |key, value|
+      setting_rgx = Regexp.new(/(<config:config-item config:name="#{key}" config:type="[a-z]*">[A-Za-z0-9]*<\/config:config-item>)/)
+      old_setting = content.scan(setting_rgx)[0][0]
+      new_setting = "<config:config-item config:name=\"#{key}\" config:type=\"#{value[1]}\">#{value[0]}</config:config-item>"
+      content.gsub!(old_setting, new_setting)
+    end
+  end
 
   def replace_fields!(content)
     hash_gsub!(content, @values)

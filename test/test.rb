@@ -79,6 +79,7 @@ end
 report.generate("section_result.odt")
 
 report = ODFReport::Report.new("master_document.odm") do |r|
+  r.change_setting('LinkUpdateMode',[2,"short"])
 
   r.add_section("Section1", items) do |s|
 

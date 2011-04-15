@@ -144,6 +144,40 @@ In the above example, @s.add_table("TB_ITEMS", :items, :header => true) do |t|@,
 
 <hr/><br/>
 
+h3. Master Documents
+
+There are times that your data may be very complex (for instance a book with many chapters).  Use the master document feature of Open Office and create a master document template, and subdocuments. In your 'master' records, you must have a field called subdoc that contains the complete filename of the subdocument. Just use the [SD] tag in the template to specify that a subdocument needs to go there.
+
+<pre>
+report = ODFReport::Report.new("master_document.odm") do |r|
+  r.change_setting('LinkUpdateMode',[2,"short"])
+
+  r.add_section("Section1", items) do |s|
+
+    s.add_field('NAME') do |i|
+      i.name
+    end
+
+    s.add_subdoc('SD') do |i|
+      "SD:#{i.subdoc}"
+    end
+
+  end
+end
+report.generate("master_document.odt")</pre>
+
+h3. Open Office Settings
+
+If you are using the master document feature, you will need to be able to change the settings in the Open Office master document.  For example, the default setting for 'update links?' is set to 'ask'.  Add the following code to your document so it will not ask this question:
+
+<pre>
+  report = ODFReport::Report.new("reports/invoice.odt") do |r|
+    report.change_setting( 'LinkUpdateMode', [2,"short"] )
+  end
+</pre>
+
+You will need to specify the name of the setting, and an array with the value and type of variable.  See the settings.xml file for examples.
+
 h3. Step 2  --  generating the document
 
 It's fairly simple to generate the document. You can use this inside a Rails application or in a standalone script.
