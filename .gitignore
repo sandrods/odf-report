@@ -1,2 +1,4 @@
 pkg
 doc
+*.gem
+test/*result.odt
