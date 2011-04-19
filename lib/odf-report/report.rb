@@ -116,8 +116,9 @@ private
   def find_image_name_matches(content)
     @images.each_pair do |image_name, path|
       #Search for the image placeholder path
-      image_rgx = Regexp.new("draw:name=\"#{image_name}\".*?><draw:image.*?xlink:href=\"([^\s]*)\" .*?/></draw:frame>")
+      image_rgx = Regexp.new("draw:name=\"#{image_name}\".*?>.*<draw:image.*?xlink:href=\"([^\s]*)\" .*?\/>.*</draw:frame>", Regexp::MULTILINE)
       content_match = content.match(image_rgx)
+
       if content_match
         placeholder_path = content_match[1]
         @image_names_replacements[path] = File.basename(placeholder_path)
