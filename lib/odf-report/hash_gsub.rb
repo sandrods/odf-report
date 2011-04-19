@@ -22,6 +22,12 @@ module ODFReport
       s.to_s.gsub("\n", "<text:line-break/>")
     end
 
+    def node_hash_gsub!(_node, hash_of_values)
+      txt = _node.inner_html
+      hash_gsub!(txt, hash_of_values)
+      _node.inner_html = txt
+    end
+
   end
 
 end

@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'zip/zipfilesystem'
 require 'fileutils'
+require 'nokogiri'
+
 require File.expand_path('../odf-report/file_ops',__FILE__)
 require File.expand_path('../odf-report/hash_gsub',__FILE__)
 require File.expand_path('../odf-report/section',__FILE__)
