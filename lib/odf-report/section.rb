@@ -30,6 +30,14 @@ class Section
   end
 
   def populate(collection)
+    if collection.is_a?(Hash)
+      populate_from_hash(collection)
+    else
+      populate_from_array(collection)
+    end
+  end
+
+  def populate_from_array(collection)
 
     collection.each do |item|
       row = {}
@@ -41,6 +49,29 @@ class Section
       @tables.each do |table|
         collection = get_collection_from_item(item, table.collection_field)
         row[:tables][table.name] = table.values(collection)
+      end
+
+      @data << row
+    end
+
+  end
+
+  def populate_from_hash(hash)
+
+    hash.each do |hash_key, hash_value|
+      row = {}
+      @fields.each do |field_name, block1|
+        row[field_name] = block1.call(hash_key)
+      end
+
+      row[:tables] = {}
+      @tables.each do |table|
+        if table.collection_field == :hash_value
+          row[:tables][table.name] = table.values(hash_value)
+        else
+          collection = get_collection_from_item(hash_key, table.collection_field)
+          row[:tables][table.name] = table.values(collection)
+        end
       end
 
       @data << row
@@ -101,6 +132,8 @@ private
         end
       end
       collection = tmp
+    elsif if collection_field.is_a?(Hash)
+      collection = item.send(collection_field.keys[0], collection_field.values[0])
     else
       collection = item.send(collection_field)
     end
