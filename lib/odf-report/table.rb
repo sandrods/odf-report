@@ -12,8 +12,10 @@ class Table
     @header           = opts[:header] || false
 
     @fields = {}
-    @rows = []
+    @template_rows = []
     @data = []
+
+    @inside_section = opts[:inside_section] || false
   end
 
   def add_column(name, field=nil, &block)
@@ -42,38 +44,26 @@ class Table
     @data = values(collection)
   end
 
-  def replace!(content, rows = nil)
+  def replace!(doc, rows = nil)
     @data = rows if rows
 
-    doc = Nokogiri::XML(content)
+    if table = find_table_node(doc)
 
-    tables = doc.search("//table:table[@table:name='#{@name}']")
-
-    unless tables.empty?
-      table = tables.first
-
-      @rows = table.search("//table:table[@table:name='#{@name}']//table:table-row")
-
-      @row_cursor = get_start_node
+      @template_rows = table.xpath("table:table-row")
 
       @data.each do |_values|
 
-        # generates one new row (table-row), based in the model extracted
-        # from the original table
         tmp_row = get_next_row
 
-        # replace values in the model_row and stores in new_rows
-        node_hash_gsub!(tmp_row, _values)
+        replace_values!(tmp_row, _values)
 
         table.add_child(tmp_row)
 
       end
 
-      @rows.each_with_index do |r, i|
-        r.remove unless (@header && i==0)
+      @template_rows.each_with_index do |r, i|
+        r.remove if (get_start_node..template_lenght) === i
       end
-
-      content.replace(doc.to_s)
 
     end
 
@@ -82,8 +72,10 @@ class Table
 private
 
   def get_next_row
-    ret = @rows[@row_cursor]
-    if @rows.size == @row_cursor + 1
+    @row_cursor = get_start_node unless defined?(@row_cursor)
+
+    ret = @template_rows[@row_cursor]
+    if @template_rows.size == @row_cursor + 1
       @row_cursor = get_start_node
     else
       @row_cursor += 1
@@ -93,6 +85,24 @@ private
 
   def get_start_node
     @header ? 1 : 0
+  end
+
+  def reset
+    @row_cursor = get_start_node
+  end
+
+  def template_lenght
+    @tl ||= @template_rows.size
+  end
+
+  def find_table_node(doc)
+
+    prefix = @inside_section ? "" : "//"
+
+    tables = doc.xpath("#{prefix}table:table[@table:name='#{@name}']")
+
+    tables.empty? ? nil : tables.first
+
   end
 
 end

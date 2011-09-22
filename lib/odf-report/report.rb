@@ -67,11 +67,16 @@ class Report
 
       update_file_from_zip(new_file, content_file) do |txt|
 
-        replace_fields!(txt)
-        replace_tables!(txt)
-        find_image_name_matches(txt)
-        replace_sections!(txt)
+        doc = Nokogiri::XML(txt)
 
+        replace_fields!(doc)
+        replace_sections!(doc)
+        replace_tables!(doc)
+
+        txt.replace(doc.to_s)
+
+        #TO_DO: make image use Nokogiri
+        find_image_name_matches(txt)
       end
 
     end
@@ -94,7 +99,7 @@ class Report
 private
 
   def replace_fields!(content)
-    hash_gsub!(content, @values)
+    replace_values!(content, @values)
   end
 
   def replace_tables!(content)

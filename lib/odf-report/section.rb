@@ -22,7 +22,7 @@ class Section
   end
 
   def add_table(table_name, collection_field, opts={}, &block)
-    opts.merge!(:name => table_name, :collection_field => collection_field)
+    opts.merge!(:name => table_name, :collection_field => collection_field, :inside_section => true)
     tab = Table.new(opts)
     yield(tab)
     @tables << tab
@@ -79,42 +79,30 @@ class Section
 
   end
 
-  def replace!(content)
+  def replace!(doc)
 
-    # search for the table inside the content
-    section_rgx = Regexp.new("(<text:section.*?text:name=\"#{@name}.*?>(.*?)<\/text:section>)", "m")
-    section_match = content.match(section_rgx)
+    sections = doc.xpath("//text:section[@text:name='#{@name}']")
 
-    if section_match
-      section_full = section_match[0]
-      section_content = section_match[2]
+    return if sections.empty?
 
-      # extract the section from the content
-      content.gsub!(section_full, "[SECTION_#{@name}]")
+    section = sections.first
 
-      new_content = ""
+    template = section.dup
 
-      # for each record
-      @data.each do |_values|
+    @data.each do |_values|
+      new_section = template.dup
 
-        # generates one new row (table-row), based in the model extracted
-        # from the original table
-        tmp_row = section_content.dup
+      replace_values!(new_section, _values)
 
-        # replace values in the section_content and stores in new_content
-        hash_gsub!(tmp_row, _values)
-
-        @tables.each do |t|
-          t.replace!(tmp_row, _values[:tables][t.name])
-        end
-
-        new_content << tmp_row
+      @tables.each do |t|
+        t.replace!(new_section, _values[:tables][t.name])
       end
 
-      # replace back the table into content
-      content.gsub!("[SECTION_#{@name}]", new_content)
+      section.before(new_section)
 
-    end # if table match
+    end
+
+    section.remove
 
   end # replace_section
 
@@ -132,7 +120,7 @@ private
         end
       end
       collection = tmp
-    elsif if collection_field.is_a?(Hash)
+    elsif collection_field.is_a?(Hash)
       collection = item.send(collection_field.keys[0], collection_field.values[0])
     else
       collection = item.send(collection_field)
