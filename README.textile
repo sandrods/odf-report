@@ -3,10 +3,19 @@ h1. ODF-REPORT
 Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
 
 
+h2. NEW!
+
+<pre>
+ODF-REPORT have been internally refactored. It now uses Nokogiri for parsing the documents, instead of Regex.
+
+This provides for a much greater flexibility. As a result, I was able to implement nested sections.
+
+Now sections can be nested inside sections, with fields, tables and others sections.
+</pre>
+
 h2. INSTALL
 
 (sudo) gem install odf-report
-
 
 h2. USAGE
 
@@ -96,11 +105,11 @@ end
 </pre>
 
 
-h3. Sections (NEW!)
+h3. Sections
 
 Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. Now you can make a Section in your template and use it in this situations. Creating a Session in OpenOffice is as easy as select menu *Insert* and then *Section...*, and then choose a name for it.
 
-*Section* 's are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside it, even Tables, as long as you pass the appropriate data structure.
+*Section* 's are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside it, even Tables *and nested Sections*, as long as you pass the appropriate data structure.
 
 Let's see an example:
 
@@ -131,6 +140,14 @@ Let's see an example:
         else
           invoice.items.sum('product_value')}
         end
+      end
+
+      s.add_section("SUB_NOTES", :notes) do |s1|
+
+        s1.add_field(:note_title) { |n| n.title }
+
+        s1.add_table ...
+
       end
 
     end
@@ -208,6 +225,7 @@ report.generate("./documents/")
 h3. REQUIREMENTS
 
 *rubyzip*: for manipulating the contents of the odt file, since it's actually a zip file.
+*nokogiri*: for parsing and manipulating the document xml files.
 
 
 <hr/>
