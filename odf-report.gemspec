@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
   s.email = %q{sandrods@gmail.com}
   s.extra_rdoc_files = ["lib/odf-report.rb", "README.textile"]
-  s.files = %w{lib/odf-report.rb odf-report.gemspec README.textile test/test.odt test/test.rb Manifest lib/odf-report/report.rb lib/odf-report/table.rb lib/odf-report/section.rb lib/odf-report/file_ops.rb lib/odf-report/hash_gsub.rb }
+  s.files = %w{lib/odf-report.rb odf-report.gemspec README.textile Manifest lib/odf-report/report.rb lib/odf-report/table.rb lib/odf-report/section.rb lib/odf-report/file_ops.rb lib/odf-report/hash_gsub.rb lib/odf-report/images.rb lib/odf-report/nested.rb }
   s.has_rdoc = false
   s.homepage = %q{}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Odf-report", "--main", "README.textile"]
@@ -24,10 +24,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rubyzip>, [">= 0", ">= 0.9.4"])
+      s.add_runtime_dependency(%q<nokogiri>, [">= 0", ">= 1.5.0"])
     else
       s.add_dependency(%q<rubyzip>, [">= 0", ">= 0.9.4"])
+      s.add_dependency(%q<nokogiri>, [">= 0", ">= 1.5.0"])
     end
   else
     s.add_dependency(%q<rubyzip>, [">= 0", ">= 0.9.4"])
+    s.add_dependency(%q<nokogiri>, [">= 0", ">= 1.5.0"])
   end
 end
