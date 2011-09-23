@@ -14,7 +14,7 @@ class Report
     @image_names_replacements = {}
     @sections = []
 
-    @tmp_dir = Dir.tmpdir + "/" + random_filename(:prefix=>'odt_')
+    @tmp_dir = File.join(Dir.tmpdir, random_filename(:prefix=>'odt_'))
     Dir.mkdir(@tmp_dir) unless File.exists? @tmp_dir
 
     yield(self)
