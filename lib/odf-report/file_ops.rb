@@ -2,6 +2,19 @@ module ODFReport
 
   module FileOps
 
+    def create_new_file(dest)
+
+      if dest
+        FileUtils.cp(@template, dest)
+        new_file = dest
+      else
+        FileUtils.cp(@template, @tmp_dir)
+        new_file = "#{@tmp_dir}/#{File.basename(@template)}"
+      end
+
+      return new_file
+    end
+
     def random_filename(opts={})
       opts = {:chars => ('0'..'9').to_a + ('A'..'F').to_a + ('a'..'f').to_a,
               :length => 24, :prefix => '', :suffix => '',

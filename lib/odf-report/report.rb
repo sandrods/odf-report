@@ -1,7 +1,7 @@
 module ODFReport
 
 class Report
-  include HashGsub, FileOps
+  include HashGsub, FileOps, Images
 
   attr_accessor :values, :tables, :images, :sections
 
@@ -53,13 +53,13 @@ class Report
 
       update_file_from_zip(new_file, content_file) do |txt|
 
-        doc = Nokogiri::XML(txt)
+        parse_document(txt) do |doc|
 
-        replace_fields!(doc)
-        replace_sections!(doc)
-        replace_tables!(doc)
+          replace_fields!(doc)
+          replace_sections!(doc)
+          replace_tables!(doc)
 
-        txt.replace(doc.to_s)
+        end
 
         #TO_DO: make image use Nokogiri
         find_image_name_matches(txt)
@@ -75,67 +75,26 @@ class Report
 
 private
 
+  def parse_document(txt)
+    doc = Nokogiri::XML(txt)
+    yield doc
+    txt.replace(doc.to_s)
+  end
+
   def replace_fields!(content)
     node_hash_gsub!(content, @values)
   end
 
   def replace_tables!(content)
-
     @tables.each do |table|
       table.replace!(content)
     end
-
   end
 
   def replace_sections!(content)
-
     @sections.each do |section|
       section.replace!(content)
     end
-
-  end
-
-  def create_new_file(dest)
-
-    if dest
-      FileUtils.cp(@template, dest)
-      new_file = dest
-    else
-      FileUtils.cp(@template, @tmp_dir)
-      new_file = "#{@tmp_dir}/#{File.basename(@template)}"
-    end
-
-    return new_file
-  end
-
-  def find_image_name_matches(content)
-
-    @images.each_pair do |image_name, path|
-      #Search for the image placeholder path
-      image_rgx = Regexp.new("draw:name=\"#{image_name}\".*?>.*<draw:image.*?xlink:href=\"([^\s]*)\" .*?\/>.*</draw:frame>", Regexp::MULTILINE)
-      content_match = content.match(image_rgx)
-
-      if content_match
-        placeholder_path = content_match[1]
-        @image_names_replacements[path] = File.basename(placeholder_path)
-      end
-    end
-
-  end
-
-  def replace_images(new_file)
-
-    unless @images.empty?
-      image_dir_name = "Pictures"
-      FileUtils.mkdir(File.join("#{@tmp_dir}", image_dir_name))
-      @image_names_replacements.each_pair do |path, template_image|
-        template_image_path = File.join(image_dir_name, template_image)
-        update_file_from_zip(new_file, template_image_path) do |content|
-          content.replace File.read(path)
-        end
-      end
-    end
-
   end
 
 end
