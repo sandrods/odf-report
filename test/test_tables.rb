@@ -13,7 +13,7 @@ col2 << OpenStruct.new({:name=>"sandro duarte", :idx=>"45", :address=>"address w
 col2 << OpenStruct.new({:name=>"ellen bicca",   :idx=>"77", :address=>"<address with escaped html>",  :phone=>77025668, :zip=>"94420-002"})
 col2 << OpenStruct.new({:name=>"luiz garcia",   :idx=>"88", :address=>"address with\nlinebreak",      :phone=>27025668, :zip=>"94520-025"})
 
-report = ODFReport::Report.new("test.odt") do |r|
+report = ODFReport::Report.new("test_tables.odt") do |r|
 
   r.add_field("HEADER_FIELD", "This field was in the HEADER")
 
@@ -39,4 +39,4 @@ report = ODFReport::Report.new("test.odt") do |r|
 
 end
 
-report.generate("result.odt")
+report.generate("test_tables_result.odt")

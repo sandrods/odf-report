@@ -16,7 +16,7 @@ items << Item.new("ALIAS",          '302', %w(sidney sloane jack michael marshal
 items << Item.new("GREY'S ANATOMY", '220', %w(meredith christina izzie alex george))
 items << Item.new("BREAKING BAD",   '556', %w(pollos gus mike heisenberg))
 
-report = ODFReport::Report.new("sections.odt") do |r|
+report = ODFReport::Report.new("test_sections.odt") do |r|
 
   r.add_field("TAG_01", Time.now)
   r.add_field("TAG_02", "TAG-2 -> New tag")
@@ -31,8 +31,9 @@ report = ODFReport::Report.new("sections.odt") do |r|
       t.add_column('NAME1') { |item| "-> #{item}" }
       t.add_column('INV')   { |item| item.to_s.reverse.upcase }
     end
+
   end
 
 end
 
-report.generate("section_result.odt")
+report.generate("test_sections_result.odt")
