@@ -3,14 +3,19 @@ module ODFReport
 class Section
   include HashGsub
 
-  attr_accessor :fields, :tables, :data, :name
+  attr_accessor :fields, :tables, :data, :name, :collection_field, :parent
 
-  def initialize(name)
-    @name = name
+  def initialize(opts)
+
+    @name             = opts[:name]
+    @collection_field = opts[:collection_field]
+    @collection       = opts[:collection]
+    @parent           = opts[:parent]
 
     @fields = {}
     @data = []
     @tables = []
+    @sections = []
   end
 
   def add_field(name, field=nil, &block)
@@ -22,18 +27,26 @@ class Section
   end
 
   def add_table(table_name, collection_field, opts={}, &block)
-    opts.merge!(:name => table_name, :collection_field => collection_field, :inside_section => true)
+    opts.merge!(:name => table_name, :collection_field => collection_field, :parent => self)
     tab = Table.new(opts)
-    yield(tab)
     @tables << tab
 
+    yield(tab)
   end
 
-  def populate(collection)
-    if collection.is_a?(Hash)
-      populate_from_hash(collection)
+  def add_section(section_name, collection_field, opts={}, &block)
+    opts.merge!(:name => section_name, :collection_field => collection_field, :parent => self)
+    sec = Section.new(opts)
+    @sections << sec
+
+    yield(sec)
+  end
+
+  def populate!(row)
+    if row
+      @data = get_collection_from_item(row, @collection_field)
     else
-      populate_from_array(collection)
+      @data = @collection
     end
   end
 
@@ -51,51 +64,38 @@ class Section
         row[:tables][table.name] = table.values(collection)
       end
 
+      row[:sections] = {}
+      @sections.each do |section|
+        collection = get_collection_from_item(item, section.collection_field)
+        row[:sections][section.name] = section.get_data(collection)
+      end
+
       @data << row
+
     end
 
   end
 
-  def populate_from_hash(hash)
 
-    hash.each do |hash_key, hash_value|
-      row = {}
-      @fields.each do |field_name, block1|
-        row[field_name] = block1.call(hash_key)
-      end
+  def replace!(doc, row = nil)
 
-      row[:tables] = {}
-      @tables.each do |table|
-        if table.collection_field == :hash_value
-          row[:tables][table.name] = table.values(hash_value)
-        else
-          collection = get_collection_from_item(hash_key, table.collection_field)
-          row[:tables][table.name] = table.values(collection)
-        end
-      end
-
-      @data << row
-    end
-
-  end
-
-  def replace!(doc)
-
-    sections = doc.xpath("//text:section[@text:name='#{@name}']")
-
-    return if sections.empty?
-
-    section = sections.first
+    return unless section = find_section_node(doc)
 
     template = section.dup
 
-    @data.each do |_values|
+    populate!(row)
+
+    @data.each do |data_item|
       new_section = template.dup
 
-      replace_values!(new_section, _values)
+      replace_values!(new_section, data_item)
 
       @tables.each do |t|
-        t.replace!(new_section, _values[:tables][t.name])
+        t.replace!(new_section, data_item)
+      end
+
+      @sections.each do |s|
+        s.replace!(new_section, data_item)
       end
 
       section.before(new_section)
@@ -107,6 +107,20 @@ class Section
   end # replace_section
 
 private
+
+  def replace_values!(new_section, data_item)
+    node_hash_gsub!(new_section, get_fields_with_values(data_item))
+  end
+
+  def get_fields_with_values(data_item)
+
+    fields_with_values = {}
+    @fields.each do |field_name, block1|
+      fields_with_values[field_name] = block1.call(data_item) || ''
+    end
+
+    fields_with_values
+  end
 
   def get_collection_from_item(item, collection_field)
 
@@ -127,6 +141,16 @@ private
     end
 
     return collection
+  end
+
+  def find_section_node(doc)
+
+    prefix = @parent ? "" : "//"
+
+    sections = doc.xpath("#{prefix}text:section[@text:name='#{@name}']")
+
+    sections.empty? ? nil : sections.first
+
   end
 
 end
