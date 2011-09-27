@@ -50,7 +50,7 @@ class Table
     end
 
     @template_rows.each_with_index do |r, i|
-      r.remove if (get_start_node..template_lenght) === i
+      r.remove if (get_start_node..template_length) === i
     end
 
   end # replace
@@ -77,7 +77,7 @@ private
     @row_cursor = get_start_node
   end
 
-  def template_lenght
+  def template_length
     @tl ||= @template_rows.size
   end
 
