@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{odf-report}
-  s.version = "0.4.0"
+  s.version = "0.4.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sandro Duarte"]
-  s.date = %q{2011-09-23}
+  s.date = %q{2011-10-03}
   s.description = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
   s.email = %q{sandrods@gmail.com}
   s.extra_rdoc_files = ["lib/odf-report.rb", "README.textile"]
