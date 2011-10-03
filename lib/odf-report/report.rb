@@ -59,10 +59,10 @@ class Report
           replace_sections!(doc)
           replace_tables!(doc)
 
+          find_image_name_matches(doc)
+
         end
 
-        #TO_DO: make image use Nokogiri
-        find_image_name_matches(txt)
       end
 
     end
