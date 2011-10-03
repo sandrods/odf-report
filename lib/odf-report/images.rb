@@ -3,15 +3,15 @@ module ODFReport
   module Images
 
     def find_image_name_matches(content)
+      doc = Nokogiri::XML(content)
 
       @images.each_pair do |image_name, path|
-        #Search for the image placeholder path
-        image_rgx = Regexp.new("draw:name=\"#{image_name}\".*?>.*<draw:image.*?xlink:href=\"([^\s]*)\" .*?\/>.*</draw:frame>", Regexp::MULTILINE)
-        content_match = content.match(image_rgx)
-
-        if content_match
-          placeholder_path = content_match[1]
-          @image_names_replacements[path] = File.basename(placeholder_path)
+        node = doc.xpath("//draw:frame[@draw:name='#{image_name}']")
+        for child in node.children
+          if child.class == "Nokogiri::XML::Element"
+            placeholder_path = node.children[0].attribute('href').value
+            @image_names_replacements[path] = File.basename(placeholder_path)
+          end
         end
       end
 
