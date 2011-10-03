@@ -34,8 +34,8 @@ report = ODFReport::Report.new("test_tables.odt") do |r|
     t.add_column(:field_08, :zip)
   end
 
-  image = File.join(Dir.pwd, 'piriapolis.jpg')
-  r.add_image("graphics1", image)
+  r.add_image("graphics1", File.join(Dir.pwd, 'piriapolis.jpg'))
+  r.add_image("graphics2", File.join(Dir.pwd, 'rails.png'))
 
 end
 
