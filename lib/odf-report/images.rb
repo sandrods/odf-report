@@ -8,8 +8,8 @@ module ODFReport
       @images.each_pair do |image_name, path|
         node = doc.xpath("//draw:frame[@draw:name='#{image_name}']")
         for child in node.children
-          if child.class == "Nokogiri::XML::Element"
-            placeholder_path = node.children[0].attribute('href').value
+          if child.class.to_s == "Nokogiri::XML::Element"
+            placeholder_path = child.attribute('href').value
             @image_names_replacements[path] = File.basename(placeholder_path)
           end
         end
