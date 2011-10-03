@@ -2,10 +2,9 @@ require '../lib/odf-report'
 require 'ostruct'
 
 col1 = []
-(1..6).each do |i|
+(1..40).each do |i|
   col1 << OpenStruct.new({:name=>"name #{i}",  :idx=>i,  :address=>"this is address #{i}"})
 end
-
 
 col2 = []
 col2 << OpenStruct.new({:name=>"josh harnet",   :idx=>"02", :address=>"testing <&> ",                 :phone=>99025668, :zip=>"90420-002"})
