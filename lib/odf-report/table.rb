@@ -15,6 +15,8 @@ class Table
 
     @template_rows = []
     @header           = opts[:header] || false
+    
+    @skip_empty_rows  = opts[:skip_empty_rows] || false
   end
 
   def add_column(name, field=nil, &block)
