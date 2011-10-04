@@ -9,8 +9,18 @@ module ODFReport
     def get_fields_with_values(data_item)
 
       fields_with_values = {}
+      row_has_non_empty_cell = false
       @fields.each do |field_name, block1|
-        fields_with_values[field_name] = block1.call(data_item) || ''
+        cell = block1.call(data_item) || ''
+        fields_with_values[field_name] = cell
+        row_has_non_empty_cell = true if cell.present?
+      end
+      
+      if @skip_empty_rows && !row_has_non_empty_cell
+        # If all cells (fields) in the row are empty (empty string) and
+        # the :skip_empty_rows option is true, then reset the row to the
+        # empty hash. This effectively skips that empty row...
+        fields_with_values = {}
       end
 
       fields_with_values

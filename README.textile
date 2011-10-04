@@ -1,6 +1,7 @@
 h1. ODF-REPORT
 
 Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
+This gem matches Sandro's version 0.4.1 but adds support for automatic omitting of empty table rows.
 
 
 h2. NEW!

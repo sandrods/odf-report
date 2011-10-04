@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{odf-report}
-  s.version = "0.4.1"
+  s.version = "0.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sandro Duarte"]
-  s.date = %q{2011-10-03}
-  s.description = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
+  s.date = %q{2011-10-04}
+  s.description = %q{Generates ODF files, given a template (.odt) and data, replacing tags. This gem matches Sandro's version 0.4.1 but adds support for automatic omitting of empty table rows.}
   s.email = %q{sandrods@gmail.com}
   s.extra_rdoc_files = ["lib/odf-report.rb", "README.textile"]
   s.files = %w{lib/odf-report.rb odf-report.gemspec README.textile Manifest lib/odf-report/report.rb lib/odf-report/table.rb lib/odf-report/section.rb lib/odf-report/file_ops.rb lib/odf-report/hash_gsub.rb lib/odf-report/images.rb lib/odf-report/nested.rb }
