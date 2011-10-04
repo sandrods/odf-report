@@ -12,6 +12,8 @@ col2 << OpenStruct.new({:name=>"sandro duarte", :idx=>"45", :address=>"address w
 col2 << OpenStruct.new({:name=>"ellen bicca",   :idx=>"77", :address=>"<address with escaped html>",  :phone=>77025668, :zip=>"94420-002"})
 col2 << OpenStruct.new({:name=>"luiz garcia",   :idx=>"88", :address=>"address with\nlinebreak",      :phone=>27025668, :zip=>"94520-025"})
 
+col3 = []
+
 report = ODFReport::Report.new("test_tables.odt") do |r|
 
   r.add_field("HEADER_FIELD", "This field was in the HEADER")
@@ -35,6 +37,13 @@ report = ODFReport::Report.new("test_tables.odt") do |r|
 
   image = File.join(Dir.pwd, 'piriapolis.jpg')
   r.add_image("graphics1", image)
+
+  r.add_table("HeaderTable1", col3, :header=>true) do |t|
+    t.add_column(:DATA1, :field1)
+    t.add_column(:DATA2, :field2)
+    t.add_column(:DATA3, :field3)
+    t.add_column(:DATA4, :field4)
+  end
 
 end
 

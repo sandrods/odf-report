@@ -53,6 +53,14 @@ class Table
       r.remove if (get_start_node..template_length) === i
     end
 
+    if @collection.length == 0
+      @template_rows = nil
+      table.xpath("table:table-row").each do |tr|
+          tr.remove
+      end
+    end
+
+
   end # replace
 
 private
