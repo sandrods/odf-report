@@ -37,7 +37,7 @@ class Table
 
     populate!(row)
 
-    @template_rows = table.xpath("table:table-row")
+    @template_rows = table.xpath("table:table-header-rows").xpath("table:table-row") + table.xpath("table:table-row")
 
     @collection.each do |data_item|
 
