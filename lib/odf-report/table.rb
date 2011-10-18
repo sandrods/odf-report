@@ -55,8 +55,14 @@ class Table
 
     if @collection.length == 0
       @template_rows = nil
-      table.xpath("table:table-row").each do |tr|
-          tr.remove
+      if table.xpath("table:table-header-rows")
+        table.xpath("table:table-header-rows").each do |tr|
+            tr.remove
+        end
+      else
+        table.xpath("table:table-row").each do |tr|
+            tr.remove
+        end
       end
     end
 
