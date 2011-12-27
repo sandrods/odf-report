@@ -83,9 +83,7 @@ private
 
   def find_table_node(doc)
 
-    prefix = @parent ? "" : "//"
-
-    tables = doc.xpath("#{prefix}table:table[@table:name='#{@name}']")
+    tables = doc.xpath(".//table:table[@table:name='#{@name}']")
 
     tables.empty? ? nil : tables.first
 

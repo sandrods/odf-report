@@ -80,9 +80,7 @@ module ODFReport
 
     def find_section_node(doc)
 
-      prefix = @parent ? "" : "//"
-
-      sections = doc.xpath("#{prefix}text:section[@text:name='#{@name}']")
+      sections = doc.xpath(".//text:section[@text:name='#{@name}']")
 
       sections.empty? ? nil : sections.first
 
