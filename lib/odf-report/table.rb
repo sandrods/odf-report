@@ -3,7 +3,7 @@ module ODFReport
 class Table
   include HashGsub, Nested
 
-  attr_accessor :fields, :rows, :name, :collection_field, :data, :header, :parent
+  attr_accessor :fields, :rows, :name, :collection_field, :data, :header, :parent, :tables
 
   def initialize(opts)
     @name             = opts[:name]
@@ -12,6 +12,7 @@ class Table
     @parent           = opts[:parent]
 
     @fields = {}
+    @tables = []
 
     @template_rows = []
     @header           = opts[:header] || false
@@ -25,6 +26,14 @@ class Table
     else
       @fields[name] = lambda { |item| item.send(name)}
     end
+  end
+
+  def add_table(table_name, collection_field, opts={}, &block)
+    opts.merge!(:name => table_name, :collection_field => collection_field, :parent => self)
+    tab = Table.new(opts)
+    @tables << tab
+
+    yield(tab)
   end
 
   def populate!(row)
@@ -44,6 +53,10 @@ class Table
       new_node = get_next_row
 
       replace_values!(new_node, data_item)
+
+      @tables.each do |t|
+        t.replace!(new_node, data_item)
+      end
 
       table.add_child(new_node)
 
