@@ -19,7 +19,7 @@ module ODFReport
         @path = dest
       else
         FileUtils.cp(@template, @tmp_dir)
-        @path = "#{@tmp_dir}/#{File.basename(@template)}"
+        @path = "#{@tmp_dir}/#{::File.basename(@template)}"
       end
     end
 
