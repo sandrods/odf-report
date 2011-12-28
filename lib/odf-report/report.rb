@@ -1,15 +1,15 @@
 module ODFReport
 
 class Report
-  include HashGsub, Images
+  include Fields, Images
 
-  attr_accessor :values, :tables, :images, :sections, :file
+  attr_accessor :fields, :tables, :images, :sections, :file
 
   def initialize(template_name, &block)
 
     @file = ODFReport::File.new(template_name)
 
-    @values = {}
+    @fields = []
     @tables = []
     @images = {}
     @image_names_replacements = {}
@@ -19,8 +19,11 @@ class Report
 
   end
 
-  def add_field(field_tag, value='')
-    @values[field_tag] = value
+  def add_field(field_tag, value='', &block)
+    opts = {:name => field_tag, :value => value}
+    field = Field.new(opts, &block)
+    @fields << field
+
   end
 
   def add_table(table_name, collection, opts={}, &block)
@@ -76,7 +79,7 @@ private
   end
 
   def replace_fields!(content)
-    node_hash_gsub!(content, @values)
+    field_replace!(content)
   end
 
   def replace_tables!(content)

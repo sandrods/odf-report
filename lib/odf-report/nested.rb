@@ -2,18 +2,8 @@ module ODFReport
 
   module Nested
 
-    def replace_values!(new_section, data_item)
-      node_hash_gsub!(new_section, get_fields_with_values(data_item))
-    end
-
-    def get_fields_with_values(data_item)
-
-      fields_with_values = {}
-      @fields.each do |field_name, block1|
-        fields_with_values[field_name] = block1.call(data_item) || ''
-      end
-
-      fields_with_values
+    def replace_fields!(new_section, data_item)
+      field_replace!(new_section, data_item)
     end
 
     def get_collection_from_item(item, collection_field)

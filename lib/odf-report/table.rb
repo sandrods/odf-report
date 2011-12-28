@@ -1,7 +1,7 @@
 module ODFReport
 
 class Table
-  include HashGsub, Nested
+  include Fields, Nested
 
   attr_accessor :fields, :rows, :name, :collection_field, :data, :header, :parent, :tables
 
@@ -11,7 +11,7 @@ class Table
     @collection       = opts[:collection]
     @parent           = opts[:parent]
 
-    @fields = {}
+    @fields = []
     @tables = []
 
     @template_rows = []
@@ -19,14 +19,11 @@ class Table
     @skip_if_empty    = opts[:skip_if_empty] || false
   end
 
-  def add_column(name, field=nil, &block)
-    if field
-      @fields[name] = lambda { |item| item.send(field)}
-    elsif block_given?
-      @fields[name] = block
-    else
-      @fields[name] = lambda { |item| item.send(name)}
-    end
+  def add_column(name, data_field=nil, &block)
+    opts = {:name => name, :data_field => data_field}
+    field = Field.new(opts, &block)
+    @fields << field
+
   end
 
   def add_table(table_name, collection_field, opts={}, &block)
@@ -58,7 +55,7 @@ class Table
 
       new_node = get_next_row
 
-      replace_values!(new_node, data_item)
+      replace_fields!(new_node, data_item)
 
       @tables.each do |t|
         t.replace!(new_node, data_item)

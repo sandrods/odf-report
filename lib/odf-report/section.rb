@@ -1,7 +1,7 @@
 module ODFReport
 
   class Section
-    include HashGsub, Nested
+    include Fields, Nested
 
     attr_accessor :fields, :tables, :data, :name, :collection_field, :parent
 
@@ -11,20 +11,17 @@ module ODFReport
       @collection       = opts[:collection]
       @parent           = opts[:parent]
 
-      @fields = {}
+      @fields = []
 
       @tables = []
       @sections = []
     end
 
-    def add_field(name, field=nil, &block)
-      if field
-        @fields[name] = lambda { |item| item.send(field)}
-      elsif block_given?
-        @fields[name] = block
-      else
-        @fields[name] = lambda { |item| item.send(name)}
-      end
+    def add_field(name, data_field=nil, &block)
+      opts = {:name => name, :data_field => data_field}
+      field = Field.new(opts, &block)
+      @fields << field
+
     end
 
     def add_table(table_name, collection_field, opts={}, &block)
@@ -58,7 +55,7 @@ module ODFReport
       @collection.each do |data_item|
         new_section = template.dup
 
-        replace_values!(new_section, data_item)
+        replace_fields!(new_section, data_item)
 
         @tables.each do |t|
           t.replace!(new_section, data_item)
