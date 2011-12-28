@@ -8,9 +8,11 @@ h2. NEW!
 <pre>
 ODF-REPORT have been internally refactored. It now uses Nokogiri for parsing the documents, instead of Regex.
 
-This provides for a much greater flexibility. As a result, I was able to implement nested sections.
+This provides for a much greater flexibility. As a result, it was possible to implement nested sections and tables.
 
-Now sections can be nested inside sections, with fields, tables and others sections.
+Now sections can be nested inside sections, with fields, tables and others sections
+
+And now, tables can also be nested inside tables.
 </pre>
 
 h2. INSTALL
