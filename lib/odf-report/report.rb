@@ -1,21 +1,19 @@
 module ODFReport
 
 class Report
-  include HashGsub, FileOps, Images
+  include HashGsub, Images
 
-  attr_accessor :values, :tables, :images, :sections
+  attr_accessor :values, :tables, :images, :sections, :file
 
   def initialize(template_name, &block)
-    @template = template_name
+
+    @file = ODFReport::File.new(template_name)
 
     @values = {}
     @tables = []
     @images = {}
     @image_names_replacements = {}
     @sections = []
-
-    @tmp_dir = File.join(Dir.tmpdir, random_filename(:prefix=>'odt_'))
-    Dir.mkdir(@tmp_dir) unless File.exists? @tmp_dir
 
     yield(self)
 
@@ -47,29 +45,25 @@ class Report
 
   def generate(dest = nil)
 
-    new_file = create_new_file(dest)
+    @file.create(dest)
 
-    %w(content.xml styles.xml).each do |content_file|
+    @file.update('content.xml', 'styles.xml') do |txt|
 
-      update_file_from_zip(new_file, content_file) do |txt|
+      parse_document(txt) do |doc|
 
-        parse_document(txt) do |doc|
+        replace_fields!(doc)
+        replace_sections!(doc)
+        replace_tables!(doc)
 
-          replace_fields!(doc)
-          replace_sections!(doc)
-          replace_tables!(doc)
-
-          find_image_name_matches(doc)
-
-        end
+        find_image_name_matches(doc)
 
       end
 
     end
 
-    replace_images(new_file)
+    replace_images(@file)
 
-    new_file
+    @file.path
 
   end
 
