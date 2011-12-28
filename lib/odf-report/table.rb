@@ -16,6 +16,7 @@ class Table
 
     @template_rows = []
     @header           = opts[:header] || false
+    @skip_if_empty    = opts[:skip_if_empty] || false
   end
 
   def add_column(name, field=nil, &block)
@@ -45,6 +46,11 @@ class Table
     return unless table = find_table_node(doc)
 
     populate!(row)
+
+    if (@skip_if_empty || !@header) && @collection.empty?
+      table.remove
+      return
+    end
 
     @template_rows = table.xpath("table:table-row")
 
