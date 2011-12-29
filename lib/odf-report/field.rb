@@ -22,9 +22,6 @@ class Field
   end
 
   def get_value(data_item = nil)
-
-    raise "Unable to retrieve value" unless @value || data_item
-
     @value || @block.call(data_item) || ''
   end
 
@@ -37,6 +34,8 @@ class Field
   end
 
   def extract_value(data_item)
+    return unless data_item
+
     key = @data_field || @name
 
     if data_item.is_a?(Hash)
