@@ -109,7 +109,7 @@ end
 
 h3. Sections
 
-Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. Now you can make a Section in your template and use it in this situations. Creating a Session in OpenOffice is as easy as select menu *Insert* and then *Section...*, and then choose a name for it.
+Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. Now you can make a Section in your template and use it in this situations. Creating a Section in OpenOffice is as easy as select menu *Insert* and then *Section...*, and then choose a name for it.
 
 *Section* 's are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside it, even Tables *and nested Sections*, as long as you pass the appropriate data structure.
 
