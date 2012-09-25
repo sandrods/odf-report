@@ -37,6 +37,10 @@ module ODFReport
 
     end
 
+    def remove
+      FileUtils.rm_rf(@tmp_dir)
+    end
+
     private
 
     def update_content_file(content_file, &block)

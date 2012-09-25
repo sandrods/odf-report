@@ -46,7 +46,7 @@ class Report
     @images[name] = path
   end
 
-  def generate(dest = nil)
+  def generate(dest = nil, &block)
 
     @file.create(dest)
 
@@ -66,8 +66,17 @@ class Report
 
     replace_images(@file)
 
+    if block_given?
+      yield @file.path
+      @file.remove
+    end
+
     @file.path
 
+  end
+
+  def cleanup
+    @file.remove
   end
 
 private
