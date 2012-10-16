@@ -16,7 +16,7 @@ module ODFReport
     def create(dest)
       if dest
         FileUtils.cp(@template, dest)
-        @path = dest
+        @path = "#{dest}/#{::File.basename(@template)}"
       else
         FileUtils.cp(@template, @tmp_dir)
         @path = "#{@tmp_dir}/#{::File.basename(@template)}"
