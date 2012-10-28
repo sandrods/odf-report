@@ -3,12 +3,13 @@ module ODFReport
 class Report
   include Fields, Images
 
-  attr_accessor :fields, :tables, :images, :sections, :file
+  attr_accessor :fields, :tables, :images, :sections, :file, :texts
 
   def initialize(template_name, &block)
 
     @file = ODFReport::File.new(template_name)
 
+    @texts = []
     @fields = []
     @tables = []
     @images = {}
@@ -23,7 +24,12 @@ class Report
     opts = {:name => field_tag, :value => value}
     field = Field.new(opts, &block)
     @fields << field
+  end
 
+  def add_text(field_tag, value)
+    opts = {:name => field_tag, :value => value}
+    text = Text.new(opts)
+    @texts << text
   end
 
   def add_table(table_name, collection, opts={}, &block)
@@ -55,6 +61,8 @@ class Report
       parse_document(txt) do |doc|
 
         replace_fields!(doc)
+        replace_texts!(doc)
+
         replace_sections!(doc)
         replace_tables!(doc)
 
@@ -89,6 +97,12 @@ private
 
   def replace_fields!(content)
     field_replace!(content)
+  end
+
+  def replace_texts!(content)
+    @texts.each do |text|
+      text.replace!(content)
+    end
   end
 
   def replace_tables!(content)
