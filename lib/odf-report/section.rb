@@ -12,6 +12,7 @@ module ODFReport
       @parent           = opts[:parent]
 
       @fields = []
+      @texts = []
 
       @tables = []
       @sections = []
@@ -21,6 +22,13 @@ module ODFReport
       opts = {:name => name, :data_field => data_field}
       field = Field.new(opts, &block)
       @fields << field
+
+    end
+
+    def add_text(name, data_field=nil, &block)
+      opts = {:name => name, :data_field => data_field}
+      field = Text.new(opts, &block)
+      @texts << field
 
     end
 
@@ -56,6 +64,10 @@ module ODFReport
         new_section = template.dup
 
         replace_fields!(new_section, data_item)
+
+        @texts.each do |t|
+          t.replace!(new_section, data_item)
+        end
 
         @tables.each do |t|
           t.replace!(new_section, data_item)

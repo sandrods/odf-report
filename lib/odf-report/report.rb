@@ -26,7 +26,7 @@ class Report
     @fields << field
   end
 
-  def add_text(field_tag, value)
+  def add_text(field_tag, value='', &block)
     opts = {:name => field_tag, :value => value}
     text = Text.new(opts)
     @texts << text

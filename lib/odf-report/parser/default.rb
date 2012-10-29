@@ -32,7 +32,7 @@ module Parser
       xml = node.parse(@text)
 
       xml.css("p").each do |p|
-        style = (p.parent.name == "blockquote") ? "quote" : nil
+        style = (p.parent && p.parent.name == "blockquote") ? "quote" : nil
         add_paragraph(p.inner_html, style)
       end
     end

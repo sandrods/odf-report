@@ -1,21 +1,14 @@
 module ODFReport
 
-  class Text
+  class Text < Field
 
-    DELIMITERS = ['[', ']']
+    attr_accessor :parser
 
-    attr_accessor :name, :parser
-
-    def initialize(opts)
-      @name       = opts[:name]
-      @value      = opts[:value]
-      @parser     = Parser::Default.new(@value)
-    end
-
-    def replace!(doc)
+    def replace!(doc, data_item = nil)
 
       return unless text = find_text_node(doc)
 
+      @parser = Parser::Default.new(get_value(data_item))
       @parser.parse(text)
 
       @parser.paragraphs.each do |p|
@@ -30,14 +23,6 @@ module ODFReport
     end
 
     private
-
-    def to_placeholder
-      if DELIMITERS.is_a?(Array)
-        "#{DELIMITERS[0]}#{@name.to_s.upcase}#{DELIMITERS[1]}"
-      else
-        "#{DELIMITERS}#{@name.to_s.upcase}#{DELIMITERS}"
-      end
-    end
 
     def find_text_node(doc)
       texts = doc.xpath(".//text:p[text()='#{to_placeholder}']")
