@@ -2,19 +2,6 @@ h1. ODF-REPORT
 
 Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
 
-
-h2. NEW!
-
-<pre>
-ODF-REPORT have been internally refactored. It now uses Nokogiri for parsing the documents, instead of Regex.
-
-This provides for a much greater flexibility. As a result, it was possible to implement nested sections and tables.
-
-Now sections can be nested inside sections, with fields, tables and others sections
-
-And now, tables can also be nested inside tables.
-</pre>
-
 h2. INSTALL
 
 (sudo) gem install odf-report
