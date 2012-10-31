@@ -51,6 +51,8 @@ class Table
 
     @template_rows = table.xpath("table:table-row")
 
+    @header = table.xpath("table:table-header-rows").empty? ? @header : false
+
     @collection.each do |data_item|
 
       new_node = get_next_row
