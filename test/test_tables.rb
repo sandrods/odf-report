@@ -59,4 +59,4 @@ report = ODFReport::Report.new("test_tables.odt") do |r|
 
 end
 
-report.generate("./result/test_tables.odt")
+report.generate("./result/")

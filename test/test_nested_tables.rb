@@ -36,4 +36,4 @@ report = ODFReport::Report.new("test_nested_tables.odt") do |r|
 
 end
 
-report.generate("./result/test_nested_tables.odt")
+report.generate("./result/")

@@ -54,4 +54,4 @@ report = ODFReport::Report.new("test_sub_sections.odt") do |r|
 
 end
 
-report.generate("./result/test_sub_sections.odt")
+report.generate("./result/")
