@@ -11,11 +11,17 @@ class Item
 end
 
 items = []
-5.times do
+4.times do
 
   text = <<-HTML
     <p>#{Faker::Lorem.sentence} <em>#{Faker::Lorem.sentence}</em> #{Faker::Lorem.sentence}</p>
     <p>#{Faker::Lorem.sentence} <strong>#{Faker::Lorem.paragraph}</strong> #{Faker::Lorem.paragraph}</p>
+    <p>#{Faker::Lorem.paragraph}</p>
+    <blockquote>
+      <p>#{Faker::Lorem.paragraph(10)}</p>
+      <p>#{Faker::Lorem.paragraph}</p>
+    </blockquote>
+    <p style="margin: 150px">#{Faker::Lorem.paragraph(15)}</p>
     <p>#{Faker::Lorem.paragraph}</p>
   HTML
 
