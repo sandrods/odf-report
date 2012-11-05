@@ -6,19 +6,15 @@ module ODFReport
 
     def replace!(doc, data_item = nil)
 
-      return unless text = find_text_node(doc)
+      return unless node = find_text_node(doc)
 
-      @parser = Parser::Default.new(get_value(data_item))
-      @parser.parse(text)
+      @parser = Parser::Default.new(get_value(data_item), node)
 
       @parser.paragraphs.each do |p|
-        node = text.dup
-        node['text:style-name'] = p[:style] if p[:style]
-        node.children = p[:text]
-        text.before(node)
+        node.before(p)
       end
 
-      text.remove
+      node.remove
 
     end
 
