@@ -8,7 +8,9 @@ module ODFReport
 
       return unless node = find_text_node(doc)
 
-      @parser = Parser::Default.new(get_value(data_item), node)
+      text_value = get_value(data_item)
+
+      @parser = Parser::Default.new(text_value, node)
 
       @parser.paragraphs.each do |p|
         node.before(p)
