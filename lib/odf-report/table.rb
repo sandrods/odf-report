@@ -6,9 +6,7 @@ module ODFReport
     attr_accessor :fields, :rows, :name, :collection_field, :data, :header, :parent, :tables
 
     def add_column(name, data_field=nil, &block)
-      opts = {:name => name, :data_field => data_field}
-      field = Field.new(opts, &block)
-      @fields << field
+      add_field(name, data_field, &block)
     end
 
     def populate!(row)
