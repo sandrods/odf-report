@@ -1,53 +1,10 @@
 module ODFReport
 
-  class Section
+  class Section < ODFReport::Component
     include Fields, Nested
 
     attr_accessor :fields, :tables, :data, :name, :collection_field, :parent
-
-    def initialize(opts)
-      @name             = opts[:name]
-      @collection_field = opts[:collection_field]
-      @collection       = opts[:collection]
-      @parent           = opts[:parent]
-
-      @fields = []
-      @texts = []
-
-      @tables = []
-      @sections = []
-    end
-
-    def add_field(name, data_field=nil, &block)
-      opts = {:name => name, :data_field => data_field}
-      field = Field.new(opts, &block)
-      @fields << field
-
-    end
-
-    def add_text(name, data_field=nil, &block)
-      opts = {:name => name, :data_field => data_field}
-      field = Text.new(opts, &block)
-      @texts << field
-
-    end
-
-    def add_table(table_name, collection_field, opts={}, &block)
-      opts.merge!(:name => table_name, :collection_field => collection_field, :parent => self)
-      tab = Table.new(opts)
-      @tables << tab
-
-      yield(tab)
-    end
-
-    def add_section(section_name, collection_field, opts={}, &block)
-      opts.merge!(:name => section_name, :collection_field => collection_field, :parent => self)
-      sec = Section.new(opts)
-      @sections << sec
-
-      yield(sec)
-    end
-
+    
     def populate!(row)
       @collection = get_collection_from_item(row, @collection_field) if row
     end
