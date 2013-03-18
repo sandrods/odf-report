@@ -1,12 +1,12 @@
 module ODFReport
 
-class Report
+class Report < ODFReport::Component
   include Fields, Images
 
   attr_accessor :fields, :tables, :images, :sections, :file, :texts
 
   def initialize(template_name, &block)
-
+  
     @file = ODFReport::File.new(template_name)
 
     @texts = []
@@ -38,14 +38,6 @@ class Report
     @tables << tab
 
     yield(tab)
-  end
-
-  def add_section(section_name, collection, opts={}, &block)
-    opts.merge!(:name => section_name, :collection => collection)
-    sec = Section.new(opts)
-    @sections << sec
-
-    yield(sec)
   end
 
   def add_image(name, path)
