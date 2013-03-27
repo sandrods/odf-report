@@ -44,28 +44,17 @@ module ODFReport
     private
 
     def update_content_file(content_file, &block)
-
-      Zip::ZipFile.open(@path) do |z|
-
+      Zip::Archive.open(@path) do |z|
         cont = "#{@tmp_dir}/#{content_file}"
-
-        z.extract(content_file, cont)
-
-        txt = ''
-
-        ::File.open(cont, "r") do |f|
-          txt = f.read
-        end
-
-        yield(txt)
-
-        ::File.open(cont, "w") do |f|
-           f.write(txt)
-        end
-
-        z.replace(content_file, cont)
+				z.fopen(content_file) do |g|
+		      txt = g.read
+		      yield(txt)
+		      ::File.open(cont, "w") do |f|
+				      f.write(txt)
+		      end
+					z.replace_file(content_file, cont)
+				end
       end
-
     end
 
     def random_filename(opts={})
