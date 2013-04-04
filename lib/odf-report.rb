@@ -1,7 +1,8 @@
 require 'rubygems'
-require 'zip/zipfilesystem'
+require 'zipruby'
 require 'fileutils'
 require 'nokogiri'
+require 'tmpdir'
 
 require File.expand_path('../odf-report/parser/default',  __FILE__)
 

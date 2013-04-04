@@ -48,12 +48,14 @@ module ODFReport
         cont = "#{@tmp_dir}/#{content_file}"
 				z.fopen(content_file) do |g|
 		      txt = g.read
+					#puts txt
 					@index = g.index
 		      yield(txt)
+					#puts txt
 		      ::File.open(cont, "w") do |f|
 				  	f.write(txt)
 		      end
-				z.replace_file(@index,cont)
+				#z.replace_file(@index,cont)
 				end				
       end
     end
