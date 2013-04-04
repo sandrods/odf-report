@@ -82,6 +82,4 @@ module ODFReport
     end
 
   end
-
-
 end
