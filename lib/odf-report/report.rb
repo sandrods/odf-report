@@ -52,7 +52,7 @@ class Report
     @images[name] = path
   end
 
-  def generate(dest = nil, &block)
+  def generate(dest = nil, filename = nil, &block)
 
     @file.create(dest)
 
@@ -79,7 +79,13 @@ class Report
       @file.remove
     end
 
-    @file.path
+		if filename
+			@new_path = @file.path[0,@file.path.rindex('/')+1]+filename
+			::File.rename(@file.path,@new_path)
+			@file.path = @new_path
+		end
+
+		return @file.path
 
   end
 
