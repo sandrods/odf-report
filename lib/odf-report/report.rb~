@@ -78,11 +78,13 @@ class Report
       yield @file.path
       @file.remove
     end
+
 		if filename
 			@new_path = @file.path[0,@file.path.rindex('/')+1]+filename
 			::File.rename(@file.path,@new_path)
 			@file.path = @new_path
 		end
+
 		return @file.path
 
   end

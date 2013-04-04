@@ -52,7 +52,7 @@ class Report
     @images[name] = path
   end
 
-  def generate(dest = nil, filename = 'test', &block)
+  def generate(dest = nil, filename = nil, &block)
 
     @file.create(dest)
 
