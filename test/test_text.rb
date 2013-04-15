@@ -35,6 +35,7 @@ report = ODFReport::Report.new("test_text.odt") do |r|
 
   r.add_field("TAG_01", Faker::Company.name)
   r.add_field("TAG_02", Faker::Company.catch_phrase)
+  r.add_field("TAG_03", "       some             text with a                 lot of spaces              ")
 
   r.add_text(:main_text, item.text)
 
