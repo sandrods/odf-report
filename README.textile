@@ -163,6 +163,7 @@ def print
 
   @ticket = Ticket.find(params[:id])
 
+  # For Rails 3 or latest replace #{RAILS_ROOT} to #{Rails.root}
   report = ODFReport::Report.new("#{RAILS_ROOT}/app/reports/ticket.odt") do |r|
 
     r.add_field(:id,         @ticket.id.to_s)
