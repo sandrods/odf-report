@@ -50,8 +50,8 @@ module ODFReport
       yield(sec)
     end
 
-    def add_image(name, path)
-      @images[name] = path
+    def add_image(name, path=nil, &block)
+      @images[name] = path || block
     end
 
     def populate!(row)
@@ -70,6 +70,12 @@ module ODFReport
         new_section = template.dup
 
         replace_fields!(new_section, data_item)
+
+        @images.each do |k, v|
+          if v.instance_of?(Proc)
+            @images[k] = v.call(data_item)
+          end
+        end
 
         @texts.each do |t|
           t.replace!(new_section, data_item)

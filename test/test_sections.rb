@@ -1,5 +1,6 @@
 require '../lib/odf-report'
 require 'ostruct'
+require 'pry'
 
 class Item
   attr_accessor :name, :sid, :children
@@ -32,7 +33,7 @@ report = ODFReport::Report.new("test_sections.odt") do |r|
       t.add_column('INV')   { |item| item.to_s.reverse.upcase }
     end
 
-    s.add_image("GRAPH", File.join(Dir.pwd, 'rails.png'))
+    s.add_image("GRAPH") { |i| File.join(Dir.pwd, 'rails.png')}
   end
 
 end
