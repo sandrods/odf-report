@@ -114,6 +114,8 @@ private
   def replace_sections!(content)
     @sections.each do |section|
       section.replace!(content)
+      @image_names_replacements.merge!(section.image_names_replacements)
+      @images.merge!(section.images)
     end
   end
 

@@ -32,6 +32,7 @@ report = ODFReport::Report.new("test_sections.odt") do |r|
       t.add_column('INV')   { |item| item.to_s.reverse.upcase }
     end
 
+    s.add_image("GRAPH", File.join(Dir.pwd, 'rails.png'))
   end
 
 end

@@ -1,9 +1,9 @@
 module ODFReport
 
   class Section
-    include Fields, Nested
+    include Fields, Nested, Images
 
-    attr_accessor :fields, :tables, :data, :name, :collection_field, :parent
+    attr_accessor :fields, :tables, :data, :name, :collection_field, :parent, :images, :image_names_replacements
 
     def initialize(opts)
       @name             = opts[:name]
@@ -16,6 +16,8 @@ module ODFReport
 
       @tables = []
       @sections = []
+      @images = {}
+      @image_names_replacements = {}
     end
 
     def add_field(name, data_field=nil, &block)
@@ -48,6 +50,10 @@ module ODFReport
       yield(sec)
     end
 
+    def add_image(name, path)
+      @images[name] = path
+    end
+
     def populate!(row)
       @collection = get_collection_from_item(row, @collection_field) if row
     end
@@ -73,8 +79,12 @@ module ODFReport
           t.replace!(new_section, data_item)
         end
 
+        find_image_name_matches(new_section)
+
         @sections.each do |s|
           s.replace!(new_section, data_item)
+          @image_names_replacements.merge!(s.image_names_replacements)
+          @images.merge!(s.images)
         end
 
         section.before(new_section)

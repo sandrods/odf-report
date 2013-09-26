@@ -8,11 +8,23 @@ PATH
 GEM
   remote: http://ruby.taobao.org/
   specs:
+    coderay (1.0.9)
+    method_source (0.8.2)
     nokogiri (1.5.10)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry-nav (0.2.3)
+      pry (~> 0.9.10)
     rubyzip (0.9.9)
+    slop (3.4.6)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   odf-report!
+  pry
+  pry-nav
+  rubyzip (~> 0.9.9)
