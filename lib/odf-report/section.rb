@@ -58,7 +58,7 @@ module ODFReport
       @collection = get_collection_from_item(row, @collection_field) if row
     end
 
-    def replace!(doc, row = nil)
+    def replace!(doc, row = nil, parent = nil)
 
       return unless section = find_section_node(doc)
 
@@ -88,13 +88,13 @@ module ODFReport
         find_image_name_matches(new_section)
 
         @sections.each do |s|
-          s.replace!(new_section, data_item)
-          @image_names_replacements.merge!(s.image_names_replacements)
-          @images.merge!(s.images)
+          s.replace!(new_section, data_item, s)
         end
 
         section.before(new_section)
 
+        parent && parent.images.merge!(@images)
+        parent && parent.image_names_replacements.merge!(@image_names_replacements)
       end
 
       section.remove
