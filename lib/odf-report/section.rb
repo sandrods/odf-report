@@ -71,12 +71,6 @@ module ODFReport
 
         replace_fields!(new_section, data_item)
 
-        @images.each do |k, v|
-          if v.instance_of?(Proc)
-            @images[k] = v.call(data_item)
-          end
-        end
-
         @texts.each do |t|
           t.replace!(new_section, data_item)
         end
@@ -93,8 +87,14 @@ module ODFReport
 
         section.before(new_section)
 
-        parent && parent.images.merge!(@images)
-        parent && parent.image_names_replacements.merge!(@image_names_replacements)
+        @images.each do |k, v|
+          if v.instance_of?(Proc)
+            image_path = v.call(data_item)
+            if node = new_section.xpath(".//draw:frame[@draw:name='#{k}']/draw:image").first
+              node.set_attribute('xlink:href', image_path)
+            end
+          end
+        end
       end
 
       section.remove
