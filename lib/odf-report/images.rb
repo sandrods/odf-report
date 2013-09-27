@@ -38,7 +38,7 @@ module ODFReport
       Zip::File.open(file.path) { |zipfile|
         doc = manifest_xml_doc(zipfile)
         need_add_nodes = []
-        need_add_files(zipfile).each do |image_path|
+        need_add_files(zipfile, file.tmp_dir).each do |image_path|
           tmp_path = ::File.join('Pictures',::File.basename(image_path))
           zipfile.add(tmp_path, image_path) { true }
 
@@ -47,7 +47,7 @@ module ODFReport
 
         need_add_nodes.each{|n| doc.root.add_child(n) }
 
-        update_manifest(doc, zipfile)
+        update_manifest(doc, zipfile, file.tmp_dir)
       }
     end
 
@@ -71,18 +71,18 @@ module ODFReport
       Nokogiri::XML.parse(entry)
     end
 
-    def update_manifest(doc, zipfile)
-      update_compress_file(doc, zipfile, 'mainfest.xml')
+    def update_manifest(doc, zipfile, tmp_dir)
+      update_compress_file(doc, zipfile, tmp_dir, manifest_path)
     end
 
-    def update_content(doc, zipfile)
-      update_compress_file(doc, zipfile, 'content.xml')
+    def update_content(doc, zipfile, tmp_dir)
+      update_compress_file(doc, zipfile, tmp_dir, 'content.xml')
     end
 
-    def update_compress_file(doc, zipfile, file)
-      tmp_path = ::File.join(file.tmp_dir, file)
+    def update_compress_file(doc, zipfile, tmp_dir, file)
+      tmp_path = ::File.join(tmp_dir, ::File.basename(file))
       ::File.open(tmp_path, 'w') do |f|
-        f.puts content_doc.to_xml
+        f.puts doc.to_xml
       end
 
       zipfile.replace(file, tmp_path)
@@ -92,7 +92,7 @@ module ODFReport
       ::File.join('META-INF', 'manifest.xml')
     end
 
-    def need_add_files(zipfile)
+    def need_add_files(zipfile, tmp_dir)
       need_add_files = []
       content = zipfile.read('content.xml')
       content_doc = Nokogiri::XML(content)
@@ -104,9 +104,10 @@ module ODFReport
         node.set_attribute('xlink:href', ::File.join('Pictures', ::File.basename(path)))
       end
 
-      update_content(content_doc, zipfile)
+      update_content(content_doc, zipfile, tmp_dir)
       return need_add_files
     end
   end
 
 end
+
