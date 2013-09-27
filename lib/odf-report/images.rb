@@ -93,6 +93,7 @@ module ODFReport
         if path !~ /^Pictures\//
           need_add_files << path
         end
+        node.set_attribute('xlink:href', ::File.join('Pictures', ::File.basename(path)))
       end
       return need_add_files
     end
