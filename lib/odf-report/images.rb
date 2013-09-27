@@ -72,12 +72,20 @@ module ODFReport
     end
 
     def update_manifest(doc, zipfile)
-      tmp_mainfest_path = ::File.join(file.tmp_dir, 'mainfest.xml')
-      ::File.open(tmp_mainfest_path, 'w') do |f|
-        f.puts doc.to_xml
+      update_compress_file(doc, zipfile, 'mainfest.xml')
+    end
+
+    def update_content(doc, zipfile)
+      update_compress_file(doc, zipfile, 'content.xml')
+    end
+
+    def update_compress_file(doc, zipfile, file)
+      tmp_path = ::File.join(file.tmp_dir, file)
+      ::File.open(tmp_path, 'w') do |f|
+        f.puts content_doc.to_xml
       end
 
-      zipfile.replace(manifest_path, tmp_mainfest_path)
+      zipfile.replace(file, tmp_path)
     end
 
     def manifest_path
@@ -95,6 +103,8 @@ module ODFReport
         end
         node.set_attribute('xlink:href', ::File.join('Pictures', ::File.basename(path)))
       end
+
+      update_content(content_doc, zipfile)
       return need_add_files
     end
   end
