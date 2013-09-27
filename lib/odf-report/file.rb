@@ -45,7 +45,7 @@ module ODFReport
 
     def update_content_file(content_file, &block)
 
-      Zip::ZipFile.open(@path) do |z|
+      Zip::File.open(@path) do |z|
 
         cont = "#{@tmp_dir}/#{content_file}"
 
