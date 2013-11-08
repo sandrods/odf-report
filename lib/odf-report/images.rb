@@ -17,7 +17,7 @@ module ODFReport
 
     def replace_images(file)
 
-      before_replace_iamges(file)
+      before_replace_images(file)
 
       return if @images.empty?
 
@@ -34,7 +34,7 @@ module ODFReport
     end # replace_images
 
 
-    def before_replace_iamges(file)
+    def before_replace_images(file)
       Zip::File.open(file.path) { |zipfile|
         doc = manifest_xml_doc(zipfile)
         need_add_nodes = []
