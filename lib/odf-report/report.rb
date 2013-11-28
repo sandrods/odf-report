@@ -60,8 +60,8 @@ class Report
 
       parse_document(txt) do |doc|
 
-        replace_fields!(doc)
         replace_texts!(doc)
+        replace_fields!(doc)
 
         replace_sections!(doc)
         replace_tables!(doc)

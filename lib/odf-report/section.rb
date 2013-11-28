@@ -63,8 +63,6 @@ module ODFReport
       @collection.each do |data_item|
         new_section = template.dup
 
-        replace_fields!(new_section, data_item)
-
         @texts.each do |t|
           t.replace!(new_section, data_item)
         end
@@ -76,6 +74,8 @@ module ODFReport
         @sections.each do |s|
           s.replace!(new_section, data_item)
         end
+
+        replace_fields!(new_section, data_item)
 
         section.before(new_section)
 
@@ -98,3 +98,5 @@ module ODFReport
   end
 
 end
+
+
