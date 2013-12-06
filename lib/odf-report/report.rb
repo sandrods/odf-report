@@ -67,6 +67,7 @@ class Report
         replace_tables!(doc)
 
         find_image_name_matches(doc)
+        avoid_duplicate_image_names(doc)
 
       end
 
