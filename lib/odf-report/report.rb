@@ -93,7 +93,7 @@ private
   def parse_document(txt)
     doc = Nokogiri::XML(txt)
     yield doc
-    txt.replace(doc.to_s)
+    txt.replace(doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
   end
 
   def replace_fields!(content)
