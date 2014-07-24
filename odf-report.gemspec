@@ -14,12 +14,15 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Generates ODF files, given a template (.odt) and data, replacing tags}
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = `git ls-files -z`.split("\x0")
+  s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency('rubyzip', "~> 0.9.4")
+  s.add_development_dependency "bundler", "~> 1.6"
+  s.add_development_dependency "rake"
+
+  s.add_runtime_dependency('rubyzip', "~> 1.1.0")
   s.add_runtime_dependency('nokogiri', ">= 1.5.0")
 
 end
