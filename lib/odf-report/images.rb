@@ -19,13 +19,10 @@ module ODFReport
 
       return if @images.empty?
 
-      FileUtils.mkdir(::File.join(file.tmp_dir, IMAGE_DIR_NAME))
-
       @image_names_replacements.each_pair do |path, template_image|
 
-        file.update(template_image) do |content|
-          content.replace ::File.read(path)
-        end
+        file.output_stream.put_next_entry(template_image)
+        file.output_stream.write ::File.read(path)
 
       end
 

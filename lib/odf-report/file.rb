@@ -1,35 +1,37 @@
 module ODFReport
-
   class File
 
-    attr_accessor :tmp_dir, :path
+    attr_accessor :data, :output_stream
 
     def initialize(template)
-
       raise "Template [#{template}] not found." unless ::File.exists? template
-
       @template = template
-      @tmp_dir = ::File.join(Dir.tmpdir, random_filename(:prefix=>'odt_'))
-      Dir.mkdir(@tmp_dir) unless ::File.exists? @tmp_dir
     end
 
-    def create(dest)
-      if dest
-        FileUtils.cp(@template, dest)
-        @path = "#{dest}/#{::File.basename(@template)}"
-      else
-        FileUtils.cp(@template, @tmp_dir)
-        @path = "#{@tmp_dir}/#{::File.basename(@template)}"
+    def update_content
+      @buffer = Zip::OutputStream.write_buffer do |out|
+        @output_stream = out
+        yield self
       end
     end
 
-    def update(*content_files, &block)
+    def update_files(*content_files, &block)
 
-      content_files.each do |content_file|
+      Zip::File.open(@template) do |file|
 
-        update_content_file(content_file) do |txt|
+        file.each do |entry|
 
-          yield txt
+          unless entry.directory?
+
+            data = entry.get_input_stream.read
+
+            if content_files.include?(entry.name)
+              yield data
+            end
+
+            @output_stream.put_next_entry(entry.name)
+            @output_stream.write data
+          end
 
         end
 
@@ -37,50 +39,9 @@ module ODFReport
 
     end
 
-    def remove
-      FileUtils.rm_rf(@tmp_dir)
-    end
-
-    private
-
-    def update_content_file(content_file, &block)
-
-      Zip::ZipFile.open(@path) do |z|
-
-        cont = "#{@tmp_dir}/#{content_file}"
-
-        z.extract(content_file, cont)
-
-        txt = ''
-
-        ::File.open(cont, "r") do |f|
-          txt = f.read
-        end
-
-        yield(txt)
-
-        ::File.open(cont, "w") do |f|
-           f.write(txt)
-        end
-
-        z.replace(content_file, cont)
-      end
-
-    end
-
-    def random_filename(opts={})
-      opts = {:chars => ('0'..'9').to_a + ('A'..'F').to_a + ('a'..'f').to_a,
-              :length => 24, :prefix => '', :suffix => '',
-              :verify => true, :attempts => 10}.merge(opts)
-      opts[:attempts].times do
-        filename = ''
-        opts[:length].times { filename << opts[:chars][rand(opts[:chars].size)] }
-        filename = opts[:prefix] + filename + opts[:suffix]
-        return filename unless opts[:verify] && ::File.exists?(filename)
-      end
-      nil
+    def data
+      @buffer.string
     end
 
   end
-
 end

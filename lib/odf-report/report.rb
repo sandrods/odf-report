@@ -52,40 +52,37 @@ class Report
     @images[name] = path
   end
 
-  def generate(dest = nil, &block)
+  def generate(dest = nil)
 
-    @file.create(dest)
+    @file.update_content do |file|
 
-    @file.update('content.xml', 'styles.xml') do |txt|
+      file.update_files('content.xml', 'styles.xml') do |txt|
 
-      parse_document(txt) do |doc|
+        parse_document(txt) do |doc|
 
-        replace_texts!(doc)
-        replace_fields!(doc)
+          replace_texts!(doc)
+          replace_fields!(doc)
 
-        replace_sections!(doc)
-        replace_tables!(doc)
+          replace_sections!(doc)
+          replace_tables!(doc)
 
-        find_image_name_matches(doc)
-        avoid_duplicate_image_names(doc)
+          find_image_name_matches(doc)
+          avoid_duplicate_image_names(doc)
+
+        end
 
       end
 
+      replace_images(file)
+
     end
 
-    replace_images(@file)
-
-    if block_given?
-      yield @file.path
-      @file.remove
+    if dest
+      ::File.open(dest, "w") {|f| f.write(@file.data) }
+    else
+      @file.data
     end
 
-    @file.path
-
-  end
-
-  def cleanup
-    @file.remove
   end
 
 private
