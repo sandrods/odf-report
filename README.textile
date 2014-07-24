@@ -2,9 +2,17 @@ h1. ODF-REPORT
 
 Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
 
+h3. NEW
+
+* as per popular request, now uses rubyzip ~> 1.1.0
+* uses @Zip::OutputStream.write_buffer@ to generate the file. This should avoid corruption issues.
+* the @.generate@ method now returns the actual report binary, so you can send_data it directly
+* you can also use @.generate('file.odt')@, which saves the report to the specified file
+
 h2. INSTALL
 
-(sudo) gem install odf-report
+In your Gemfile
+<pre>gem 'odf-report' </pre>
 
 h2. USAGE
 
@@ -185,20 +193,19 @@ def print
 
   end
 
-  report_file_name = report.generate
-
-  send_file(report_file_name)
+  send_data report.generate, type: 'application/vnd.oasis.opendocument.text',
+                              disposition: 'attachment',
+                              filename: 'report.odt'
 
 end
 </pre>
 
-The @generate@ method will, er... generate the document in a temp dir and returns the full path of the generated file, so you can send it back to the user.
 
 _That's all I have to say about that._
 
 h4. Generating a document in a standalone script
 
-It's just the same as in a Rails app, but you can inform the path where the file will be generated instead of using a temp dir.
+It's just the same as in a Rails app, but you can inform the path where the file will be saved.
 
 <pre>
 report = ODFReport::Report.new("ticket.odt") do |r|
@@ -207,21 +214,12 @@ report = ODFReport::Report.new("ticket.odt") do |r|
 
 end
 
-report.generate("./documents/")
+report.generate("./documents/new_ticket.odt")
 </pre>
 
 <hr/>
 
 h3. REQUIREMENTS
 
-*rubyzip*: for manipulating the contents of the odt file, since it's actually a zip file.
-*nokogiri*: for parsing and manipulating the document xml files.
-
-
-<hr/>
-
-h3. THE FUTURE
-
-Well, this is my first attempt. This gem was extracted from an actual project we developed internally, to fulfill our specific needs.
-
-That said, I would really appreciate any input you can come up with. Critics, suggestions, bug reports are welcome and will be thoroughly examined.
+* rubyzip*: for manipulating the contents of the odt file, since it's actually a zip file.
+* nokogiri*: for parsing and manipulating the document xml files.
