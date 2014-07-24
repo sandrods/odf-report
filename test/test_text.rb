@@ -31,7 +31,7 @@ end
 
 item = items.pop
 
-report = ODFReport::Report.new("test_text.odt") do |r|
+report = ODFReport::Report.new("./templates/test_text.odt") do |r|
 
   r.add_field("TAG_01", Faker::Company.name)
   r.add_field("TAG_02", Faker::Company.catch_phrase)
@@ -45,4 +45,4 @@ report = ODFReport::Report.new("test_text.odt") do |r|
 
 end
 
-report.generate("./result/")
+report.generate("./result/test_text.odt")

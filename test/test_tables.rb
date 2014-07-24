@@ -15,7 +15,7 @@ col2 << OpenStruct.new({:name=>"luiz garcia",   'idx'=>"88", :address=>"address 
 
 col3, col4, col5 = [], [], []
 
-report = ODFReport::Report.new("test_tables.odt") do |r|
+report = ODFReport::Report.new("./templates/test_tables.odt") do |r|
 
   r.add_field("HEADER_FIELD", "This field was in the HEADER")
 
@@ -59,4 +59,4 @@ report = ODFReport::Report.new("test_tables.odt") do |r|
 
 end
 
-report.generate("./result/")
+report.generate("./result/test_tables.odt")

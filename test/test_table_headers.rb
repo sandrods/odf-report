@@ -17,7 +17,7 @@ items = []
 
 end
 
-report = ODFReport::Report.new("test_table_headers.odt") do |r|
+report = ODFReport::Report.new("./templates/test_table_headers.odt") do |r|
 
   r.add_table("TABLE_01", items, :header => true) do |s|
     s.add_column(:name)
@@ -36,4 +36,4 @@ report = ODFReport::Report.new("test_table_headers.odt") do |r|
 
 end
 
-report.generate("./result/")
+report.generate("./result/test_table_headers.odt")
