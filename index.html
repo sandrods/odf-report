@@ -18,7 +18,7 @@
     <div class="wrapper">
       <header>
         <h1>Odf-report</h1>
-        <p>Generates ODF files, given a template (.odt) and data, replacing tags</p>
+        <p>a gem for generating ODF documents (actually, just .odt for now) using a previously created .odt template and replacing tags. You can use LibreOffice as a report designer!! Really cool...</p>
         <p class="view"><a href="https://github.com/sandrods/odf-report">View the Project on GitHub <small>sandrods/odf-report</small></a></p>
         <ul>
           <li><a href="https://github.com/sandrods/odf-report/zipball/master">Download <strong>ZIP File</strong></a></li>
@@ -89,6 +89,8 @@
 
 <p>To use table placeholders, you should create a Table in your document and give it a name. In OpenOffice, it's just a matter of right-clicking the table you just created, choose <em>Table Properties...</em> and type a name in the Name field.</p>
 
+<img src="images/table_name.png" />
+
 <p>If you inform <strong>:header=&gt;true</strong>, the first row will be treated as a <em>header</em> and left untouched. The remaining rows will be used as the template for the table. If you have more than one template row, they will be cycled. This is usefull for making zebra tables.</p>
 
 <p>As with Field placeholders, just insert a <strong>[FIELD_NAME]</strong> in each cell and let the magic takes place.</p>
@@ -110,15 +112,7 @@
 
 <p>and considering you have a table like this in your template</p>
 
-<pre><code>---------------------------------
-|  [ITEM_ID]  |  [DESCRIPTION]  |
----------------------------------
-
-* this is my lame attempt to draw a table.
-  you don't suppose to type this.
-  you have to use an actual table.
-  i don't know... just thought I'd mention it ;-)
-</code></pre>
+<img src="images/table1.png" />
 
 <p>and a collection <strong>@list_of_itens</strong>, it will be created one row for each item in the collection, and the replacement will take place accordingly.</p>
 
@@ -227,7 +221,7 @@ You can also assign any properties you want to the mock image and they will be k
 
   <span class="k">end</span>
 
-  <span class="n">send_data</span> <span class="n">report</span><span class="o">.</span><span class="n">generate</span><span class="p">,</span> 
+  <span class="n">send_data</span> <span class="n">report</span><span class="o">.</span><span class="n">generate</span><span class="p">,</span>
              <span class="ss">type</span><span class="p">:</span> <span class="s1">'application/vnd.oasis.opendocument.text'</span><span class="p">,</span>
              <span class="ss">disposition</span><span class="p">:</span> <span class="s1">'attachment'</span><span class="p">,</span>
              <span class="ss">filename</span><span class="p">:</span> <span class="s1">'report.odt'</span>
@@ -258,6 +252,9 @@ You can also assign any properties you want to the mock image and they will be k
 <li>
 <em>nokogiri</em>: for parsing and manipulating the document xml files.</li>
 </ul>
+
+  <a href="https://codeclimate.com/github/sandrods/odf-report"><img src="https://codeclimate.com/github/sandrods/odf-report.png" /></a>
+
       </section>
     </div>
     <footer>
