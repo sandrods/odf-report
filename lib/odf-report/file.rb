@@ -21,9 +21,11 @@ module ODFReport
 
         file.each do |entry|
 
-          unless entry.directory?
+          next if entry.directory?
 
-            data = entry.get_input_stream.read
+          entry.get_input_stream do |is|
+
+            data = is.sysread
 
             if content_files.include?(entry.name)
               yield data
@@ -31,6 +33,7 @@ module ODFReport
 
             @output_stream.put_next_entry(entry.name)
             @output_stream.write data
+
           end
 
         end
