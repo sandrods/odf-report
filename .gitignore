@@ -3,3 +3,4 @@ pckg
 doc
 *.gem
 test/result
+Gemfile.lock
