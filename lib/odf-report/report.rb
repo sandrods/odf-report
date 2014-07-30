@@ -78,7 +78,7 @@ class Report
     end
 
     if dest
-      ::File.open(dest, "w") {|f| f.write(@file.data) }
+      ::File.open(dest, "wb") {|f| f.write(@file.data) }
     else
       @file.data
     end
