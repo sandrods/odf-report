@@ -34,6 +34,7 @@ module Parser
     end
 
     def parse
+
       xml = @template_node.parse(@text)
 
       xml.css("p", "h1", "h2").each do |p|

@@ -1,7 +1,7 @@
 module ODFReport
 
 class Table
-  include Fields, Nested
+  include Nested
 
   attr_accessor :fields, :rows, :name, :collection_field, :data, :header, :parent, :tables
 
@@ -57,11 +57,11 @@ class Table
 
       new_node = get_next_row
 
-      replace_fields!(new_node, data_item)
-
       @tables.each do |t|
         t.replace!(new_node, data_item)
       end
+
+      @fields.each { |field| field.replace!(new_node, data_item) }
 
       table.add_child(new_node)
 

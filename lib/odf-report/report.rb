@@ -1,7 +1,7 @@
 module ODFReport
 
 class Report
-  include Fields, Images
+  include Images
 
   attr_accessor :fields, :tables, :images, :sections, :file, :texts
 
@@ -94,25 +94,19 @@ private
   end
 
   def replace_fields!(content)
-    field_replace!(content)
+    @fields.each { |field| field.replace!(content) }
   end
 
   def replace_texts!(content)
-    @texts.each do |text|
-      text.replace!(content)
-    end
+    @texts.each { |text| text.replace!(content) }
   end
 
   def replace_tables!(content)
-    @tables.each do |table|
-      table.replace!(content)
-    end
+    @tables.each { |table| table.replace!(content) }
   end
 
   def replace_sections!(content)
-    @sections.each do |section|
-      section.replace!(content)
-    end
+    @sections.each { |section| section.replace!(content) }
   end
 
 end

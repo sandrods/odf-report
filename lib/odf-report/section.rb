@@ -1,7 +1,7 @@
 module ODFReport
 
   class Section
-    include Fields, Nested
+    include Nested
 
     attr_accessor :fields, :tables, :data, :name, :collection_field, :parent
 
@@ -75,7 +75,7 @@ module ODFReport
           s.replace!(new_section, data_item)
         end
 
-        replace_fields!(new_section, data_item)
+        @fields.each { |field| field.replace!(new_section, data_item) }
 
         section.before(new_section)
 
@@ -98,5 +98,3 @@ module ODFReport
   end
 
 end
-
-
