@@ -58,11 +58,11 @@ class Report
 
         parse_document(txt) do |doc|
 
-          replace_texts!(doc)
-          replace_fields!(doc)
+          @sections.each { |s| s.replace!(doc) }
+          @tables.each   { |t| t.replace!(doc) }
 
-          replace_sections!(doc)
-          replace_tables!(doc)
+          @texts.each    { |t| t.replace!(doc) }
+          @fields.each   { |f| f.replace!(doc) }
 
           find_image_name_matches(doc)
           avoid_duplicate_image_names(doc)
@@ -89,22 +89,6 @@ private
     doc = Nokogiri::XML(txt)
     yield doc
     txt.replace(doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
-  end
-
-  def replace_fields!(content)
-    @fields.each { |field| field.replace!(content) }
-  end
-
-  def replace_texts!(content)
-    @texts.each { |text| text.replace!(content) }
-  end
-
-  def replace_tables!(content)
-    @tables.each { |table| table.replace!(content) }
-  end
-
-  def replace_sections!(content)
-    @sections.each { |section| section.replace!(content) }
   end
 
 end
