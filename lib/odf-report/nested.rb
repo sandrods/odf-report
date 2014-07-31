@@ -2,6 +2,38 @@ module ODFReport
 
   module Nested
 
+    def add_field(name, data_field=nil, &block)
+      opts = {:name => name, :data_field => data_field}
+      field = Field.new(opts, &block)
+      @fields << field
+
+    end
+    alias_method :add_column, :add_field
+
+    def add_text(name, data_field=nil, &block)
+      opts = {:name => name, :data_field => data_field}
+      field = Text.new(opts, &block)
+      @texts << field
+
+    end
+
+    def add_table(table_name, collection_field, opts={})
+      opts.merge!(:name => table_name, :collection_field => collection_field)
+      tab = Table.new(opts)
+      @tables << tab
+
+      yield(tab)
+    end
+
+    def add_section(section_name, collection_field, opts={})
+      opts.merge!(:name => section_name, :collection_field => collection_field)
+      sec = Section.new(opts)
+      @sections << sec
+
+      yield(sec)
+    end
+
+
     def get_collection_from_item(item, collection_field)
 
       return item[collection_field] if item.is_a?(Hash)

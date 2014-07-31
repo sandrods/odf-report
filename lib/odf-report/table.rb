@@ -16,20 +16,7 @@ class Table
     @skip_if_empty    = opts[:skip_if_empty] || false
   end
 
-  def add_column(name, data_field=nil, &block)
-    opts = {:name => name, :data_field => data_field}
-    field = Field.new(opts, &block)
-    @fields << field
 
-  end
-
-  def add_table(table_name, collection_field, opts={}, &block)
-    opts.merge!(:name => table_name, :collection_field => collection_field, :parent => self)
-    tab = Table.new(opts)
-    @tables << tab
-
-    yield(tab)
-  end
 
   def populate!(row)
     @collection = get_collection_from_item(row, @collection_field) if row
