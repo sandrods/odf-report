@@ -3,13 +3,10 @@ module ODFReport
 class Table
   include Nested
 
-  attr_accessor :fields, :rows, :name, :collection_field, :data, :header, :parent, :tables
-
   def initialize(opts)
     @name             = opts[:name]
     @collection_field = opts[:collection_field]
     @collection       = opts[:collection]
-    @parent           = opts[:parent]
 
     @fields = []
     @tables = []
@@ -89,10 +86,6 @@ private
 
   def get_start_node
     @header ? 1 : 0
-  end
-
-  def reset
-    @row_cursor = get_start_node
   end
 
   def template_length

@@ -3,8 +3,6 @@ module ODFReport
 class Report
   include Images
 
-  attr_accessor :fields, :tables, :images, :sections, :file, :texts
-
   def initialize(template_name, &block)
 
     @file = ODFReport::File.new(template_name)
@@ -20,19 +18,19 @@ class Report
 
   end
 
-  def add_field(field_tag, value='', &block)
+  def add_field(field_tag, value='')
     opts = {:name => field_tag, :value => value}
-    field = Field.new(opts, &block)
+    field = Field.new(opts)
     @fields << field
   end
 
-  def add_text(field_tag, value='', &block)
+  def add_text(field_tag, value='')
     opts = {:name => field_tag, :value => value}
     text = Text.new(opts)
     @texts << text
   end
 
-  def add_table(table_name, collection, opts={}, &block)
+  def add_table(table_name, collection, opts={})
     opts.merge!(:name => table_name, :collection => collection)
     tab = Table.new(opts)
     @tables << tab
@@ -40,7 +38,7 @@ class Report
     yield(tab)
   end
 
-  def add_section(section_name, collection, opts={}, &block)
+  def add_section(section_name, collection, opts={})
     opts.merge!(:name => section_name, :collection => collection)
     sec = Section.new(opts)
     @sections << sec
