@@ -17,17 +17,17 @@ class TestText < Minitest::Test
   def setup
 
     @items = []
-    4.times do
+    3.times do
 
       text = <<-HTML
         <p>#{Faker::Lorem.sentence} <em>#{Faker::Lorem.sentence}</em> #{Faker::Lorem.sentence}</p>
-        <p>#{Faker::Lorem.sentence} <strong>#{Faker::Lorem.paragraph}</strong> #{Faker::Lorem.paragraph}</p>
+        <p>#{Faker::Lorem.sentence} <strong>#{Faker::Lorem.paragraph(3)}</strong> #{Faker::Lorem.sentence}</p>
         <p>#{Faker::Lorem.paragraph}</p>
         <blockquote>
-          <p>#{Faker::Lorem.paragraph(10)}</p>
+          <p>#{Faker::Lorem.paragraph}</p>
           <p>#{Faker::Lorem.paragraph}</p>
         </blockquote>
-        <p style="margin: 150px">#{Faker::Lorem.paragraph(15)}</p>
+        <p style="margin: 150px">#{Faker::Lorem.paragraph}</p>
         <p>#{Faker::Lorem.paragraph}</p>
       HTML
 
@@ -50,6 +50,11 @@ class TestText < Minitest::Test
       r.add_section("SECTION_01", @items) do |s|
         s.add_field(:name)
         s.add_text(:inner_text) { |i| i.inner_text }
+      end
+
+      r.add_table("TABLE", @items) do |s|
+        s.add_field(:field, :name)
+        s.add_text(:text, :inner_text)
       end
 
     end
