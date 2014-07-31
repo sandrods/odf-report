@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require "minitest/reporters"
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
+I18n.enforce_available_locales = false
 
 class Item
   attr_accessor :id, :name, :subs
