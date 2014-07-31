@@ -18,15 +18,12 @@ class Table
 
 
 
-  def populate!(row)
-    @collection = get_collection_from_item(row, @collection_field) if row
-  end
 
   def replace!(doc, row = nil)
 
     return unless table = find_table_node(doc)
 
-    populate!(row)
+    @collection = get_collection_from_item(row, @collection_field) if row
 
     if (@skip_if_empty || !@header) && @collection.empty?
       table.remove

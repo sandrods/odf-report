@@ -15,17 +15,14 @@ module ODFReport
 
     end
 
-    def populate!(row)
-      @collection = get_collection_from_item(row, @collection_field) if row
-    end
-
     def replace!(doc, row = nil)
 
       return unless section = find_section_node(doc)
 
       template = section.dup
 
-      populate!(row)
+
+      @collection = get_collection_from_item(row, @collection_field) if row
 
       @collection.each do |data_item|
         new_section = template.dup
