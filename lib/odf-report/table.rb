@@ -25,7 +25,7 @@ class Table
 
     @collection = get_collection_from_item(row, @collection_field) if row
 
-    if (@skip_if_empty || !@header) && @collection.empty?
+    if @skip_if_empty && @collection.empty?
       table.remove
       return
     end
