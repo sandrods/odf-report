@@ -25,21 +25,16 @@ module ODFReport
       @collection = get_collection_from_item(row, @collection_field) if row
 
       @collection.each do |data_item|
+
         new_section = template.dup
 
-        @texts.each do |t|
-          t.replace!(new_section, data_item)
-        end
+        @tables.each    { |t| t.replace!(new_section, data_item) }
 
-        @tables.each do |t|
-          t.replace!(new_section, data_item)
-        end
+        @sections.each  { |s| s.replace!(new_section, data_item) }
 
-        @sections.each do |s|
-          s.replace!(new_section, data_item)
-        end
+        @texts.each     { |t| t.replace!(new_section, data_item) }
 
-        @fields.each { |field| field.replace!(new_section, data_item) }
+        @fields.each    { |f| f.replace!(new_section, data_item) }
 
         section.before(new_section)
 

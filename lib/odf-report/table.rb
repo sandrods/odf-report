@@ -17,12 +17,14 @@ class Table
     @skip_if_empty    = opts[:skip_if_empty] || false
   end
 
-
-
-
   def replace!(doc, row = nil)
 
     return unless table = find_table_node(doc)
+
+    @template_rows = table.xpath("table:table-row")
+
+    @header = table.xpath("table:table-header-rows").empty? ? @header : false
+
 
     @collection = get_collection_from_item(row, @collection_field) if row
 
@@ -31,19 +33,15 @@ class Table
       return
     end
 
-    @template_rows = table.xpath("table:table-row")
-
-    @header = table.xpath("table:table-header-rows").empty? ? @header : false
-
     @collection.each do |data_item|
 
       new_node = get_next_row
 
-      @tables.each do |t|
-        t.replace!(new_node, data_item)
-      end
+      @tables.each    { |t| t.replace!(new_node, data_item) }
 
-      @fields.each { |field| field.replace!(new_node, data_item) }
+      @texts.each     { |t| t.replace!(new_node, data_item) }
+
+      @fields.each    { |f| f.replace!(new_node, data_item) }
 
       table.add_child(new_node)
 
