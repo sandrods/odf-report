@@ -17,16 +17,13 @@ module ODFReport
 
     def replace!(doc, row = nil)
 
-      return unless section = find_section_node(doc)
-
-      template = section.dup
-
+      return unless @section_node = find_section_node(doc)
 
       @collection = get_collection_from_item(row, @collection_field) if row
 
       @collection.each do |data_item|
 
-        new_section = template.dup
+        new_section = get_section_node
 
         @tables.each    { |t| t.replace!(new_section, data_item) }
 
@@ -36,11 +33,11 @@ module ODFReport
 
         @fields.each    { |f| f.replace!(new_section, data_item) }
 
-        section.before(new_section)
+        @section_node.before(new_section)
 
       end
 
-      section.remove
+      @section_node.remove
 
     end # replace_section
 
@@ -52,6 +49,16 @@ module ODFReport
 
       sections.empty? ? nil : sections.first
 
+    end
+
+    def get_section_node
+      node = @section_node.dup
+
+      name = node.get_attribute('text:name').to_s
+      @idx ||=0; @idx +=1
+      node.set_attribute('text:name', "#{name}_#{@idx}")
+
+      node
     end
 
   end
