@@ -1,7 +1,5 @@
 require './lib/odf-report'
-require 'ostruct'
 require 'faker'
-require 'launchy'
 require 'minitest/autorun'
 
 class TestText < Minitest::Test

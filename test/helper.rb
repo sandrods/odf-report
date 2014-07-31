@@ -13,6 +13,15 @@ class Item
     @id   = _id
     @subs = _subs
   end
+
+  def self.get_list(quant = 3)
+    r = []
+    (1..quant).each do |i|
+      r << Item.new(Faker::Number.number(10), Faker::Name.name)
+    end
+    r
+  end
+
 end
 
 class Inspector
@@ -29,7 +38,7 @@ class Inspector
   end
 
   def text
-    @text ||= xml.to_xml
+    @text ||= xml.to_s
   end
 
 end

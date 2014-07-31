@@ -1,7 +1,6 @@
 # coding: UTF-8
 require './lib/odf-report'
 require 'faker'
-require 'launchy'
 require 'minitest/autorun'
 
 class TestFieldsInsideSections < Minitest::Test
