@@ -9,6 +9,7 @@ class Table
     @collection       = opts[:collection]
 
     @fields = []
+    @texts = []
     @tables = []
 
     @template_rows = []
