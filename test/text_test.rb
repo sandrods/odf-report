@@ -1,8 +1,6 @@
 require './lib/odf-report'
 require 'faker'
-require 'minitest/autorun'
 
-class TestText < Minitest::Test
 
   class Item
     attr_accessor :name, :inner_text
@@ -12,7 +10,7 @@ class TestText < Minitest::Test
     end
   end
 
-  def setup
+
 
     @items = []
     3.times do
@@ -33,9 +31,7 @@ class TestText < Minitest::Test
 
     end
 
-  end
 
-  def test_generate
     item = @items.pop
 
     report = ODFReport::Report.new("test/templates/test_text.odt") do |r|
@@ -58,8 +54,3 @@ class TestText < Minitest::Test
     end
 
     report.generate("test/result/test_text.odt")
-
-  end
-
-
-end

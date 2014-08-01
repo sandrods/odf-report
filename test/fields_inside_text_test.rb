@@ -1,11 +1,7 @@
 # coding: UTF-8
 require './lib/odf-report'
 require 'faker'
-require 'minitest/autorun'
 
-class TestFieldsInsideSections < Minitest::Test
-
-  def setup
 
     @html = <<-HTML
       <p>Uniquely promote installed base total linkage via emerging deliverables com <strong>[EVENTO_TEXTO_CARTA]</strong>, unleash cross-media collaboration <strong>[FUNCAO]</strong> [EVENTO_NOME].</p>
@@ -24,9 +20,7 @@ class TestFieldsInsideSections < Minitest::Test
 
     HTML
 
-  end
 
-  def test_generate
 
     report = ODFReport::Report.new("test/templates/test_fields_inside_text.odt") do |r|
 
@@ -42,8 +36,3 @@ class TestFieldsInsideSections < Minitest::Test
     end
 
     report.generate("test/result/test_fields_inside_text.odt")
-
-  end
-
-
-end

@@ -2,9 +2,7 @@ require './lib/odf-report'
 require 'ostruct'
 require 'faker'
 require 'launchy'
-require 'minitest/autorun'
 
-class TestSections < Minitest::Test
 
   class Item
     attr_accessor :name, :sid, :children
@@ -15,7 +13,6 @@ class TestSections < Minitest::Test
     end
   end
 
-  def setup
 
     @items = []
     @items << Item.new("LOST",           '007', %w(sawyer juliet hurley locke jack freckles))
@@ -23,9 +20,6 @@ class TestSections < Minitest::Test
     @items << Item.new("GREY'S ANATOMY", '220', %w(meredith christina izzie alex george))
     @items << Item.new("BREAKING BAD",   '556', %w(pollos gus mike heisenberg))
 
-  end
-
-  def test_generate
 
     report = ODFReport::Report.new("test/templates/test_sections.odt") do |r|
 
@@ -48,8 +42,3 @@ class TestSections < Minitest::Test
     end
 
     report.generate("test/result/test_sections.odt")
-
-  end
-
-
-end

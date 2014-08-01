@@ -2,9 +2,7 @@ require './lib/odf-report'
 require 'ostruct'
 require 'faker'
 require 'launchy'
-require 'minitest/autorun'
 
-class SubSectionsTest < Minitest::Test
 
   class Item
     attr_accessor :name, :sid, :children, :subs
@@ -16,7 +14,7 @@ class SubSectionsTest < Minitest::Test
     end
   end
 
-  def setup
+
 
     subs1 = []
     subs1 << Item.new("SAWYER", 1, %w(Your bones don't break))
@@ -34,9 +32,6 @@ class SubSectionsTest < Minitest::Test
     @items << Item.new("ALIAS",          '302', nil, subs2)
     @items << Item.new("BREAKING BAD",   '556', [])
 
-  end
-
-  def test_generate
 
     report = ODFReport::Report.new("test/templates/test_sub_sections.odt") do |r|
 
@@ -61,8 +56,3 @@ class SubSectionsTest < Minitest::Test
     end
 
     report.generate("test/result/test_sub_sections.odt")
-
-  end
-
-
-end

@@ -2,9 +2,7 @@
 require './lib/odf-report'
 require 'faker'
 require 'launchy'
-require 'minitest/autorun'
 
-class NestedTablesTest < Minitest::Test
 
   class Item
     attr_accessor :name, :sid, :children
@@ -15,17 +13,12 @@ class NestedTablesTest < Minitest::Test
     end
   end
 
-  def setup
-
     @items = []
     @items << Item.new("LOST",           '007', %w(sawyer juliet hurley locke jack freckles))
     @items << Item.new("ALIAS",          '302', %w(sidney sloane jack michael marshal))
     @items << Item.new("GREY'S ANATOMY", '220', %w(meredith christina izzie alex george))
     @items << Item.new("BREAKING BAD",   '556', %w(pollos gus mike heisenberg))
 
-  end
-
-  def test_generate
 
     report = ODFReport::Report.new("test/templates/test_nested_tables.odt") do |r|
 
@@ -48,8 +41,3 @@ class NestedTablesTest < Minitest::Test
     end
 
     report.generate("test/result/test_nested_tables.odt")
-
-  end
-
-
-end

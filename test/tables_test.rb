@@ -2,12 +2,7 @@ require './lib/odf-report'
 require 'ostruct'
 require 'faker'
 require 'launchy'
-require 'minitest/autorun'
 
-
-class TestTables < Minitest::Test
-
-  def setup
 
     @col1 = []
     (1..40).each do |i|
@@ -23,9 +18,7 @@ class TestTables < Minitest::Test
 
     @col3, @col4, @col5 = [], [], []
 
-  end
 
-  def test_generate
 
     report = ODFReport::Report.new("test/templates/test_tables.odt") do |r|
 
@@ -72,7 +65,3 @@ class TestTables < Minitest::Test
     end
 
     report.generate("test/result/test_tables.odt")
-
-  end
-
-end

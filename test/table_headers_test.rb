@@ -2,10 +2,7 @@ require './lib/odf-report'
 require 'ostruct'
 require 'faker'
 require 'launchy'
-require 'minitest/autorun'
 
-
-class TableHeadersTest < Minitest::Test
 
   class Item
     attr_accessor :name, :mail
@@ -15,14 +12,12 @@ class TableHeadersTest < Minitest::Test
     end
   end
 
-  def setup
+
 
     @items = []
     50.times { @items << Item.new(Faker::Name.name, Faker::Internet.email) }
 
-  end
 
-  def test_generate
 
     report = ODFReport::Report.new("test/templates/test_table_headers.odt") do |r|
 
@@ -44,7 +39,3 @@ class TableHeadersTest < Minitest::Test
     end
 
     report.generate("test/result/test_table_headers.odt")
-
-  end
-
-end
