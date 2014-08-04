@@ -1,37 +1,22 @@
 module ODFReport
 
-  class Section
-    include Nested
+  class Section < Nestable
 
-    def initialize(opts)
-      @name             = opts[:name]
-      @collection_field = opts[:collection_field]
-      @collection       = opts[:collection]
+    def replace!(doc)
 
-      @fields = []
-      @texts = []
-      @tables = []
-      @sections = []
+      return unless find_section_node(doc)
 
-    end
-
-    def replace!(doc, row = nil)
-
-      return unless @section_node = find_section_node(doc)
-
-      @collection = get_collection_from_item(row, @collection_field) if row
-
-      @collection.each do |data_item|
+      @data_source.each do |record|
 
         new_section = get_section_node
 
-        @tables.each    { |t| t.replace!(new_section, data_item) }
+        @tables.each    { |t| t.set_source(record).replace!(new_section) }
 
-        @sections.each  { |s| s.replace!(new_section, data_item) }
+        @sections.each  { |s| s.set_source(record).replace!(new_section) }
 
-        @texts.each     { |t| t.replace!(new_section, data_item) }
+        @texts.each     { |t| t.set_source(record).replace!(new_section) }
 
-        @fields.each    { |f| f.replace!(new_section, data_item) }
+        @fields.each    { |f| f.set_source(record).replace!(new_section) }
 
         @section_node.before(new_section)
 
@@ -47,7 +32,7 @@ module ODFReport
 
       sections = doc.xpath(".//text:section[@text:name='#{@name}']")
 
-      sections.empty? ? nil : sections.first
+      @section_node = sections.empty? ? nil : sections.first
 
     end
 

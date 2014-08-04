@@ -1,6 +1,22 @@
 module ODFReport
+  class Nestable
 
-  module Nested
+    def initialize(opts)
+      @name = opts[:name]
+
+      @data_source = DataSource.new(opts)
+
+      @fields = []
+      @texts = []
+      @tables = []
+      @sections = []
+
+    end
+
+    def set_source(data_item)
+      @data_source.set_source(data_item)
+      self
+    end
 
     def add_field(name, data_field=nil, &block)
       opts = {:name => name, :data_field => data_field}
@@ -33,30 +49,5 @@ module ODFReport
       yield(sec)
     end
 
-
-    def get_collection_from_item(item, collection_field)
-
-      return item[collection_field] if item.is_a?(Hash)
-
-      if collection_field.is_a?(Array)
-        tmp = item.dup
-        collection_field.each do |f|
-          if f.is_a?(Hash)
-            tmp = tmp.send(f.keys[0], f.values[0])
-          else
-            tmp = tmp.send(f)
-          end
-        end
-        collection = tmp
-      elsif collection_field.is_a?(Hash)
-        collection = item.send(collection_field.keys[0], collection_field.values[0])
-      else
-        collection = item.send(collection_field)
-      end
-
-      return collection
-    end
-
   end
-
 end

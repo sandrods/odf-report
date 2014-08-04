@@ -4,13 +4,11 @@ module ODFReport
 
     attr_accessor :parser
 
-    def replace!(doc, data_item = nil)
+    def replace!(doc)
 
       return unless node = find_text_node(doc)
 
-      text_value = get_value(data_item)
-
-      @parser = Parser::Default.new(text_value, node)
+      @parser = Parser::Default.new(@data_source.value, node)
 
       @parser.paragraphs.each do |p|
         node.before(p)

@@ -14,7 +14,7 @@ RSpec.describe "Fields" do
 
       r.add_table('TABLE_01', @itens_01) do |t|
         t.add_column(:column_01, :id)
-        t.add_column(:column_02, :name)
+        t.add_column(:column_02) { |i| i.name.reverse }
       end
 
       r.add_section('SECTION_01', @itens_01) do |t|
@@ -52,7 +52,7 @@ RSpec.describe "Fields" do
       expect(table).to match(/\[COLUMN_03\]/)
 
       expect(table).to match(item.id)
-      expect(table).to match(item.name)
+      expect(table).to match(item.name.reverse)
 
     end
 
