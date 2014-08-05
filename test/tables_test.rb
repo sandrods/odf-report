@@ -4,64 +4,28 @@ require 'faker'
 require 'launchy'
 
 
-    @col1 = []
+    hash = {}
+
+    hash[:header_field] = "This field was in the HEADER"
+    hash[:tag_01] = "New tag"
+    hash[:tag_02] = "TAG-2 -> New tag"
+
+    hash[:table_01] = []
+
     (1..40).each do |i|
-      @col1 << {:name=>"name #{i}",  :idx=>i,  :address=>"this is address #{i}"}
+      hash[:table_01] << {field_02: "name #{i}",  field_01: i,  address: "this is address #{i}"}
     end
 
+    hash[:table_02] = []
 
-    @col2 = []
-    @col2 << OpenStruct.new({:name=>"josh harnet",   :idx=>"02", :address=>"testing <&> ",                 :phone=>99025668, :zip=>"90420-002"})
-    @col2 << OpenStruct.new({:name=>"sandro duarte", :idx=>"45", :address=>"address with &",               :phone=>88774451, :zip=>"90490-002"})
-    @col2 << OpenStruct.new({:name=>"ellen bicca",   :idx=>"77", :address=>"<address with escaped html>",  :phone=>77025668, :zip=>"94420-002"})
-    @col2 << OpenStruct.new({:name=>"luiz garcia",   'idx'=>"88", :address=>"address with\nlinebreak",      :phone=>27025668, :zip=>"94520-025"})
-
-    @col3, @col4, @col5 = [], [], []
+    hash[:table_02] << {field_05: "josh harnet",   field_04: "02", field_06: "testing &>",              field_07: 99025668, field_08: "90420-002"}
+    hash[:table_02] << {field_05: "sandro duarte", field_04: "45", field_06: "address with &",          field_07: 88774451, field_08: "90420-002"}
+    hash[:table_02] << {field_05: "ellen bicca",   field_04: "77", field_06: "address with not",        field_07: 77025668, field_08: "90420-002"}
+    hash[:table_02] << {field_05: "luiz garcia",   field_04: "88", field_06: "address with\nlinebreak", field_07: 27025668, field_08: "94520-025"}
 
 
+    report = ODFReport::Report.new("test/templates/test_tables.odt")
 
-    report = ODFReport::Report.new("test/templates/test_tables.odt") do |r|
+    report.populate!(hash)
 
-      r.add_field("HEADER_FIELD", "This field was in the HEADER")
-
-      r.add_field("TAG_01", "New tag")
-      r.add_field("TAG_02", "TAG-2 -> New tag")
-
-      r.add_table("TABLE_01", @col1, :header=>true) do |t|
-        t.add_column(:field_01, :idx)
-        t.add_column(:field_02, :name)
-        t.add_column(:address)
-      end
-
-      r.add_table("TABLE_02", @col2) do |t|
-        t.add_column(:field_04, :idx)
-        t.add_column(:field_05, :name)
-        t.add_column(:field_06, 'address')
-        t.add_column(:field_07, :phone)
-        t.add_column(:field_08, :zip)
-      end
-
-      r.add_table("TABLE_03", @col3, :header=>true) do |t|
-        t.add_column(:field_01, :idx)
-        t.add_column(:field_02, :name)
-        t.add_column(:field_03, :address)
-      end
-
-      r.add_table("TABLE_04", @col4, :header=>true, :skip_if_empty => true) do |t|
-        t.add_column(:field_01, :idx)
-        t.add_column(:field_02, :name)
-        t.add_column(:field_03, :address)
-      end
-
-      r.add_table("TABLE_05", @col5) do |t|
-        t.add_column(:field_01, :idx)
-        t.add_column(:field_02, :name)
-        t.add_column(:field_03, :address)
-      end
-
-      r.add_image("graphics1", File.join(Dir.pwd, 'test', 'templates', 'piriapolis.jpg'))
-      r.add_image("graphics2", File.join(Dir.pwd, 'test', 'templates', 'rails.png'))
-
-    end
-
-    report.generate("test/result/test_tables.odt")
+    report.save("test/result/new_test_tables.odt")

@@ -2,21 +2,22 @@ module ODFReport
 
   class Section < Nestable
 
+    def initialize(name, value)
+      @name = name.to_s.upcase
+      @collection = value
+    end
+
     def replace!(doc)
 
       return unless find_section_node(doc)
 
-      @data_source.each do |record|
+      @collection.each do |record|
 
         new_section = get_section_node
 
-        @tables.each    { |t| t.set_source(record).replace!(new_section) }
-
-        @sections.each  { |s| s.set_source(record).replace!(new_section) }
-
-        @texts.each     { |t| t.set_source(record).replace!(new_section) }
-
-        @fields.each    { |f| f.set_source(record).replace!(new_section) }
+        record.each do |key, value|
+          Component.for(key, value, new_section).replace!(new_section)
+        end
 
         @section_node.before(new_section)
 

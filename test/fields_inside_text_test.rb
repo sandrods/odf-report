@@ -20,19 +20,16 @@ require 'faker'
 
     HTML
 
+    hash = {}
 
+    hash[:body] = @html
 
-    report = ODFReport::Report.new("test/templates/test_fields_inside_text.odt") do |r|
+    hash['EVENTO_TEXTO_CARTA'] = Faker::Lorem.sentence
+    hash['FUNCAO'] = Faker::Lorem.word
+    hash['EVENTO_NOME'] = Faker::Company.name
 
-      r.add_text(:body, @html)
+    hash['NUMERO_SECAO'] = Faker::Number.number(3)
+    hash['NOME_LOCAL'] = Faker::Company.name
+    hash['ENDERECO_LOCAL'] = Faker::Address.street_address
 
-      r.add_field('EVENTO_TEXTO_CARTA', Faker::Lorem.sentence)
-      r.add_field('FUNCAO', Faker::Lorem.word)
-      r.add_field('EVENTO_NOME', Faker::Company.name)
-
-      r.add_field('NUMERO_SECAO', Faker::Number.number(3))
-      r.add_field('NOME_LOCAL', Faker::Company.name)
-      r.add_field('ENDERECO_LOCAL', Faker::Address.street_address)
-    end
-
-    report.generate("test/result/test_fields_inside_text.odt")
+    ODFReport::Report.new("test/templates/test_fields_inside_text.odt").populate!(hash).save("test/result/new_test_fields_inside_text.odt")

@@ -3,54 +3,15 @@ module ODFReport
 class Report
   include Images
 
-  def initialize(template_name, &block)
+  def initialize(template_name)
 
     @file = ODFReport::File.new(template_name)
-
-    @texts = []
-    @fields = []
-    @tables = []
     @images = {}
     @image_names_replacements = {}
-    @sections = []
-
-    yield(self)
 
   end
 
-  def add_field(field_tag, value='')
-    opts = {:name => field_tag, :value => value}
-    field = Field.new(opts)
-    @fields << field
-  end
-
-  def add_text(field_tag, value='')
-    opts = {:name => field_tag, :value => value}
-    text = Text.new(opts)
-    @texts << text
-  end
-
-  def add_table(table_name, collection, opts={})
-    opts.merge!(:name => table_name, :collection => collection)
-    tab = Table.new(opts)
-    @tables << tab
-
-    yield(tab)
-  end
-
-  def add_section(section_name, collection, opts={})
-    opts.merge!(:name => section_name, :collection => collection)
-    sec = Section.new(opts)
-    @sections << sec
-
-    yield(sec)
-  end
-
-  def add_image(name, path)
-    @images[name] = path
-  end
-
-  def generate(dest = nil)
+  def populate!(hash)
 
     @file.update_content do |file|
 
@@ -58,29 +19,35 @@ class Report
 
         parse_document(txt) do |doc|
 
-          @sections.each { |s| s.replace!(doc) }
-          @tables.each   { |t| t.replace!(doc) }
+          hash.each do |key, value|
+            Component.for(key, value, doc).replace!(doc)
+          end
 
-          @texts.each    { |t| t.replace!(doc) }
-          @fields.each   { |f| f.replace!(doc) }
-
-          find_image_name_matches(doc)
-          avoid_duplicate_image_names(doc)
+          #find_image_name_matches(doc)
+          #avoid_duplicate_image_names(doc)
 
         end
 
       end
 
-      replace_images(file)
+      #replace_images(file)
 
     end
 
-    if dest
-      ::File.open(dest, "wb") {|f| f.write(@file.data) }
-    else
-      @file.data
-    end
+    self
 
+  end
+
+  def add_image(name, path)
+    @images[name] = path
+  end
+
+  def save(dest)
+    ::File.open(dest, "wb") {|f| f.write(@file.data) }
+  end
+
+  def data
+    @file.data
   end
 
 private

@@ -1,13 +1,15 @@
 module ODFReport
 
-class Table < Nestable
+class Table
 
-  def initialize(opts)
-    super(opts)
-
+  def initialize(name, value)
+    @name = name.to_s.upcase
+    @collection = value
     @template_rows = []
-    @header           = opts[:header] || false
-    @skip_if_empty    = opts[:skip_if_empty] || false
+
+    # to do
+    @skip_if_empty = false
+    @header = false
   end
 
   def replace!(doc)
@@ -17,20 +19,18 @@ class Table < Nestable
 
     @header = table.xpath("table:table-header-rows").empty? ? @header : false
 
-    if @skip_if_empty && @data_source.empty?
+    if @skip_if_empty && @collection.empty?
       table.remove
       return
     end
 
-    @data_source.each do |record|
+    @collection.each do |record|
 
       new_node = get_next_row
 
-      @tables.each    { |t| t.set_source(record).replace!(new_node) }
-
-      @texts.each     { |t| t.set_source(record).replace!(new_node) }
-
-      @fields.each    { |f| f.set_source(record).replace!(new_node) }
+      record.each do |key, value|
+        Component.for(key, value, new_node).replace!(new_node)
+      end
 
       table.add_child(new_node)
 

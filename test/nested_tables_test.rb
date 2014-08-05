@@ -4,40 +4,21 @@ require 'faker'
 require 'launchy'
 
 
-  class Item
-    attr_accessor :name, :sid, :children
-    def initialize(_name, _sid, _children=[])
-      @name=_name
-      @sid=_sid
-      @children=_children
-    end
-  end
+  hash = {}
 
-    @items = []
-    @items << Item.new("LOST",           '007', %w(sawyer juliet hurley locke jack freckles))
-    @items << Item.new("ALIAS",          '302', %w(sidney sloane jack michael marshal))
-    @items << Item.new("GREY'S ANATOMY", '220', %w(meredith christina izzie alex george))
-    @items << Item.new("BREAKING BAD",   '556', %w(pollos gus mike heisenberg))
+  hash[:header_field] = "This field was in the HEADER"
+  hash[:tag_01] = Time.now
+  hash[:tag_02] = "TAG-2 -> New tag"
 
 
-    report = ODFReport::Report.new("test/templates/test_nested_tables.odt") do |r|
+  col = []
+  col << { name: "LOST",           sid: '007', table_s1: %w(sawyer juliet hurley locke jack freckles).map { |n| { name1: "-> #{n}", inv: n.reverse.upcase}} }
+  col << { name: "ALIAS",          sid: '302', table_s1: %w(sidney sloane jack michael marshal).map       { |n| { name1: "-> #{n}", inv: n.reverse.upcase}} }
+  col << { name: "GREY'S ANATOMY", sid: '220', table_s1: %w(meredith christina izzie alex george).map     { |n| { name1: "-> #{n}", inv: n.reverse.upcase}} }
+  col << { name: "BREAKING BAD",   sid: '556', table_s1: %w(pollos gus mike heisenberg).map               { |n| { name1: "-> #{n}", inv: n.reverse.upcase}} }
 
-      r.add_field("TAG_01", Time.now)
-      r.add_field("TAG_02", "TAG-2 -> New tag")
+  hash[:table_main] = { _type: 'TABLE', collection: col, header: true }
 
-      r.add_table("TABLE_MAIN", @items) do |s|
+  report = ODFReport::Report.new("test/templates/test_nested_tables.odt")
 
-        s.add_column('NAME') { |i| i.name }
-
-        s.add_column('SID', :sid)
-
-        s.add_table('TABLE_S1', :children, :header=>true) do |t|
-          t.add_column('NAME1') { |item| "-> #{item}" }
-          t.add_column('INV')   { |item| item.to_s.reverse.upcase }
-        end
-
-      end
-
-    end
-
-    report.generate("test/result/test_nested_tables.odt")
+  report.populate!(hash).save("test/result/new_test_nested_tables.odt")

@@ -4,55 +4,28 @@ require 'faker'
 require 'launchy'
 
 
-  class Item
-    attr_accessor :name, :sid, :children, :subs
-    def initialize(_name, _sid, _children=[], _subs=[])
-      @name=_name
-      @sid=_sid
-      @children=_children
-      @subs=_subs
-    end
-  end
-
-
+    hash = {}
 
     subs1 = []
-    subs1 << Item.new("SAWYER", 1, %w(Your bones don't break))
-    subs1 << Item.new("HURLEY", 2, %w(Your cells react to bacteria and viruses))
-    subs1 << Item.new("LOCKE",  3, %W(Do you see any Teletubbies in here))
+    subs1 <<  { first_name: "SAWYER", ipsum_table: %w(Your bones don't break).map { |n| { ipsum_item: n } } }
+    subs1 <<  { first_name: "HURLEY", ipsum_table: %w(Your cells react to bacteria and viruses).map { |n| { ipsum_item: n } } }
+    subs1 <<  { first_name: "LOCKE",  ipsum_table: %W(Do you see any Teletubbies in here).map { |n| { ipsum_item: n } } }
 
     subs2 = []
-    subs2 << Item.new("SLOANE",  21, %w(Praesent hendrerit lectus sit amet))
-    subs2 << Item.new("JACK",    22, %w(Donec nec est eget dolor laoreet))
-    subs2 << Item.new("MICHAEL", 23, %W(Integer elementum massa at nulla placerat varius))
-
-    @items = []
-    @items << Item.new("LOST",           '007', [], subs1)
-    @items << Item.new("GREY'S ANATOMY", '220', nil)
-    @items << Item.new("ALIAS",          '302', nil, subs2)
-    @items << Item.new("BREAKING BAD",   '556', [])
+    subs2 <<  { first_name: "SLOANE",  ipsum_table: %w(Praesent hendrerit lectus sit amet).map { |n| { ipsum_item: n } } }
+    subs2 <<  { first_name: "JACK",    ipsum_table: %w(Donec nec est eget dolor laoreet).map { |n| { ipsum_item: n } } }
+    subs2 <<  { first_name: "MICHAEL", ipsum_table: %W(Integer elementum massa at nulla placerat varius).map { |n| { ipsum_item: n } } }
 
 
-    report = ODFReport::Report.new("test/templates/test_sub_sections.odt") do |r|
+    hash[:tag_01] = Time.now
+    hash[:tag_02] = "TAG-2 -> New tag"
 
-      r.add_field("TAG_01", Time.now)
-      r.add_field("TAG_02", "TAG-2 -> New tag")
+    hash[:section_01] = []
+    hash[:section_01] << { name: "LOST",           sid: '007', sub_01: subs1 }
+    hash[:section_01] << { name: "ALIAS",          sid: '302', sub_01: [] }
+    hash[:section_01] << { name: "GREY'S ANATOMY", sid: '220', sub_01: subs2 }
+    hash[:section_01] << { name: "BREAKING BAD",   sid: '556', sub_01: [] }
 
-      r.add_section("SECTION_01", @items) do |s|
+    report = ODFReport::Report.new("test/templates/test_sub_sections.odt")
 
-        s.add_field('NAME') { |i| i.name }
-
-        s.add_field('SID', :sid)
-
-        s.add_section('SUB_01', :subs) do |r|
-          r.add_field("FIRST_NAME", :name)
-          r.add_table('IPSUM_TABLE', :children, :header => true) do |t|
-            t.add_column('IPSUM_ITEM') { |i| i }
-          end
-        end
-
-      end
-
-    end
-
-    report.generate("test/result/test_sub_sections.odt")
+    report.populate!(hash).save("test/result/new_test_sub_sections.odt")
