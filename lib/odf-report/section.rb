@@ -1,7 +1,7 @@
 module ODFReport
 
   class Section
-    include Nested
+    include Images, Nested
 
     def initialize(opts)
       @name             = opts[:name]
@@ -13,9 +13,11 @@ module ODFReport
       @tables = []
       @sections = []
 
+      @images = []
+      @image_name_additions = {}
     end
 
-    def replace!(doc, row = nil)
+    def replace!(doc, file, row = nil)
 
       return unless @section_node = find_section_node(doc)
 
@@ -25,19 +27,23 @@ module ODFReport
 
         new_section = get_section_node
 
-        @tables.each    { |t| t.replace!(new_section, data_item) }
+        @sections.each { |s| s.replace!(new_section, file, data_item) }
 
-        @sections.each  { |s| s.replace!(new_section, data_item) }
+        @tables.each   { |t| t.replace!(new_section, file, data_item) }
 
-        @texts.each     { |t| t.replace!(new_section, data_item) }
+        @texts.each    { |t| t.replace!(new_section, data_item) }
 
-        @fields.each    { |f| f.replace!(new_section, data_item) }
+        @fields.each   { |f| f.replace!(new_section, data_item) }
+
+        @images.each   { |i| @image_name_additions = i.replace!(new_section, data_item) }
 
         @section_node.before(new_section)
 
       end
 
       @section_node.remove
+
+      update_images(file)
 
     end # replace_section
 
