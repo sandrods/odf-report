@@ -1,10 +1,13 @@
 module ODFReport
+
   class File
 
     attr_accessor :output_stream
 
+    MANIFEST_FILE = "META-INF/manifest.xml"
+
     def initialize(template)
-      raise "Template [#{template}] not found." unless ::File.exists? template
+      raise "Template [#{template}] not found." unless ::File.exist? template
       @template = template
     end
 
@@ -31,8 +34,12 @@ module ODFReport
               yield data
             end
 
-            @output_stream.put_next_entry(entry.name)
-            @output_stream.write data
+            if MANIFEST_FILE.eql? entry.name
+              @manifest_data = data
+            else
+              @output_stream.put_next_entry(entry.name)
+              @output_stream.write data
+            end
 
           end
 
@@ -46,5 +53,14 @@ module ODFReport
       @buffer.string
     end
 
+    def update_manifest_file(&block)
+
+      yield @manifest_data
+
+      @output_stream.put_next_entry(MANIFEST_FILE)
+      @output_stream.write @manifest_data
+    end
+
   end
 end
+

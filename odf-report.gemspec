@@ -21,11 +21,11 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "bundler", "~> 1.6"
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec", "~> 3.0.0"
+  s.add_development_dependency "rspec", "~>3.0.0"
   s.add_development_dependency "faker"
   s.add_development_dependency "launchy"
 
-  s.add_runtime_dependency('rubyzip', "~> 1.1.0")
-  s.add_runtime_dependency('nokogiri', ">= 1.5.0")
+  s.add_runtime_dependency('rubyzip', ">= 1.1.6")
+  s.add_runtime_dependency('nokogiri', ">= 1.6.4.1")
 
 end
