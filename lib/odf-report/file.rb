@@ -18,26 +18,22 @@ module ODFReport
     def update_files(*content_files, &block)
 
       Zip::File.open(@template) do |file|
-
         file.each do |entry|
 
           next if entry.directory?
-
           entry.get_input_stream do |is|
 
-            data = is.sysread
+            entry_data = is.sysread
 
             if content_files.include?(entry.name)
-              yield data
+              yield entry_data, entry.name
             end
 
             @output_stream.put_next_entry(entry.name)
-            @output_stream.write data
+            @output_stream.write entry_data
 
           end
-
         end
-
       end
 
     end

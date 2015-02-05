@@ -33,6 +33,12 @@ module ODFReport
       yield(sec)
     end
 
+    def add_image(image_name, data_field = nil, opts = {}, &block)
+      opts.merge!(name: image_name, data_field: data_field)
+      image = Image.new(opts, &block)
+      @images << image
+    end
+
 
     def get_collection_from_item(item, collection_field)
 
