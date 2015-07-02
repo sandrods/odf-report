@@ -4,9 +4,11 @@ module ODFReport
     def initialize(opts)
       super(opts)
 
-      @template_rows = []
+      @template_rows    = []
       @header           = opts[:header] || false
       @skip_if_empty    = opts[:skip_if_empty] || false
+      @parent_fields    = opts[:parent_fields]
+      @footer           = opts[:footer] || false
     end
 
     def replace!(doc)
@@ -15,6 +17,8 @@ module ODFReport
       @template_rows = table.xpath("table:table-row")
 
       @header = table.xpath("table:table-header-rows").empty? ? @header : false
+
+      @footer = ((@header && template_length > 2) || (!@header && template_length > 1)) ? @footer : false
 
       if @skip_if_empty && @data_source.empty?
         table.remove
@@ -35,6 +39,12 @@ module ODFReport
 
       end
 
+      if @footer
+        node = get_footer_row
+        @parent_fields.each { |f| f.replace!(node) }
+        table.add_child(node)
+      end
+
       @template_rows.each_with_index do |r, i|
         r.remove if (get_start_node..template_length) === i
       end
@@ -52,7 +62,7 @@ module ODFReport
         @row_cursor = get_start_node unless defined?(@row_cursor)
 
         ret = @template_rows[@row_cursor]
-        if @template_rows.size == @row_cursor + 1
+        if @template_rows.size == @row_cursor + (@footer ? 2 : 1)
           @row_cursor = get_start_node
         else
           @row_cursor += 1
@@ -78,5 +88,8 @@ module ODFReport
       Nokogiri::XML(wrap_with_ns(node)).at_xpath("//table:table-row")
     end
 
+    def get_footer_row
+      @template_rows.last.dup
+    end
   end
 end

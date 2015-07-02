@@ -44,6 +44,8 @@ To use table placeholders, you should create a Table in your document and give i
 
 If you inform `header: true`, the first row will be treated as a *header* and left untouched. The remaining rows will be used as the template for the table.
 
+If you inform `footer: true`, the last row will be treated as a *footer* and left untouched. The remaining rows will be used as the template for the table.
+
 If you have more than one template row, they will be cycled. This is usefull for making zebra tables.
 
 As with **Field placeholders**, just insert a `[FIELD_NAME]` in each cell and let the magic takes place.
@@ -56,7 +58,7 @@ report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
   r.add_field "USER_NAME", @user.nome
   r.add_field "ADDRESS", @user.address
 
-  r.add_table("TABLE_1", @list_of_items, :header=>true) do |t|
+  r.add_table("TABLE_1", @list_of_items, :header=>true, :footer=>true) do |t|
     t.add_column(:item_id, :id)
     t.add_column(:description) { |item| "==> #{item.description}" }
   end
