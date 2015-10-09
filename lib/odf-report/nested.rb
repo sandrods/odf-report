@@ -2,6 +2,13 @@ module ODFReport
 
   module Nested
 
+    def add_image(name, data_field=nil, &block)
+      opts = {:name => name, :data_field => data_field}
+      image = Image.new(opts, &block)
+      @images << image
+
+    end
+
     def add_field(name, data_field=nil, &block)
       opts = {:name => name, :data_field => data_field}
       field = Field.new(opts, &block)
@@ -32,7 +39,6 @@ module ODFReport
 
       yield(sec)
     end
-
 
     def get_collection_from_item(item, collection_field)
 

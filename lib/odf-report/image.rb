@@ -1,12 +1,13 @@
 module ODFReport
 
-  class Field
+  class Image
 
     DELIMITERS = %w([ ])
+    IMAGE_DIR_NAME = "Pictures"
 
     def initialize(opts, &block)
       @name = opts[:name]
-      @data_field = opts[:data_field]
+      @data_image = opts[:data_image]
 
       unless @value = opts[:value]
 
@@ -23,14 +24,18 @@ module ODFReport
 
     def replace!(content, data_item = nil)
 
-      txt = content.inner_html
+      old_file = ''
+      path = get_value(data_item)
+      content.xpath(".//draw:frame[svg:title='#{to_placeholder}']/draw:image").each do |node|
+        placeholder_path = node.attribute('href').value
+        node.attribute('href').value = ::File.join(IMAGE_DIR_NAME, ::File.basename(path))
+        old_file = ::File.join(IMAGE_DIR_NAME, ::File.basename(placeholder_path))
+      end
+      content.xpath(".//draw:frame[svg:title='#{to_placeholder}']/svg:title").each do |node|
+        node.content = ''
+      end
 
-      val = get_value(data_item)
-
-      txt.gsub!(to_placeholder, sanitize(val))
-
-      content.inner_html = txt
-
+      {path=>old_file}
     end
 
     def get_value(data_item = nil)
@@ -39,9 +44,7 @@ module ODFReport
 
     def extract_value(data_item)
       return unless data_item
-
-      key = @data_field || @name
-
+      key = @data_image || @name
       if data_item.is_a?(Hash)
         data_item[key] || data_item[key.to_s.downcase] || data_item[key.to_s.upcase] || data_item[key.to_s.downcase.to_sym]
 
@@ -49,7 +52,7 @@ module ODFReport
         data_item.send(key.to_s.downcase.to_sym)
 
       else
-        raise "Can't find field [#{key}] in this #{data_item.class}"
+        raise "Can't find image [#{key}] in this #{data_item.class}"
 
       end
 
