@@ -215,6 +215,35 @@ end
 report.generate("./documents/new_ticket.odt")
 </pre>
 
+h4. Manual touchups to the generated XML
+
+There may be cases where odf-report gets you to within spitting distance
+of how you want the XML to look. For example, you may want to apply
+conditional formatting, by changing the style of paragraphs that meet some
+criterion. ODFReport doesn't come with support for this out of the box, but
+you can override the @touchup@ hook, like so:
+
+<pre>
+module ODFReport
+  class Report
+    def touchup(doc)
+      doc.xpath("//text:p/text()").each do |p|
+        if p.text =~ /\[STYLE=(.+?)\]/
+          match=$1
+          text = p.text.to_s.sub(/\[STYLE=(.+?)\]/, '')
+          p.content = text
+          p.parent.attributes['style-name'].value=match
+        end
+      end
+    end
+  end
+end
+</pre>
+
+The @touchup@ hook has access to the entire Nokogiri document. The
+example changes the paragraph style of any paragraph having a
+[STYLE=_name_] tag to the given style name, and removes the tag.
+
 <hr/>
 
 h3. REQUIREMENTS
