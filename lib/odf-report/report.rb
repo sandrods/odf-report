@@ -67,6 +67,8 @@ class Report
           find_image_name_matches(doc)
           avoid_duplicate_image_names(doc)
 
+          yield(doc) if block_given?
+
         end
 
       end
