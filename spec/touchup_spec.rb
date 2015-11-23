@@ -2,28 +2,21 @@ RSpec.describe "Touchup" do
 
   before(:context) do
 
-    module ODFReport
-      class Report
-        alias_method :old_touchup, :touchup
-        def touchup(doc)
-          doc.xpath("//text:p/text()").each do |p|
-            if p.text =~ /\[STYLE=(.+?)\]/
-              match=$1
-              text = p.text.to_s.sub(/\[STYLE=(.+?)\]/, '')
-              p.content = text
-              p.parent.attributes['style-name'].value=match
-            end
-          end
-        end
-      end
-    end
-
     report = ODFReport::Report.new("spec/specs.odt") do |r|
 
       r.add_field(:field_01, "[STYLE=teststyle]Testing!")
     end
 
-    report.generate("spec/result/specs.odt")
+    report.generate("spec/result/specs.odt") do |doc|
+      doc.xpath("//text:p/text()").each do |p|
+        if p.text =~ /\[STYLE=(.+?)\]/
+          match=$1
+          text = p.text.to_s.sub(/\[STYLE=(.+?)\]/, '')
+          p.content = text
+          p.parent.attributes['style-name'].value=match
+        end
+      end
+    end
 
     @data = Inspector.new("spec/result/specs.odt")
 

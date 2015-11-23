@@ -50,10 +50,6 @@ class Report
     @images[name] = path
   end
 
-  # Override this routine if you need to tweak the generated XML
-  def touchup(doc)
-  end
-
   def generate(dest = nil)
 
     @file.update_content do |file|
@@ -71,7 +67,7 @@ class Report
           find_image_name_matches(doc)
           avoid_duplicate_image_names(doc)
 
-          touchup(doc)
+          yield(doc) if block_given?
 
         end
 
