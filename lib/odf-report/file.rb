@@ -4,7 +4,7 @@ module ODFReport
     attr_accessor :output_stream
 
     def initialize(template)
-      raise "Template [#{template}] not found." unless ::File.exists? template
+      raise "Template [#{template}] not found." unless ::File.exist? template
       @template = template
     end
 
