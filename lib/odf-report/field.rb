@@ -1,8 +1,6 @@
 module ODFReport
   class Field
 
-    DELIMITERS = %w([ ])
-
     def initialize(opts, &block)
       @name = opts[:name]
       @data_field = opts[:data_field]
@@ -57,11 +55,8 @@ module ODFReport
     private
 
     def to_placeholder
-      if DELIMITERS.is_a?(Array)
-        "#{DELIMITERS[0]}#{@name.to_s.upcase}#{DELIMITERS[1]}"
-      else
-        "#{DELIMITERS}#{@name.to_s.upcase}#{DELIMITERS}"
-      end
+      # this regexp is used to ignore superfluous tags like </text:span><text:span>
+      %r{\[(</[^><]*><[^/><]*>)?#{@name.to_s.upcase}(</[^><]*><[^/><]*>)?\]}
     end
 
     def sanitize(txt)
