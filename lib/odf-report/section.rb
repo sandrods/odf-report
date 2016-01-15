@@ -4,7 +4,7 @@ module ODFReport
     include Nested
 
     def initialize(opts)
-      @name             = opts[:name]
+      @name             = opts[:name].to_s.upcase
       @collection_field = opts[:collection_field]
       @collection       = opts[:collection]
 
@@ -12,11 +12,9 @@ module ODFReport
       @texts = []
       @tables = []
       @sections = []
-
     end
 
     def replace!(doc, row = nil)
-
       return unless @section_node = find_section_node(doc)
 
       @collection = get_collection_from_item(row, @collection_field) if row
