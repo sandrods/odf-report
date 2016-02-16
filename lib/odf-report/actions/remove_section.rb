@@ -2,7 +2,7 @@ module ODFReport
   module Actions
     class RemoveSection
       def initialize(section_name)
-        @section_name = section_name
+        @section_name = section_name.upcase
       end
 
       def process!(doc)
