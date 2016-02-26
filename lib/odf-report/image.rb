@@ -23,9 +23,13 @@ module ODFReport
     end
 
     def replace!(content, data_item = nil)
-
       old_file = ''
       path = get_value(data_item)
+      
+      if path.empty?
+        return
+      end
+      
       content.xpath(".//draw:frame[svg:title='#{to_placeholder}']/draw:image").each do |node|
         placeholder_path = node.attribute('href').value
         node.attribute('href').value = ::File.join(IMAGE_DIR_NAME, ::File.basename(path))
@@ -34,7 +38,6 @@ module ODFReport
       content.xpath(".//draw:frame[svg:title='#{to_placeholder}']/svg:title").each do |node|
         node.content = ''
       end
-
       {path=>old_file}
     end
 

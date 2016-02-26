@@ -34,7 +34,7 @@ module ODFReport
 
         @fields.each   { |f| f.replace!(new_section, data_item) }
 
-        @images.each   { |i| @image_name_additions.merge! i.replace!(new_section, data_item) }
+        @images.each   { |i| i.replace!(new_section, data_item).nil? ? nil : (@image_name_additions.merge! i.replace!(new_section, data_item)) }
 
         @section_node.before(new_section)
 
