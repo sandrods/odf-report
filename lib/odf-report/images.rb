@@ -5,9 +5,9 @@ module ODFReport
     IMAGE_DIR_NAME = "Pictures"
 
     def update_images(file)
-
+      Rails.logger.info 'Test version'
       return if @images.empty?
-
+      
       @image_name_additions.each_pair do |local_file, old_file|
 
         new_file = ::File.join(IMAGE_DIR_NAME, ::File.basename(local_file))
