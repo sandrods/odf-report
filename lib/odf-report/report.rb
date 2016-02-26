@@ -68,7 +68,7 @@ module ODFReport
 
             @fields.each   { |f| f.replace!(doc) }
               
-            @images.each   { |i| @image_name_additions.merge! i.replace!(doc) }
+            @images.each   { |i| i.replace!(doc).nil? ? nil : (@image_name_additions.merge! i.replace!(doc)) }
 
             avoid_duplicate_image_names(doc)
 

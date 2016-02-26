@@ -46,7 +46,7 @@ module ODFReport
 
         @fields.each { |f| f.replace!(new_node, data_item) }
 
-        @images.each { |i| @image_name_additions.merge! i.replace!(new_node, data_item) }
+        @images.each { |i| i.replace!(new_node, data_item).nil? ? nil : (@image_name_additions.merge! i.replace!(new_node, data_item)) }        
 
         table.add_child(new_node)
 
