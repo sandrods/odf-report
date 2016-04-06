@@ -67,6 +67,7 @@ module ODFReport
     def sanitize(txt)
       txt = html_escape(txt)
       txt = odf_linebreak(txt)
+      txt = odf_consecutive_spaces(txt)
       txt
     end
 
@@ -76,7 +77,12 @@ module ODFReport
       return "" unless s
       s.to_s.gsub(/[&"><]/) { |special| HTML_ESCAPE[special] }
     end
-
+    
+    def odf_consecutive_spaces(s)
+    return "" unless s
+    s..gsub(/ {2,}/){|r| "<text:s text:c=\"#{r.count(" ").to_s }\"/>"}
+    end
+    
     def odf_linebreak(s)
       return "" unless s
       s.to_s.gsub("\n", "<text:line-break/>")
