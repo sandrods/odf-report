@@ -80,7 +80,7 @@ module ODFReport
     
     def odf_consecutive_spaces(s)
     return "" unless s
-    s..gsub(/ {2,}/){|r| "<text:s text:c=\"#{r.count(" ").to_s }\"/>"}
+    s.gsub(/ {2,}/){|r| "<text:s text:c=\"#{r.count(" ").to_s }\"/>"}
     end
     
     def odf_linebreak(s)
