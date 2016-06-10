@@ -29,7 +29,6 @@ module ODFReport
       txt.gsub!(to_placeholder, sanitize(val))
 
       content.inner_html = txt
-
     end
 
     def get_value(data_item = nil)

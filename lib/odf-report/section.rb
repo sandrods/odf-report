@@ -31,8 +31,11 @@ module ODFReport
 
         @fields.each    { |f| f.replace!(new_section, data_item) }
 
-        @section_node.before(new_section)
+        if data_item.try(:pagebreak?)
+          new_section.add_child("<text:p text:style-name='PAGEBREAK'/>")
+        end
 
+        @section_node.before(new_section)
       end
 
       @section_node.remove
