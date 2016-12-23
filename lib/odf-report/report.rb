@@ -50,6 +50,10 @@ class Report
     @images[name] = path
   end
 
+  def user_metadata
+    @file_meta ||= file_user_meta
+  end
+
   def generate(dest = nil)
 
     @file.update_content do |file|
@@ -89,6 +93,16 @@ private
     doc = Nokogiri::XML(txt)
     yield doc
     txt.replace(doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
+  end
+
+  def file_user_meta
+    meta_data = {}
+
+    Nokogiri::XML(@file.meta).xpath('//meta:user-defined').each do |node|
+      meta_data[node.values.first] = node.child.content
+    end
+
+    meta_data
   end
 
 end

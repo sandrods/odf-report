@@ -46,5 +46,11 @@ module ODFReport
       @buffer.string
     end
 
+    def meta
+      Zip::File.open(@template) do |file|
+        file.read('meta.xml')
+      end
+    end
+
   end
 end
