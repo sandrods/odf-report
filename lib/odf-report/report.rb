@@ -3,9 +3,9 @@ module ODFReport
 class Report
   include Images
 
-  def initialize(template_name, &block)
+  def initialize(template_name = nil, io: nil)
 
-    @file = ODFReport::File.new(template_name)
+    @template = ODFReport::Template.new(template_name, io: io)
 
     @texts = []
     @fields = []
@@ -14,7 +14,7 @@ class Report
     @image_names_replacements = {}
     @sections = []
 
-    yield(self)
+    yield(self) if block_given?
 
   end
 
@@ -52,43 +52,31 @@ class Report
 
   def generate(dest = nil)
 
-    @file.update_content do |file|
+    @template.update_content do |file|
 
-      file.update_files('content.xml', 'styles.xml') do |txt|
+      file.update_files do |doc|
 
-        parse_document(txt) do |doc|
+        @sections.each { |s| s.replace!(doc) }
+        @tables.each   { |t| t.replace!(doc) }
 
-          @sections.each { |s| s.replace!(doc) }
-          @tables.each   { |t| t.replace!(doc) }
+        @texts.each    { |t| t.replace!(doc) }
+        @fields.each   { |f| f.replace!(doc) }
 
-          @texts.each    { |t| t.replace!(doc) }
-          @fields.each   { |f| f.replace!(doc) }
-
-          find_image_name_matches(doc)
-          avoid_duplicate_image_names(doc)
-
-        end
+        find_image_name_matches(doc)
+        avoid_duplicate_image_names(doc)
 
       end
 
-      replace_images(file)
+      include_image_files(file)
 
     end
 
     if dest
-      ::File.open(dest, "wb") {|f| f.write(@file.data) }
+      ::File.open(dest, "wb") {|f| f.write(@template.data) }
     else
-      @file.data
+      @template.data
     end
 
-  end
-
-private
-
-  def parse_document(txt)
-    doc = Nokogiri::XML(txt)
-    yield doc
-    txt.replace(doc.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML))
   end
 
 end

@@ -15,7 +15,7 @@ module ODFReport
 
     end
 
-    def replace_images(file)
+    def include_image_files(file)
 
       return if @images.empty?
 
