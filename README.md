@@ -162,7 +162,7 @@ def print
 
   @ticket = Ticket.find(params[:id])
 
-  report = ODFReport::Report.new(Rails.root.join("/app/reports/ticket.odt") do |r|
+  report = ODFReport::Report.new(Rails.root.join("/app/reports/ticket.odt")) do |r|
 
     r.add_field(:id,         @ticket.id.to_s)
     r.add_field(:created_by, @ticket.created_by)
