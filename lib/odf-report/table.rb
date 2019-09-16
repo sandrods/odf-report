@@ -11,6 +11,7 @@ class Table
     @fields = []
     @texts = []
     @tables = []
+    @sections = []
 
     @template_rows = []
     @header           = opts[:header] || false
@@ -25,7 +26,6 @@ class Table
 
     @header = table.xpath("table:table-header-rows").empty? ? @header : false
 
-
     @collection = get_collection_from_item(row, @collection_field) if row
 
     if @skip_if_empty && @collection.empty?
@@ -36,6 +36,8 @@ class Table
     @collection.each do |data_item|
 
       new_node = get_next_row
+
+      @sections.each { |s| s.replace!(new_node, data_item) }
 
       @tables.each    { |t| t.replace!(new_node, data_item) }
 
