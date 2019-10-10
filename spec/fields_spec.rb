@@ -51,7 +51,7 @@ RSpec.describe "Fields" do
       expect(table).not_to match(/\[COLUMN_02\]/)
       expect(table).to match(/\[COLUMN_03\]/)
 
-      expect(table).to match(item.id)
+      expect(table).to match(item.id.to_s)
       expect(table).to match(item.name)
 
     end
@@ -67,7 +67,7 @@ RSpec.describe "Fields" do
 
       section = @data.xml.xpath(".//text:section[@text:name='SECTION_01_#{idx+1}']").to_s
 
-      expect(section).to match(item.id)
+      expect(section).to match(item.id.to_s)
       expect(section).to match(item.name)
 
     end

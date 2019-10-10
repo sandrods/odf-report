@@ -5,8 +5,7 @@ Gem for generating .odt files by making strings, images, tables and sections rep
 
 ### NEW
 
-* you can provide an `io:` param to the report, so you can use templates stored in the database.
-* now uses rubyzip ~> **1.2.0**
+* uses newer rubyzip >= **1.3.0**
 
 ## INSTALL
 
