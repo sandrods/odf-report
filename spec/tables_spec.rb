@@ -36,4 +36,22 @@ RSpec.describe "Tables" do
 
   end
 
+  context "when required table is not found" do
+
+    it "raises error" do
+      table_name = 'nonexistent'
+      table = ::ODFReport::Table.new(
+        collection: [],
+        name: table_name,
+        required: true
+      )
+      doc = double('document')
+      allow(doc).to receive(:xpath).and_return([])
+      expect {
+        table.send(:find_table_node, doc)
+      }.to raise_error(format('Required table not found: %s', table_name))
+    end
+
+  end
+
 end

@@ -15,6 +15,7 @@ class Table
     @template_rows = []
     @header           = opts[:header] || false
     @skip_if_empty    = opts[:skip_if_empty] || false
+    @required         = opts[:required] || false
   end
 
   def replace!(doc, row = nil)
@@ -79,7 +80,15 @@ private
 
     tables = doc.xpath(".//table:table[@table:name='#{@name}']")
 
-    tables.empty? ? nil : tables.first
+    if tables.empty?
+      if @required
+        raise format('Required table not found: %s', @name)
+      else
+        nil
+      end
+    else
+      tables.first
+    end
 
   end
 
