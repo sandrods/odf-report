@@ -20,6 +20,7 @@ module ODFReport
       return if @images.empty?
 
       @image_names_replacements.each_pair do |path, template_image|
+        puts template_image
 
         file.output_stream.put_next_entry(template_image)
         file.output_stream.write ::File.read(path)

@@ -1,7 +1,6 @@
 module ODFReport
 
 class Report
-  include Images
 
   def initialize(template_name = nil, io: nil)
 
@@ -10,8 +9,7 @@ class Report
     @texts = []
     @fields = []
     @tables = []
-    @images = {}
-    @image_names_replacements = {}
+    @images = []
     @sections = []
 
     yield(self) if block_given?
@@ -46,8 +44,10 @@ class Report
     yield(sec)
   end
 
-  def add_image(name, path)
-    @images[name] = path
+  def add_image(image_name, value='')
+    opts = {:name => image_name, :value => value}
+    image = Image.new(opts)
+    @images << image
   end
 
   def generate(dest = nil)
@@ -62,17 +62,22 @@ class Report
         @texts.each    { |t| t.replace!(doc) }
         @fields.each   { |f| f.replace!(doc) }
 
-        find_image_name_matches(doc)
-        avoid_duplicate_image_names(doc)
+        @images.each   { |i| i.replace!(doc) }
 
       end
 
-      include_image_files(file)
+      @images.each { |i| i.include_image_file(file) }
+
+      file.update_manifest do |content|
+        @images.each { |i| i.include_manifest_entry(content) }
+      end
 
     end
 
+
+
     if dest
-      ::File.open(dest, "wb") {|f| f.write(@template.data) }
+      File.open(dest, "wb") { |f| f.write(@template.data) }
     else
       @template.data
     end
