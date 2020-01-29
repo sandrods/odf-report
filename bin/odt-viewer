@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'launchy'
+require "nokogiri"
+require "zip"
+
+xml = ""
+
+Zip::File.open(ARGV[0]) do |zip|
+  content = zip.get_entry('content.xml').get_input_stream.read
+  xml = Nokogiri::XML(content).to_xml
+end
+
+filename = File.join(Dir.mktmpdir, "#{File.basename(ARGV[0])}.result.xml")
+
+File.open(filename, 'w') { |f| f.write xml }
+
+Launchy.open filename

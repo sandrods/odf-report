@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'launchy'
+
+arg = ARGV[0]
+dir = File.basename(arg, File.extname(arg))
+
+%x( rm -rf #{dir}; unzip -d #{dir} #{arg} )
+
+Launchy.open dir
