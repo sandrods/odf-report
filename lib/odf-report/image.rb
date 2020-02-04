@@ -1,6 +1,3 @@
-require 'mime/types'
-require 'securerandom'
-
 module ODFReport
   class Image < Field
 
@@ -9,44 +6,35 @@ module ODFReport
     attr_reader :href, :new_file
 
     def replace!(doc, data_item = nil)
+      frame = doc.at("//draw:frame[@draw:name='#{@name}']")
+      image = doc.at("//draw:frame[@draw:name='#{@name}']/draw:image")
 
-      return unless node = find_image_node(doc)
+      return unless image
 
       @new_file = get_value(data_item)
+      @href     = File.join(IMAGE_DIR_NAME, File.basename(@new_file))
 
-      @href = File.join(IMAGE_DIR_NAME, "#{SecureRandom.hex}_#{File.basename(new_file)}")
-
-      # @href = File.join(IMAGE_DIR_NAME, "100000000000014000000#{rand(1000..5000)}E5D9155585D8FB7.jpg")
-      # @href = @node.attribute('href')
-
-
-      node.attribute('href').value = @href
-
+      image.attribute('href').content = @href
+      frame.attribute('name').content = SecureRandom.hex
     end
 
-    def include_image_file(file)
-      return if @href.nil?
+    def self.include_image_file(file, i)
+      return if i[:href].nil?
 
-      file.update_file(@href, File.read(@new_file))
+      file.update_file(i[:href], File.read(i[:file]))
     end
 
-    def include_manifest_entry(content)
-      return if @href.nil?
+    def self.include_manifest_entry(content, i)
+      return if i[:href].nil?
 
-      return unless root_node = content.xpath("//manifest:manifest").first
+      return unless root_node = content.at("//manifest:manifest")
 
-      node = content.create_element('manifest:file-entry')
-      node['manifest:full-path'] = @href
-      node['manifest:media-type'] = MIME::Types.type_for(@href)[0].content_type
+      entry = content.create_element('manifest:file-entry')
+      entry['manifest:full-path']  = i[:href]
+      entry['manifest:media-type'] = MIME::Types.type_for(i[:href])[0].content_type
 
-      root_node.add_child node
+      root_node.add_child entry
 
-    end
-
-    private
-
-    def find_image_node(doc)
-      doc.xpath("//draw:frame[@draw:name='#{@name}']/draw:image").first
     end
 
   end

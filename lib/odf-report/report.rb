@@ -9,8 +9,10 @@ class Report
     @texts = []
     @fields = []
     @tables = []
-    @images = []
     @sections = []
+
+    @images      = []
+    @image_files = []
 
     yield(self) if block_given?
 
@@ -62,19 +64,20 @@ class Report
         @texts.each    { |t| t.replace!(doc) }
         @fields.each   { |f| f.replace!(doc) }
 
-        @images.each   { |i| i.replace!(doc) }
+        @images.each do |i|
+          i.replace!(doc)
+          @image_files << { href: i.href, file: i.new_file } if i.href
+        end
 
       end
 
-      @images.each { |i| i.include_image_file(file) }
+      all_images.each { |i| Image.include_image_file(file, i) }
 
       file.update_manifest do |content|
-        @images.each { |i| i.include_manifest_entry(content) }
+        all_images.each { |i| Image.include_manifest_entry(content, i) }
       end
 
     end
-
-
 
     if dest
       File.open(dest, "wb") { |f| f.write(@template.data) }
@@ -82,6 +85,10 @@ class Report
       @template.data
     end
 
+  end
+
+  def all_images
+    @all_images ||= (@image_files + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten.uniq { |i| i[:href] }
   end
 
 end

@@ -79,7 +79,7 @@ module ODFReport
     end
 
     def process_entry(entry)
-      doc = Nokogiri::XML(entry)
+      doc = Nokogiri::XML(entry, &:noblanks)
       yield doc
       entry.replace(doc.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML))
     end

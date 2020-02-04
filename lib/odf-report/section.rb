@@ -8,10 +8,13 @@ module ODFReport
       @collection_field = opts[:collection_field]
       @collection       = opts[:collection]
 
-      @fields = []
-      @texts = []
-      @tables = []
+      @fields   = []
+      @texts    = []
+      @tables   = []
       @sections = []
+
+      @images      = []
+      @image_files = []
 
     end
 
@@ -32,6 +35,8 @@ module ODFReport
         @texts.each     { |t| t.replace!(new_section, data_item) }
 
         @fields.each    { |f| f.replace!(new_section, data_item) }
+
+        @images.each    { |f| f.replace!(new_section, data_item) }
 
         @section_node.before(new_section)
 

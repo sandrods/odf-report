@@ -4,17 +4,19 @@ module ODFReport
 
     def add_field(name, data_field=nil, &block)
       opts = {:name => name, :data_field => data_field}
-      field = Field.new(opts, &block)
-      @fields << field
+      @fields << Field.new(opts, &block)
 
     end
     alias_method :add_column, :add_field
 
     def add_text(name, data_field=nil, &block)
       opts = {:name => name, :data_field => data_field}
-      field = Text.new(opts, &block)
-      @texts << field
+      @texts << Text.new(opts, &block)
+    end
 
+    def add_image(name, data_field=nil, &block)
+      opts = {:name => name, :data_field => data_field}
+      @images << Image.new(opts, &block)
     end
 
     def add_table(table_name, collection_field, opts={})
@@ -33,6 +35,9 @@ module ODFReport
       yield(sec)
     end
 
+    def all_images
+      (@image_files + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten
+    end
 
     def get_collection_from_item(item, collection_field)
 
