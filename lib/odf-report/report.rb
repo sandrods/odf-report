@@ -12,7 +12,6 @@ class Report
     @sections = []
 
     @images      = []
-    @image_files = []
 
     yield(self) if block_given?
 
@@ -64,10 +63,7 @@ class Report
         @texts.each    { |t| t.replace!(doc) }
         @fields.each   { |f| f.replace!(doc) }
 
-        @images.each do |i|
-          i.replace!(doc)
-          @image_files << { href: i.href, file: i.new_file } if i.href
-        end
+        @images.each { |i| i.replace!(doc) }
 
       end
 
@@ -88,7 +84,7 @@ class Report
   end
 
   def all_images
-    @all_images ||= (@image_files + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten.uniq { |i| i[:href] }
+    @all_images ||= (@images.map(&:files) + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten.uniq
   end
 
 end

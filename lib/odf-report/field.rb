@@ -82,7 +82,5 @@ module ODFReport
       s.to_s.gsub("\n", "<text:line-break/>")
     end
 
-
-
   end
 end

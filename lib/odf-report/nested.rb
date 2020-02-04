@@ -3,24 +3,24 @@ module ODFReport
   module Nested
 
     def add_field(name, data_field=nil, &block)
-      opts = {:name => name, :data_field => data_field}
+      opts = {name: name, data_field: data_field}
       @fields << Field.new(opts, &block)
 
     end
     alias_method :add_column, :add_field
 
     def add_text(name, data_field=nil, &block)
-      opts = {:name => name, :data_field => data_field}
+      opts = {name: name, data_field: data_field}
       @texts << Text.new(opts, &block)
     end
 
     def add_image(name, data_field=nil, &block)
-      opts = {:name => name, :data_field => data_field}
+      opts = {name: name, data_field: data_field}
       @images << Image.new(opts, &block)
     end
 
     def add_table(table_name, collection_field, opts={})
-      opts.merge!(:name => table_name, :collection_field => collection_field)
+      opts.merge!(name: table_name, collection_field: collection_field)
       tab = Table.new(opts)
       @tables << tab
 
@@ -28,7 +28,7 @@ module ODFReport
     end
 
     def add_section(section_name, collection_field, opts={})
-      opts.merge!(:name => section_name, :collection_field => collection_field)
+      opts.merge!(name: section_name, collection_field: collection_field)
       sec = Section.new(opts)
       @sections << sec
 
@@ -36,7 +36,7 @@ module ODFReport
     end
 
     def all_images
-      (@image_files + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten
+      (@images.map(&:files) + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten
     end
 
     def get_collection_from_item(item, collection_field)

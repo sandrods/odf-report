@@ -47,13 +47,10 @@ module ODFReport
 
         @fields.each    { |f| f.replace!(new_node, data_item) }
 
-        @images.each do |i|
-          i.replace!(new_node, data_item)
-          @image_files << { href: i.href, file: i.new_file }
-        end
+        @images.each    { |i| i.replace!(new_node, data_item) }
 
         table.add_child(new_node)
-        
+
       end
 
       @template_rows.each_with_index do |r, i|
