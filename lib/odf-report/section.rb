@@ -1,39 +1,21 @@
 module ODFReport
+  class Section < Nestable
 
-  class Section
-    include Nested
+    def replace!(doc)
 
-    def initialize(opts)
-      @name             = opts[:name]
-      @collection_field = opts[:collection_field]
-      @collection       = opts[:collection]
+      return unless find_section_node(doc)
 
-      @fields = []
-      @texts = []
-      @tables = []
-      @sections = []
+      @data_source.each do |record|
 
-    end
+        new_section = deep_clone(@section_node)
 
-    def replace!(doc, row = nil)
+        @tables.each    { |t| t.set_source(record).replace!(new_section) }
+        @sections.each  { |s| s.set_source(record).replace!(new_section) }
+        @texts.each     { |t| t.set_source(record).replace!(new_section) }
+        @fields.each    { |f| f.set_source(record).replace!(new_section) }
+        @images.each    { |i| i.set_source(record).replace!(new_section) }
 
-      return unless @section_node = find_section_node(doc)
-
-      @collection = get_collection_from_item(row, @collection_field) if row
-
-      @collection.each do |data_item|
-
-        new_section = get_section_node
-
-        @tables.each    { |t| t.replace!(new_section, data_item) }
-
-        @sections.each  { |s| s.replace!(new_section, data_item) }
-
-        @texts.each     { |t| t.replace!(new_section, data_item) }
-
-        @fields.each    { |f| f.replace!(new_section, data_item) }
-
-        @section_node.before(new_section)
+        @section_node.before(new_section.to_xml)
 
       end
 
@@ -44,23 +26,14 @@ module ODFReport
   private
 
     def find_section_node(doc)
-
-      sections = doc.xpath(".//text:section[@text:name='#{@name}']")
-
-      sections.empty? ? nil : sections.first
-
+      @section_node = doc.at_css("text|section[@text|name='#{@name}']")
     end
 
-    def get_section_node
-      node = @section_node.dup
+    def deep_clone(node)
+      Nokogiri::XML(wrap_with_ns(node)).at("text|section")
+                                       .tap { |n| n.attribute('name').content = SecureRandom.uuid }
 
-      name = node.get_attribute('text:name').to_s
-      @idx ||=0; @idx +=1
-      node.set_attribute('text:name', "#{name}_#{@idx}")
-
-      node
     end
 
   end
-
 end

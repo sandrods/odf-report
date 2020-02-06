@@ -5,3 +5,4 @@ doc
 test/result
 spec/result
 Gemfile.lock
+.DS_Store

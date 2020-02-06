@@ -7,7 +7,7 @@ RSpec.describe "Fields" do
 
     @itens_01 = Item.get_list(3)
 
-    report = ODFReport::Report.new("spec/specs.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/specs.odt") do |r|
 
       r.add_field(:field_01, @field_01)
       r.add_field(:field_02, @field_02)
@@ -65,7 +65,7 @@ RSpec.describe "Fields" do
 
     @itens_01.each_with_index do |item, idx|
 
-      section = @data.xml.xpath(".//text:section[@text:name='SECTION_01_#{idx+1}']").to_s
+      section = @data.xml.at_xpath(".//text:section[#{idx+1}]").to_s
 
       expect(section).to match(item.id.to_s)
       expect(section).to match(item.name)

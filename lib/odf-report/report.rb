@@ -1,7 +1,6 @@
 module ODFReport
 
 class Report
-  include Images
 
   def initialize(template_name = nil, io: nil)
 
@@ -10,9 +9,9 @@ class Report
     @texts = []
     @fields = []
     @tables = []
-    @images = {}
-    @image_names_replacements = {}
     @sections = []
+
+    @images      = []
 
     yield(self) if block_given?
 
@@ -46,8 +45,10 @@ class Report
     yield(sec)
   end
 
-  def add_image(name, path)
-    @images[name] = path
+  def add_image(image_name, value='')
+    opts = {:name => image_name, :value => value}
+    image = Image.new(opts)
+    @images << image
   end
 
   def generate(dest = nil)
@@ -56,27 +57,34 @@ class Report
 
       file.update_files do |doc|
 
-        @sections.each { |s| s.replace!(doc) }
-        @tables.each   { |t| t.replace!(doc) }
+        @sections.each { |c| c.replace!(doc) }
+        @tables.each   { |c| c.replace!(doc) }
 
-        @texts.each    { |t| t.replace!(doc) }
-        @fields.each   { |f| f.replace!(doc) }
+        @texts.each    { |c| c.replace!(doc) }
+        @fields.each   { |c| c.replace!(doc) }
 
-        find_image_name_matches(doc)
-        avoid_duplicate_image_names(doc)
+        @images.each   { |c| c.replace!(doc) }
 
       end
 
-      include_image_files(file)
+      all_images.each { |i| Image.include_image_file(file, i) }
+
+      file.update_manifest do |content|
+        all_images.each { |i| Image.include_manifest_entry(content, i) }
+      end
 
     end
 
     if dest
-      ::File.open(dest, "wb") {|f| f.write(@template.data) }
+      File.open(dest, "wb") { |f| f.write(@template.data) }
     else
       @template.data
     end
 
+  end
+
+  def all_images
+    @all_images ||= (@images.map(&:files) + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten.uniq
   end
 
 end
