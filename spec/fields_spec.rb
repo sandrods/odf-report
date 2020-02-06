@@ -7,7 +7,7 @@ RSpec.describe "Fields" do
 
     @itens_01 = Item.get_list(3)
 
-    report = ODFReport::Report.new("spec/specs.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/specs.odt") do |r|
 
       r.add_field(:field_01, @field_01)
       r.add_field(:field_02, @field_02)

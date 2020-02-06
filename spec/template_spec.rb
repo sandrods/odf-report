@@ -15,7 +15,7 @@ RSpec.describe "Templates Types" do
   end
 
   context "template from file" do
-    let(:report) { ODFReport::Report.new("spec/specs.odt") }
+    let(:report) { ODFReport::Report.new("spec/templates/specs.odt") }
 
     it "works" do
 
@@ -29,7 +29,7 @@ RSpec.describe "Templates Types" do
   end
 
   context "template from a String" do
-    let(:report) { ODFReport::Report.new(io: ::File.open("spec/specs.odt").read) }
+    let(:report) { ODFReport::Report.new(io: File.open("spec/templates/specs.odt").read) }
 
     it "works" do
 

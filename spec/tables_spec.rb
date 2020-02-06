@@ -2,7 +2,7 @@ RSpec.describe "Tables" do
 
   before(:context) do
 
-    report = ODFReport::Report.new("spec/specs.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/specs.odt") do |r|
 
       r.add_table('TABLE_02', []) do |t|
         t.add_column(:column_01, :id)
