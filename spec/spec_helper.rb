@@ -14,7 +14,7 @@ class Item
   def self.get_list(quant = 3)
     r = []
     (1..quant).each do |i|
-      r << Item.new(Faker::Number.number(10), Faker::Name.name)
+      r << Item.new(Faker::Number.number(digits: 10), Faker::Name.name)
     end
     r
   end

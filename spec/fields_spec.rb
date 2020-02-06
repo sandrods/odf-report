@@ -65,7 +65,7 @@ RSpec.describe "Fields" do
 
     @itens_01.each_with_index do |item, idx|
 
-      section = @data.xml.xpath(".//text:section[@text:name='SECTION_01_#{idx+1}']").to_s
+      section = @data.xml.at_xpath(".//text:section[#{idx+1}]").to_s
 
       expect(section).to match(item.id.to_s)
       expect(section).to match(item.name)

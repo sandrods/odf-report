@@ -57,13 +57,13 @@ class Report
 
       file.update_files do |doc|
 
-        @sections.each { |s| s.replace!(doc) }
-        @tables.each   { |t| t.replace!(doc) }
+        @sections.each { |c| c.replace!(doc) }
+        @tables.each   { |c| c.replace!(doc) }
 
-        @texts.each    { |t| t.replace!(doc) }
-        @fields.each   { |f| f.replace!(doc) }
+        @texts.each    { |c| c.replace!(doc) }
+        @fields.each   { |c| c.replace!(doc) }
 
-        @images.each { |i| i.replace!(doc) }
+        @images.each   { |c| c.replace!(doc) }
 
       end
 

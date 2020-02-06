@@ -4,19 +4,20 @@ module ODFReport
     IMAGE_DIR_NAME = "Pictures"
 
     attr_reader :files
-    
+
     def initialize(opts, &block)
       @files = []
       super
     end
 
     def replace!(doc, data_item = nil)
-      frame = doc.at("//draw:frame[@draw:name='#{@name}']")
-      image = doc.at("//draw:frame[@draw:name='#{@name}']/draw:image")
+
+      frame = doc.xpath("//draw:frame[@draw:name='#{@name}']").first
+      image = doc.xpath("//draw:frame[@draw:name='#{@name}']/draw:image").first
 
       return unless image
 
-      file = get_value(data_item)
+      file = @data_source.value
 
       image.attribute('href').content = File.join(IMAGE_DIR_NAME, File.basename(file))
       frame.attribute('name').content = SecureRandom.uuid

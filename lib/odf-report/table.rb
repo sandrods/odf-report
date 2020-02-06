@@ -1,55 +1,37 @@
 module ODFReport
-  class Table
-    include Nested
+  class Table < Nestable
 
     def initialize(opts)
-      @name             = opts[:name]
-      @collection_field = opts[:collection_field]
-      @collection       = opts[:collection]
-
-      @fields   = []
-      @texts    = []
-      @tables   = []
-      @sections = []
-
-      @images      = []
-      @image_files = []
+      super(opts)
 
       @template_rows = []
-      @header        = opts[:header] || false
-      @skip_if_empty = opts[:skip_if_empty] || false
+      @header           = opts[:header] || false
+      @skip_if_empty    = opts[:skip_if_empty] || false
     end
 
-    def replace!(doc, row = nil)
-
+    def replace!(doc)
       return unless table = find_table_node(doc)
 
       @template_rows = table.xpath("table:table-row")
 
       @header = table.xpath("table:table-header-rows").empty? ? @header : false
 
-      @collection = get_collection_from_item(row, @collection_field) if row
-
-      if @skip_if_empty && @collection.empty?
+      if @skip_if_empty && @data_source.empty?
         table.remove
         return
       end
 
-      @collection.each_with_index do |data_item, i|
+      @data_source.each do |record|
 
         new_node = get_next_row
 
-        @tables.each    { |t| t.replace!(new_node, data_item) }
+        @tables.each    { |n| n.set_source(record).replace!(new_node) }
+        @sections.each  { |n| n.set_source(record).replace!(new_node) }
+        @texts.each     { |n| n.set_source(record).replace!(new_node) }
+        @fields.each    { |n| n.set_source(record).replace!(new_node) }
+        @images.each    { |n| n.set_source(record).replace!(new_node) }
 
-        @sections.each  { |s| s.replace!(new_node, data_item) }
-
-        @texts.each     { |t| t.replace!(new_node, data_item) }
-
-        @fields.each    { |f| f.replace!(new_node, data_item) }
-
-        @images.each    { |i| i.replace!(new_node, data_item) }
-
-        table.add_child(new_node)
+        table.add_child(new_node.to_xml)
 
       end
 
@@ -90,22 +72,11 @@ module ODFReport
     end
 
     def find_table_node(doc)
-
-      tables = doc.xpath("//table:table[@table:name='#{@name}']")
-
-      tables.empty? ? nil : tables.first
-
+      doc.at_css("table|table[@table|name='#{@name}']")
     end
 
     def deep_clone(node)
-
-      tmp = Nokogiri::XML(node.to_xml, &:noblanks)
-      %w(table draw xlink text).each do |x|
-        tmp.root["xmlns:#{x}"] = x
-      end
-
-      Nokogiri::XML(tmp.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML)).at("//table:table-row")
-
+      Nokogiri::XML(wrap_with_ns(node)).at("table|table-row")
     end
 
   end
