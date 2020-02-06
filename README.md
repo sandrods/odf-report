@@ -5,7 +5,8 @@ Gem for generating .odt files by making strings, images, tables and sections rep
 
 ### NEW
 
-* uses newer rubyzip >= **1.3.0**
+* allow nested images inside tables and sections
+* allow sections inside tables
 
 ## INSTALL
 
@@ -28,7 +29,7 @@ There are *four* kinds of substitutions available:
 
 #### Fields
 
-It's just an upcase sentence, surrounded by brackets. It will be replaced for wathever value you supply.
+It's just an upcase sentence, surrounded by brackets. It will be replaced by the value you supply.
 
 In the folowing example:
 
@@ -79,21 +80,7 @@ and a collection `@list_of_itens`, it will create one row for each item in the c
 
 Any format applied to the fields in the template will be preserved.
 
-
-### Images
-
-You must put a mock image in your `.odt` template and give it a name. That name will be used to replace the mock image for the actual image.
-You can also assign any properties you want to the mock image and they will be kept once the image is replaced.
-
-An image replace would look like this:
-
-```ruby
-report = ODFReport::Report.new("my_template.odt") do |r|
-  r.add_image :graphic1, "/path/to/the/image.jpg"
-end
-```
-
-### Sections
+#### Sections
 
 Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. You can make a Section in your template and use it in this situations. Creating a Section in OpenOffice is as easy as select menu *Insert* and then *Section...*, and then choose a name for it.
 
@@ -145,6 +132,26 @@ Let's see an example:
 Note that when you add a Table to a Section, you don't pass the collection itself, but the attribute of the item of that section that will return the collection for that particular Table. Sounds complicated, huh? But once you get it, it's quite straightforward.
 
 In the above example, `s.add_table("TB_ITEMS", :items, header: true) do |t|`, the `:items` thing refers to a `invoice.items`. Easy, right?
+
+
+#### Images
+
+You must put a mock image in your `.odt` template and give it a name. That name will be used to replace the mock image for the actual image.
+You can also assign any properties you want to the mock image and they will be kept once the image is replaced.
+
+An image replace would look like this:
+
+```ruby
+report = ODFReport::Report.new("my_template.odt") do |r|
+  r.add_image :graphic1, "/path/to/the/image.jpg"
+
+  r.add_table("TABLE_WITH_IMAGES", @items) do |t|
+    t.add_column(:id)
+    t.add_column(:product, :product_name)
+    t.add_image('PRODUCT_IMAGE') { |item| item.image_path }
+  end  
+end
+```
 
 <hr/>
 
@@ -213,5 +220,6 @@ report = ODFReport::Report.new(io: @template.attachment.read) do |r|
 
 #### REQUIREMENTS
 
-**rubyzip**: for manipulating the contents of the odt file, since it's actually a zip file.
-**nokogiri**: for parsing and manipulating the document xml files.
+**rubyzip**: manipulating the contents of the odt file, since it's actually a zip file.
+**nokogiri**: parsing and manipulating the document xml files.
+**mime-types**: identify images mime types
