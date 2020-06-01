@@ -3,11 +3,6 @@
 
 Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
 
-### NEW
-
-* allow nested images inside tables and sections
-* allow sections inside tables
-
 ## INSTALL
 
 In your Gemfile
