@@ -45,7 +45,7 @@ class Report
     yield(sec)
   end
 
-  def add_image(image_name, value='')
+  def add_image(image_name, value=nil)
     opts = {:name => image_name, :value => value}
     image = Image.new(opts)
     @images << image

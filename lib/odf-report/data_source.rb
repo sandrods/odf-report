@@ -14,6 +14,7 @@ module ODFReport
     end
 
     def each(&block)
+      return unless @value
       @value.each(&block)
     end
 

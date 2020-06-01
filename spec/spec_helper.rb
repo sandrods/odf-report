@@ -12,11 +12,9 @@ class Item
   end
 
   def self.get_list(quant = 3)
-    r = []
-    (1..quant).each do |i|
-      r << Item.new(Faker::Number.number(digits: 10), Faker::Name.name)
+    (1..quant).map do |i|
+      Item.new(Faker::Number.number(digits: 10), Faker::Name.name)
     end
-    r
   end
 
 end

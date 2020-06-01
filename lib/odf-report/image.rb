@@ -19,10 +19,15 @@ module ODFReport
 
       file = @data_source.value
 
-      image.attribute('href').content = File.join(IMAGE_DIR_NAME, File.basename(file))
-      frame.attribute('name').content = SecureRandom.uuid
+      if file
+        image.attribute('href').content = File.join(IMAGE_DIR_NAME, File.basename(file))
+        frame.attribute('name').content = SecureRandom.uuid
 
-      @files << file
+        @files << file
+      else
+        frame.remove
+      end
+      
     end
 
     def self.include_image_file(zip_file, image_file)
