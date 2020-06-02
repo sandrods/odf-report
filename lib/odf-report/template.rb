@@ -35,7 +35,7 @@ module ODFReport
             process_entry(data, &block)
           end
 
-          update_file(entry.name, data)
+          update_file(entry.name, data) unless entry.name == MANIFEST_FILE
 
         end
       end
