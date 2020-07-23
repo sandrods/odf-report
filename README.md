@@ -218,3 +218,11 @@ report = ODFReport::Report.new(io: @template.attachment.read) do |r|
 **rubyzip**: manipulating the contents of the odt file, since it's actually a zip file.
 **nokogiri**: parsing and manipulating the document xml files.
 **mime-types**: identify images mime types
+
+#### TROUBLESHOOTING
+
+If your placeholder is not being replaced, the problem might come from OpenOffice/LibreOffice which, when a placeholder is edited,  add some markup that prevents odf-report from identifying the placeholder.
+
+The golden rule is: NEVER edit the placeholders. If you want to change one, delete it an write again, including the []
+Example: if you have, say, [USER] in your template and you want to change to [USERNAME], you should not edit and type NAME.
+Delete the PLACEHOLDER [USER] and type [USERNAME].
