@@ -156,4 +156,91 @@ RSpec.describe "Images" do
 
   end
 
+  context "Adding images and keeping ratio" do
+
+    before do
+
+      image_path = 'spec/images/image_1.jpg'
+
+      report = ODFReport::Report.new("spec/templates/images_ratio.odt") do |r|
+
+        # r.add_image("IMAGE_01")
+        r.add_image("IMAGE_PORTRAIT", image_path, keep_ratio: true)
+        r.add_image("IMAGE_LANDSCAPE", image_path, keep_ratio: true)
+
+      end
+
+      report.generate("spec/result/images_ratio.odt")
+
+      @data = Inspector.new("spec/result/images_ratio.odt")
+
+    end
+
+    it 'reduces the width of the placeholder for images too wide' do
+      frame = @data.xml.xpath("//draw:frame")[0]
+
+      expect(frame.attribute('height').value.to_f).to be_within(1.86).of(0.1)
+      expect(frame.attribute('width').value.to_f).to be_within(3.72).of(0.1)
+    end
+
+    it 'reduces the width of the placeholder for images too tall' do
+      frame = @data.xml.xpath("//draw:frame")[1]
+
+      expect(frame.attribute('height').value.to_f).to be_within(0.93).of(0.1)
+      expect(frame.attribute('width').value.to_f).to be_within(1.86).of(0.1)
+    end
+
+  end
+
+  context "size tools" do
+
+    before do
+      @image = ODFReport::Image.new name: 'test', value: "spec/images/image_1.jpg", keep_ratio: true
+    end
+
+    it 'computes correctly the width/height ratio of the image' do
+      expect(@image.compute_ratio.to_f).to equal(2.0)
+    end
+
+    describe 'extract_size_and_unit' do
+
+      it 'returns the size as float and unit as string if parsing is successful' do
+        cases = [
+          ['5cm', 5.0, 'cm'],
+          ['.5cm', 0.5, 'cm'],
+          ['5.5cm', 5.5, 'cm'],
+          ['0.5in', 0.5, 'in']
+        ]
+
+        cases.each do |(str, expected, expected_unit)|
+          expect(@image.send(:extract_size_and_unit, str)).to eq([expected, expected_unit])
+        end
+      end
+
+      it 'returns nil if parsing fails' do
+        cases = ['', nil, '42m', 'cm']
+
+        cases.each { |str| expect(@image.send(:extract_size_and_unit, str)).to be(nil) }
+      end
+
+    end
+
+    describe 'update_node_ratio' do
+
+      before do
+        @fake_node = Object.new
+      end
+
+      it "resizes the node image to the correct dimensions" do
+        allow(@image).to receive(:get_node_image_dimensions) { [500, 500, 'cm'] }
+        allow(@image).to receive(:update_node_size_attribute)
+
+        @image.update_node_ratio @fake_node
+        expect(@image).to have_received(:update_node_size_attribute).with(@fake_node, :height, 250.0, 'cm')
+      end
+
+    end
+
+  end
+
 end
