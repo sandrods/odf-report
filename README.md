@@ -221,8 +221,16 @@ report = ODFReport::Report.new(io: @template.attachment.read) do |r|
 
 #### TROUBLESHOOTING
 
+##### Placeholder not replaced
+
 If your placeholder is not being replaced, the problem might come from OpenOffice/LibreOffice which, when a placeholder is edited,  add some markup that prevents odf-report from identifying the placeholder.
 
 The golden rule is: NEVER edit the placeholders. If you want to change one, delete it an write again, including the []
 Example: if you have, say, [USER] in your template and you want to change to [USERNAME], you should not edit and type NAME.
 Delete the PLACEHOLDER [USER] and type [USERNAME].
+
+##### Word found unreadable content
+
+- Symptom: You prepare your template file in eg. LibreOffice, and when you open the template in Word it says "Word found unreadable content"
+- Solution: Open your template in LibreOffice, save as `.docx`, quit LibreOffice. Open the `.docx` in LibreOffice, save as `.odt`.
+- Hypothesis: Word does not support all ODT features. Saving as `.docx` removes those features of the document.
