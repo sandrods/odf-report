@@ -17,9 +17,12 @@ module ODFReport
 
       txt = content.inner_html
 
-      txt.gsub!(to_placeholder, sanitize(@data_source.value))
+      replaced = txt.gsub!(to_placeholder, sanitize(@data_source.value))
 
-      content.inner_html = txt
+      # replacing inner_html is memory expensive, only do it if a change was made
+      if replaced 
+        content.inner_html = txt
+      end
 
     end
 
