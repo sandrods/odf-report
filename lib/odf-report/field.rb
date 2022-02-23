@@ -17,9 +17,9 @@ module ODFReport
 
       txt = content.inner_html
 
-      txt.gsub!(to_placeholder, sanitize(@data_source.value))
-
-      content.inner_html = txt
+      if txt.gsub!(to_placeholder, sanitize(@data_source.value))
+        content.inner_html = txt
+      end
 
     end
 
