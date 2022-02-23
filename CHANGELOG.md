@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - None
 
+## 0.7.3
+
+### Fixed
+- newer versions (> 1.3.0) of Nokogiri where presenting "Nokogiri::CSS::SyntaxError: unexpected '|'" #120
+- prevent unnecessary memory expensive operations with missing placeholders #117
+
 ## 0.7.2
 
 ### Fixed
