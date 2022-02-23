@@ -116,8 +116,8 @@ RSpec.describe "Images" do
     end
 
     it "removes nil images in report" do
-      expect(@data.xml.at_css("draw|frame[@draw|name='IMAGE_01']")).to be
-      expect(@data.xml.at_css("draw|frame[@draw|name='IMAGE_02']")).to be_nil
+      expect(@data.xml.at_xpath(".//draw:frame[@draw:name='IMAGE_01']")).to be
+      expect(@data.xml.at_xpath(".//draw:frame[@draw:name='IMAGE_02']")).to be_nil
     end
 
     it "removes nil images in tables" do

@@ -38,12 +38,12 @@ RSpec.describe "Sections" do
   end
 
   it "should remove section with empty collection" do
-    section = @data.xml.at_css("text|section[@text|name='SECTION_02']")
+    section = @data.xml.at_xpath("//text:section[@text:name='SECTION_02']")
     expect(section).to be_nil
   end
 
   it "should remove section with nil collection" do
-    section = @data.xml.at_css("text|section[@text|name='SECTION_03']")
+    section = @data.xml.at_xpath("//text:section[@text:name='SECTION_03']")
     expect(section).to be_nil
   end
 

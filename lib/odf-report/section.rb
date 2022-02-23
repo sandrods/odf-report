@@ -26,11 +26,11 @@ module ODFReport
   private
 
     def find_section_node(doc)
-      @section_node = doc.at_css("text|section[@text|name='#{@name}']")
+      @section_node = doc.at_xpath("//text:section[@text:name='#{@name}']")
     end
 
     def deep_clone(node)
-      Nokogiri::XML(wrap_with_ns(node)).at("text|section")
+      Nokogiri::XML(wrap_with_ns(node)).at_xpath("//text:section")
                                        .tap { |n| n.attribute('name').content = SecureRandom.uuid }
 
     end

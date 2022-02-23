@@ -60,7 +60,6 @@ module ODFReport
       end
 
       return deep_clone(ret)
-      # return ret.dup
     end
 
     def get_start_node
@@ -72,11 +71,11 @@ module ODFReport
     end
 
     def find_table_node(doc)
-      doc.at_css("table|table[@table|name='#{@name}']")
+      doc.at_xpath("//table:table[@table:name='#{@name}']")
     end
 
     def deep_clone(node)
-      Nokogiri::XML(wrap_with_ns(node)).at("table|table-row")
+      Nokogiri::XML(wrap_with_ns(node)).at_xpath("//table:table-row")
     end
 
   end
