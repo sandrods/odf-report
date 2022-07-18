@@ -56,7 +56,7 @@ report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
   r.add_field "USER_NAME", @user.nome
   r.add_field "ADDRESS", @user.address
 
-  r.add_table("TABLE_1", @list_of_itens, :header=>true) do |t|
+  r.add_table("TABLE_1", @list_of_items, :header=>true) do |t|
     t.add_column(:item_id, :id)
     t.add_column(:description) { |item| "==> #{item.description}" }
   end
@@ -71,7 +71,7 @@ and considering you have a table like this in your template
 | [ITEM_ID] | [DESCRIPTION] |
 
 
-and a collection `@list_of_itens`, it will create one row for each item in the collection, and the replacement will take place accordingly.
+and a collection `@list_of_items`, it will create one row for each item in the collection, and the replacement will take place accordingly.
 
 Any format applied to the fields in the template will be preserved.
 
