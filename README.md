@@ -148,6 +148,16 @@ report = ODFReport::Report.new("my_template.odt") do |r|
 end
 ```
 
+#### More style!
+
+You can generate more stylish documents by creating styles "title1" to "title9" in your `.odt` template. Then use `add_text` in place of `add_field` or `add_column` and give it an HTML fragment comprising a h1, h2 (up to h9) tag. The text fragment enclosed in `<h1></h1>` will be styled as style1, style2 for `<h2></h2>` and so forth...
+
+```ruby
+  report = ODFReport::Report.new("reports/invoice.odt") do |r|
+    r.add_text(:title, "<h1>INVOICES REPORT</h1>")
+  end
+```
+
 <hr/>
 
 ### Step 2  --  generating the document
