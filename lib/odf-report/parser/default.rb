@@ -37,7 +37,7 @@ module Parser
 
       xml = @template_node.parse(@text)
 
-      xml.css("p", "h1", "h2").each do |p|
+      xml.css("p", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9").each do |p|
 
         style = check_style(p)
         text = parse_formatting(p.inner_html)
@@ -71,7 +71,7 @@ module Parser
       style = nil
 
       if node.name =~ /h\d/i
-        style = "title"
+        style = "title#{node.name[-1]}"
 
       elsif node.parent && node.parent.name == "blockquote"
         style = "quote"
