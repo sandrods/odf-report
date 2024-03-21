@@ -34,11 +34,9 @@ module Parser
     end
 
     def parse
+      html = Nokogiri::HTML5.fragment(@text)
 
-      xml = @template_node.parse(@text)
-
-      xml.css("p", "h1", "h2").each do |p|
-
+      html.css("p", "h1", "h2").each do |p|
         style = check_style(p)
         text = parse_formatting(p.inner_html)
 
@@ -63,6 +61,7 @@ module Parser
       text.gsub!(/<strong.*?>(.+?)<\/strong>/)  { "<text:span text:style-name=\"bold\">#{$1}<\/text:span>" }
       text.gsub!(/<em.*?>(.+?)<\/em>/)          { "<text:span text:style-name=\"italic\">#{$1}<\/text:span>" }
       text.gsub!(/<u.*?>(.+?)<\/u>/)            { "<text:span text:style-name=\"underline\">#{$1}<\/text:span>" }
+      text.gsub!("<br\/?>", "<text:line-break/>")
       text.gsub!("\n", "")
       text
     end
