@@ -13,11 +13,11 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby 3.2
-      uses: actions/setup-ruby@v1
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2.x
+        ruby-version: '3.2' 
+        bundler-cache: true
 
 #     - name: Publish to GPR
 #       run: |
