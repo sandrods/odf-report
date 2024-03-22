@@ -18,10 +18,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - None
 
+## 0.8.1
+
+### Fixed
+- \<br\> replacement in default text parser #130
+
 ## 0.8.0
 
-### Dependencies
+### Fixed
+- Use Nokogiri HTML5 parser for text nodes parsing #129
 
+### Dependencies
 - nokogiri >= 1.12.0 (was >= 1.10.0)
 
 ## 0.7.3
