@@ -1,12 +1,11 @@
 module ODFReport
   class DataSource
-
     attr_reader :value
 
     def initialize(opts, &block)
-      @value      = opts[:value]      || opts[:collection]
+      @value = opts[:value] || opts[:collection]
       @data_field = opts[:data_field] || opts[:collection_field] || opts[:name]
-      @block      = block
+      @block = block
     end
 
     def set_source(record)
@@ -25,7 +24,6 @@ module ODFReport
     private
 
     def extract_value_from_item(record)
-
       if @block
         @block.call(record)
 
@@ -43,23 +41,21 @@ module ODFReport
         record.send(@data_field)
 
       else
-        raise "Can't find [#{@data_field.to_s}] in this #{record.class}"
+        raise "Can't find [#{@data_field}] in this #{record.class}"
 
       end
-
     end
 
     def execute_methods_on_item(record)
       tmp = record.dup
       @data_field.each do |f|
-        if f.is_a?(Hash)
-          tmp = tmp.send(f.keys[0], f.values[0])
+        tmp = if f.is_a?(Hash)
+          tmp.send(f.keys[0], f.values[0])
         else
-          tmp = tmp.send(f)
+          tmp.send(f)
         end
       end
       tmp
     end
-
   end
 end

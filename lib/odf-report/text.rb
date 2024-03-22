@@ -1,12 +1,9 @@
 module ODFReport
-
   class Text < Field
-
     attr_accessor :parser
 
     def replace!(doc, data_item = nil)
-
-      return unless node = find_text_node(doc)
+      return unless (node = find_text_node(doc))
 
       @parser = Parser::Default.new(@data_source.value, node)
 
@@ -15,7 +12,6 @@ module ODFReport
       end
 
       node.remove
-
     end
 
     private
@@ -24,10 +20,10 @@ module ODFReport
       texts = doc.xpath(".//text:p[text()='#{to_placeholder}']")
       if texts.empty?
         texts = doc.xpath(".//text:p/text:span[text()='#{to_placeholder}']")
-        if texts.empty?
-          texts = nil
+        texts = if texts.empty?
+          nil
         else
-          texts = texts.first.parent
+          texts.first.parent
         end
       else
         texts = texts.first
@@ -35,7 +31,5 @@ module ODFReport
 
       texts
     end
-
   end
-
 end

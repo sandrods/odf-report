@@ -1,6 +1,5 @@
 module ODFReport
   class Field
-
     DELIMITERS = %w([ ])
 
     def initialize(opts, &block)
@@ -14,16 +13,14 @@ module ODFReport
     end
 
     def replace!(content, data_item = nil)
-
       txt = content.inner_html
 
       if txt.gsub!(to_placeholder, sanitize(@data_source.value))
         content.inner_html = txt
       end
-
     end
 
-  private
+    private
 
     def to_placeholder
       if DELIMITERS.is_a?(Array)
@@ -35,11 +32,10 @@ module ODFReport
 
     def sanitize(txt)
       txt = html_escape(txt)
-      txt = odf_linebreak(txt)
-      txt
+      odf_linebreak(txt)
     end
 
-    HTML_ESCAPE = { '&' => '&amp;',  '>' => '&gt;',   '<' => '&lt;', '"' => '&quot;' }
+    HTML_ESCAPE = {"&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;"}
 
     def html_escape(s)
       return "" unless s
@@ -50,6 +46,5 @@ module ODFReport
       return "" unless s
       s.to_s.gsub("\n", "<text:line-break/>")
     end
-
   end
 end
