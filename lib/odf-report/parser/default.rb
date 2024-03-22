@@ -61,7 +61,7 @@ module Parser
       text.gsub!(/<strong.*?>(.+?)<\/strong>/)  { "<text:span text:style-name=\"bold\">#{$1}<\/text:span>" }
       text.gsub!(/<em.*?>(.+?)<\/em>/)          { "<text:span text:style-name=\"italic\">#{$1}<\/text:span>" }
       text.gsub!(/<u.*?>(.+?)<\/u>/)            { "<text:span text:style-name=\"underline\">#{$1}<\/text:span>" }
-      text.gsub!("<br\/?>", "<text:line-break/>")
+      text.gsub!(/<br\/?>/, "<text:line-break/>")
       text.gsub!("\n", "")
       text
     end
