@@ -30,7 +30,11 @@ class Report
   end
 
   def add_table(table_name, collection, opts={})
-    opts.merge!(:name => table_name, :collection => collection)
+    opts.merge!(
+      :name => table_name,
+      :collection => collection,
+      :parent_fields => @fields
+    )
     tab = Table.new(opts)
     @tables << tab
 
