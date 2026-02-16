@@ -25,16 +25,17 @@ bundle exec rake open       # Open generated test result .odt files
 
 **Key classes (all under `ODFReport` module in `lib/odf-report/`):**
 
-- `Report` — Main entry point and public API. Holds arrays of all replacer objects.
-- `Template` — Handles .odt file I/O (ZIP read/write). Accepts file path or `io:` buffer.
-- `Nestable` — Base class for `Table` and `Section`. Provides the nested DSL (`add_field`, `add_column`, `add_table`, `add_section`, `add_image`, `add_text`) and recursive replacement.
+- `Report` — Main entry point and public API. Includes `Composable` for the DSL. `generate` delegates to `replace_placeholders!` (XML substitution) and `include_images` (ZIP + manifest updates).
+- `Template` — Handles .odt file I/O (ZIP read/write). Accepts file path or `io:` buffer. Caches the ZIP handle via `template_entries`.
+- `Composable` — Module included by both `Report` and `Nestable`. Provides `add_field`, `add_text`, `add_image`, `add_table`, `add_section`, `all_images`, and lazy-initialized arrays (`fields`, `texts`, `tables`, `sections`, `images`).
+- `Nestable` — Base class for `Table` and `Section`. Includes `Composable`. Adds `@name`, `@data_source`, `set_source`, `replace_with!`, and `wrap_with_ns`.
 - `Table` — Finds a named ODF table, clones its template row for each collection item.
 - `Section` — Finds a named ODF section, clones it for each collection item. Supports nesting.
 - `Field` — Replaces `[PLACEHOLDER]` text nodes in XML. Names are uppercased automatically.
 - `Text` — Extends Field; parses HTML content and inserts ODF paragraphs via `Parser::Default`.
-- `Image` — Replaces placeholder images (matched by draw frame name) with actual image files. Updates the ZIP manifest.
-- `DataSource` — Extracts values from hashes, objects (method calls), or arrays (method chains). Supports block transforms.
-- `Parser::Default` — Converts HTML tags (`<br>`, `<p>`, `<b>`, `<i>`, etc.) to ODF XML elements.
+- `Image` — Replaces placeholder images (matched by draw frame name) with actual image files. Uses `image_href` class method for path building. Updates the ZIP manifest.
+- `DataSource` — Unified value/extraction model. When `set_source` is not called (Report path), `value` returns the literal. When `set_source` is called (Nestable path), `value` extracts from the record using `@field` as a lookup key. Supports hashes, method calls, method chains, methods with arguments, and block transforms.
+- `Parser::Default` — Converts HTML tags (`<br>`, `<p>`, `<strong>`, `<em>`, etc.) to ODF XML elements.
 
 ## Testing
 
