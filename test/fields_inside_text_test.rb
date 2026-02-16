@@ -30,7 +30,7 @@ require 'faker'
       r.add_field('FUNCAO', Faker::Lorem.word)
       r.add_field('EVENTO_NOME', Faker::Company.name)
 
-      r.add_field('NUMERO_SECAO', Faker::Number.number(3))
+      r.add_field('NUMERO_SECAO', Faker::Number.number(digits: 3))
       r.add_field('NOME_LOCAL', Faker::Company.name)
       r.add_field('ENDERECO_LOCAL', Faker::Address.street_address)
     end

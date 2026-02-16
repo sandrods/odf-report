@@ -1,3 +1,5 @@
+require "ostruct"
+
 RSpec.describe "Images" do
 
   context('Adding Images') do

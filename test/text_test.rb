@@ -17,7 +17,7 @@ require 'faker'
 
       text = <<-HTML
         <p>#{Faker::Lorem.sentence} <em>#{Faker::Lorem.sentence}</em> #{Faker::Lorem.sentence}</p>
-        <p>#{Faker::Lorem.sentence} <strong>#{Faker::Lorem.paragraph(3)}</strong> NO FORMAT <strong>#{Faker::Lorem.paragraph(2)}</strong> #{Faker::Lorem.sentence}</p>
+        <p>#{Faker::Lorem.sentence} <strong>#{Faker::Lorem.paragraph(sentence_count: 3)}</strong> NO FORMAT <strong>#{Faker::Lorem.paragraph(sentence_count: 2)}</strong> #{Faker::Lorem.sentence}</p>
         <p>#{Faker::Lorem.paragraph}</p>
         <blockquote>
           <p>#{Faker::Lorem.paragraph}</p>
