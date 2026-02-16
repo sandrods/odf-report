@@ -9,7 +9,7 @@ module ODFReport
       super
     end
 
-    def replace!(doc, data_item = nil)
+    def replace!(doc)
       frame = doc.xpath("//draw:frame[@draw:name='#{@name}']").first
       return unless frame
 

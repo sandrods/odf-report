@@ -12,7 +12,7 @@ module ODFReport
       self
     end
 
-    def replace!(content, data_item = nil)
+    def replace!(content)
       txt = content.inner_html
 
       if txt.gsub!(to_placeholder, sanitize(@data_source.value))

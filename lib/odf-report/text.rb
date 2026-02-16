@@ -2,7 +2,7 @@ module ODFReport
   class Text < Field
     attr_accessor :parser
 
-    def replace!(doc, data_item = nil)
+    def replace!(doc)
       return unless (node = find_text_node(doc))
 
       @parser = Parser::Default.new(@data_source.value, node)
