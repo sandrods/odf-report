@@ -23,11 +23,11 @@ module ODFReport
       @data_source.each do |record|
         new_node = get_next_row
 
-        @tables.each { |n| n.set_source(record).replace!(new_node) }
-        @sections.each { |n| n.set_source(record).replace!(new_node) }
-        @texts.each { |n| n.set_source(record).replace!(new_node) }
-        @fields.each { |n| n.set_source(record).replace!(new_node) }
-        @images.each { |n| n.set_source(record).replace!(new_node) }
+        tables.each { |n| n.set_source(record).replace!(new_node) }
+        sections.each { |n| n.set_source(record).replace!(new_node) }
+        texts.each { |n| n.set_source(record).replace!(new_node) }
+        fields.each { |n| n.set_source(record).replace!(new_node) }
+        images.each { |n| n.set_source(record).replace!(new_node) }
 
         table.add_child(new_node.to_xml)
       end

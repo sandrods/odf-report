@@ -6,8 +6,6 @@ module ODFReport
       @name = opts[:name]
 
       @data_source = DataSource.new(opts)
-
-      init_replacers
     end
 
     alias_method :add_column, :add_field

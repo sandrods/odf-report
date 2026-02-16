@@ -5,21 +5,19 @@ module ODFReport
     def initialize(template_name = nil, io: nil)
       @template = ODFReport::Template.new(template_name, io: io)
 
-      init_replacers
-
       yield(self) if block_given?
     end
 
     def generate(dest = nil)
       @template.update_content do |file|
         file.update_files do |doc|
-          @sections.each { |c| c.replace!(doc) }
-          @tables.each { |c| c.replace!(doc) }
+          sections.each { |c| c.replace!(doc) }
+          tables.each { |c| c.replace!(doc) }
 
-          @texts.each { |c| c.replace!(doc) }
-          @fields.each { |c| c.replace!(doc) }
+          texts.each { |c| c.replace!(doc) }
+          fields.each { |c| c.replace!(doc) }
 
-          @images.each { |c| c.replace!(doc) }
+          images.each { |c| c.replace!(doc) }
         end
 
         all_images.each { |i| Image.include_image_file(file, i) }
