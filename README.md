@@ -1,7 +1,7 @@
 
 # ODF-REPORT
 
-Gem for generating .odt files by making strings, images, tables and sections replacements in a previously created .odt file.
+Gem for generating .odt files by making string, image, table and section replacements in a previously created .odt file.
 
 ## INSTALL
 
@@ -24,9 +24,9 @@ There are *four* kinds of substitutions available:
 
 #### Fields
 
-It's just an upcase sentence, surrounded by brackets. It will be replaced by the value you supply.
+It's just an uppercase sentence, surrounded by brackets. It will be replaced by the value you supply.
 
-In the folowing example:
+In the following example:
 
 ```ruby
 report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
@@ -35,7 +35,7 @@ report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
 end
 ```
 
-All occurences of `[USER_NAME]` found in the file will be replaced by the value of `@user.name` whereas all `[ADDRESS]` 'es will contains `My new address`
+All occurrences of `[USER_NAME]` found in the file will be replaced by the value of `@user.name` whereas all `[ADDRESS]` 'es will contain `My new address`
 
 
 #### Tables
@@ -44,11 +44,11 @@ To use table placeholders, you should create a Table in your document and give i
 
 If you inform `header: true`, the first row will be treated as a *header* and left untouched. The remaining rows will be used as the template for the table.
 
-If you have more than one template row, they will be cycled. This is usefull for making zebra tables.
+If you have more than one template row, they will be cycled. This is useful for making zebra tables.
 
-As with **Field placeholders**, just insert a `[FIELD_NAME]` in each cell and let the magic takes place.
+As with **Field placeholders**, just insert a `[FIELD_NAME]` in each cell and let the magic take place.
 
-Taking the folowing example:
+Taking the following example:
 
 ```ruby
 report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
@@ -77,9 +77,9 @@ Any format applied to the fields in the template will be preserved.
 
 #### Sections
 
-Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. You can make a Section in your template and use it in this situations. Creating a Section in OpenOffice is as easy as select menu *Insert* and then *Section...*, and then choose a name for it.
+Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. You can make a Section in your template and use it in these situations. Creating a Section in OpenOffice is as easy as selecting menu *Insert* and then *Section...*, and then choose a name for it.
 
-Sections are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside it, even Tables *and nested Sections*, as long as you provide the appropriate data structure.
+Sections are a lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. *But*, Sections can have anything inside them, even Tables *and nested Sections*, as long as you provide the appropriate data structure.
 
 Let's see an example:
 
@@ -107,7 +107,7 @@ Let's see an example:
         if invoice.status == 'CLOSED'
           invoice.total
         else
-          invoice.items.sum('product_value')}
+          invoice.items.sum('product_value')
         end
       end
 
@@ -217,15 +217,15 @@ report = ODFReport::Report.new(io: @template.attachment.read) do |r|
 
 **rubyzip**: manipulating the contents of the odt file, since it's actually a zip file.
 **nokogiri**: parsing and manipulating the document xml files.
-**mime-types**: identify images mime types
+**mime-types**: identify image MIME types
 
 #### TROUBLESHOOTING
 
 ##### Placeholder not replaced
 
-If your placeholder is not being replaced, the problem might come from OpenOffice/LibreOffice which, when a placeholder is edited,  add some markup that prevents odf-report from identifying the placeholder.
+If your placeholder is not being replaced, the problem might come from OpenOffice/LibreOffice which, when a placeholder is edited, adds some markup that prevents odf-report from identifying the placeholder.
 
-The golden rule is: NEVER edit the placeholders. If you want to change one, delete it an write again, including the []
+The golden rule is: NEVER edit the placeholders. If you want to change one, delete it and write again, including the []
 Example: if you have, say, [USER] in your template and you want to change to [USERNAME], you should not edit and type NAME.
 Delete the PLACEHOLDER [USER] and type [USERNAME].
 
