@@ -36,22 +36,12 @@ module ODFReport
     private
 
     def get_next_row
-      if @template_rows.size == 1
+      @row_cursor = get_start_node unless defined?(@row_cursor)
 
-        ret = @template_rows.first
+      row = @template_rows[@row_cursor]
+      @row_cursor = (@row_cursor + 1 < @template_rows.size) ? @row_cursor + 1 : get_start_node
 
-      else
-        @row_cursor = get_start_node unless defined?(@row_cursor)
-
-        ret = @template_rows[@row_cursor]
-        if @template_rows.size == @row_cursor + 1
-          @row_cursor = get_start_node
-        else
-          @row_cursor += 1
-        end
-      end
-
-      deep_clone(ret)
+      deep_clone(row)
     end
 
     def get_start_node
