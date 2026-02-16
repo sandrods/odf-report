@@ -1,7 +1,7 @@
 module ODFReport
   class Table < Nestable
     def initialize(opts)
-      super(opts)
+      super
 
       @template_rows = []
       @header = opts[:header] || false
