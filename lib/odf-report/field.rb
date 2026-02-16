@@ -23,11 +23,7 @@ module ODFReport
     private
 
     def to_placeholder
-      if DELIMITERS.is_a?(Array)
-        "#{DELIMITERS[0]}#{@name.to_s.upcase}#{DELIMITERS[1]}"
-      else
-        "#{DELIMITERS}#{@name.to_s.upcase}#{DELIMITERS}"
-      end
+      "#{DELIMITERS[0]}#{@name.to_s.upcase}#{DELIMITERS[1]}"
     end
 
     def sanitize(txt)
