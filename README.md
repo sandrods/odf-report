@@ -16,8 +16,9 @@ gem 'odf-report'
 
 First of all, you need a `.odt` file to serve as a template.
 Templates are normal .odt files with `[PLACEHOLDERS]` for *substitutions*.
-There are *four* kinds of substitutions available:
+There are *five* kinds of substitutions available:
 * fields
+* texts
 * tables
 * images
 * sections
