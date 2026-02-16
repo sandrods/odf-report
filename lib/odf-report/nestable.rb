@@ -30,9 +30,5 @@ module ODFReport
     end
 
     private
-
-    def value_key = :data_field
-
-    def collection_key = :collection_field
   end
 end

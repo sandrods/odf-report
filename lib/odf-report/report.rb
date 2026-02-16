@@ -28,10 +28,6 @@ module ODFReport
 
     private
 
-    def value_key = :value
-
-    def collection_key = :collection
-
     def replace_placeholders!(doc)
       sections.each { |c| c.replace!(doc) }
       tables.each { |c| c.replace!(doc) }

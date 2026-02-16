@@ -1,26 +1,20 @@
 module ODFReport
   module Composable
     def add_field(name, value = nil, &block)
-      opts = {name: name}
-      opts[value_key] = value
-      fields << Field.new(opts, &block)
+      fields << Field.new({name: name, value: value}, &block)
     end
 
     def add_text(name, value = nil, &block)
-      opts = {name: name}
-      opts[value_key] = value
-      texts << Text.new(opts, &block)
+      texts << Text.new({name: name, value: value}, &block)
     end
 
     def add_image(name, value = nil, &block)
-      opts = {name: name}
-      opts[value_key] = value
-      images << Image.new(opts, &block)
+      images << Image.new({name: name, value: value}, &block)
     end
 
     def add_table(table_name, collection, opts = {})
       opts[:name] = table_name
-      opts[collection_key] = collection
+      opts[:value] = collection
 
       tab = Table.new(opts)
       tables << tab
@@ -30,7 +24,7 @@ module ODFReport
 
     def add_section(section_name, collection, opts = {})
       opts[:name] = section_name
-      opts[collection_key] = collection
+      opts[:value] = collection
 
       sec = Section.new(opts)
       sections << sec
