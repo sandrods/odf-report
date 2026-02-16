@@ -3,22 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Odf-report by sandrods</title>
+    <title>ODF-Report by sandrods</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
     <div class="wrapper">
       <header>
-        <h1>Odf-report</h1>
-        <p>a gem for generating ODF documents (actually, just .odt for now) using a previously created .odt template and replacing tags. You can use LibreOffice as a report designer!! Really cool...</p>
+        <h1>ODF-Report</h1>
+        <p>Gem for generating .odt files by making string, image, table and section replacements in a previously created .odt file.</p>
         <p class="view"><a href="https://github.com/sandrods/odf-report">View the Project on GitHub <small>sandrods/odf-report</small></a></p>
         <ul>
           <li><a href="https://github.com/sandrods/odf-report/zipball/master">Download <strong>ZIP File</strong></a></li>
@@ -27,233 +23,240 @@
         </ul>
       </header>
       <section>
-        <h2>
-<a name="new" class="anchor" href="#new"><span class="octicon octicon-link"></span></a>NEW!</h2>
+
+<h2>INSTALL</h2>
+
+<p>In your Gemfile</p>
+
+<pre><code>gem 'odf-report'</code></pre>
+
+<h2>USAGE</h2>
+
+<h3>Step 1 &mdash; the template</h3>
+
+<p>First of all, you need a <code>.odt</code> file to serve as a template.
+Templates are normal .odt files with <code>[PLACEHOLDERS]</code> for <em>substitutions</em>.
+There are <em>five</em> kinds of substitutions available:</p>
 
 <ul>
-<li>as per popular request, now uses rubyzip ~&gt; 1.1.0</li>
-<li>uses <code>Zip::OutputStream.write_buffer</code> to generate the file. This should avoid corruption issues.</li>
-<li>the <code>.generate</code> method now returns the actual report binary, so you can send_data it directly</li>
-<li>you can also use <code>.generate('file.odt')</code>, which saves the report to the specified file</li>
-</ul><hr><h2>
-<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>INSTALL</h2>
+  <li>fields</li>
+  <li>texts</li>
+  <li>tables</li>
+  <li>images</li>
+  <li>sections</li>
+</ul>
 
-<p>in your Gemfile</p>
+<h4>Fields</h4>
 
-<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s2">"odf-report"</span>
-</pre></div>
+<p>It's just an uppercase sentence, surrounded by brackets. It will be replaced by the value you supply.</p>
 
-<p>or at the terminal prompt</p>
+<p>In the following example:</p>
 
-<div class="highlight highlight-bash"><pre><span class="nv">$ </span><span class="o">(</span>sudo<span class="o">)</span> gem install odf-report
-</pre></div>
+<pre><code>report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
+  r.add_field :user_name, @user.name
+  r.add_field :address, "My new address"
+end</code></pre>
 
-<h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>USAGE</h2>
+<p>All occurrences of <code>[USER_NAME]</code> found in the file will be replaced by the value of <code>@user.name</code> whereas all <code>[ADDRESS]</code> 'es will contain <code>My new address</code></p>
 
-<h3>
-<a name="step-1------the-template" class="anchor" href="#step-1------the-template"><span class="octicon octicon-link"></span></a>Step 1  --  the template</h3>
+<h4>Texts (HTML formatted content)</h4>
 
-<p>First of all, you need to create a .odt file to serve as a template</p>
+<p>You can use <code>add_text</code> to replace a placeholder with rich HTML content, which gets converted into ODF-formatted paragraphs with support for inline formatting (<code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;u&gt;</code>), headings, blockquotes, and line breaks.</p>
 
-<p>Templates are normal .odt files with placeholders for Substitutions</p>
+<pre><code>report = ODFReport::Report.new("my_template.odt") do |r|
+  r.add_text :description, '&lt;p&gt;A paragraph with &lt;strong&gt;bold&lt;/strong&gt; and &lt;em&gt;italic&lt;/em&gt; text.&lt;/p&gt;'
+end</code></pre>
 
-<p>There are now <em>four</em> kinds of substitutions available: </p>
+<p>For full details on supported tags, required template styles, and examples, see the <a href="https://github.com/sandrods/odf-report/wiki/Using-add_text-with-HTML-formatting">Using add_text with HTML formatting</a> wiki page.</p>
 
-<ul>
-<li>fields</li>
-<li>tables</li>
-<li>images</li>
-<li>sections</li>
-</ul><h3>
-<a name="fields-placeholders" class="anchor" href="#fields-placeholders"><span class="octicon octicon-link"></span></a>Fields placeholders</h3>
-
-<p>It's just an upcase sentence, surrounded by brackets. It will be replaced for wathever value you supply.</p>
-
-<p>In the folowing example:</p>
-
-<div class="highlight highlight-ruby"><pre><span class="n">report</span> <span class="o">=</span> <span class="no">ODFReport</span><span class="o">::</span><span class="no">Report</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"Users/john/my_template.odt"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
-
-  <span class="n">r</span><span class="o">.</span><span class="n">add_field</span> <span class="ss">:user_name</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span>
-  <span class="n">r</span><span class="o">.</span><span class="n">add_field</span> <span class="ss">:address</span><span class="p">,</span> <span class="s2">"My new address"</span>
-
-<span class="k">end</span>
-</pre></div>
-
-<p>All occurences of <strong>[USER_NAME]</strong> found in the file will be replaced by the value of <strong>@user.name</strong> whereas all <strong>[ADDRESS]</strong> 'es will contains <strong>My new address</strong></p>
-
-<p>It's as simple as that.</p>
-
-<h3>
-<a name="table-placeholders" class="anchor" href="#table-placeholders"><span class="octicon octicon-link"></span></a>Table placeholders</h3>
+<h4>Tables</h4>
 
 <p>To use table placeholders, you should create a Table in your document and give it a name. In OpenOffice, it's just a matter of right-clicking the table you just created, choose <em>Table Properties...</em> and type a name in the Name field.</p>
 
-<img src="images/table_name.png" />
+<p>If you inform <code>header: true</code>, the first row will be treated as a <em>header</em> and left untouched. The remaining rows will be used as the template for the table.</p>
 
-<p>If you inform <strong>:header=&gt;true</strong>, the first row will be treated as a <em>header</em> and left untouched. The remaining rows will be used as the template for the table. If you have more than one template row, they will be cycled. This is usefull for making zebra tables.</p>
+<p>If you have more than one template row, they will be cycled. This is useful for making zebra tables.</p>
 
-<p>As with Field placeholders, just insert a <strong>[FIELD_NAME]</strong> in each cell and let the magic takes place.</p>
+<p>As with <strong>Field placeholders</strong>, just insert a <code>[FIELD_NAME]</code> in each cell and let the magic take place.</p>
 
-<p>Taking the folowing example:</p>
+<p>Taking the following example:</p>
 
-<div class="highlight highlight-ruby"><pre><span class="n">report</span> <span class="o">=</span> <span class="no">ODFReport</span><span class="o">::</span><span class="no">Report</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"Users/john/my_template.odt"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
+<pre><code>report = ODFReport::Report.new("Users/john/my_template.odt") do |r|
 
-  <span class="n">r</span><span class="o">.</span><span class="n">add_field</span> <span class="s2">"USER_NAME"</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">nome</span>
-  <span class="n">r</span><span class="o">.</span><span class="n">add_field</span> <span class="s2">"ADDRESS"</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">address</span>
+  r.add_field "USER_NAME", @user.nome
+  r.add_field "ADDRESS", @user.address
 
-  <span class="n">r</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="s2">"TABLE_1"</span><span class="p">,</span> <span class="vi">@list_of_itens</span><span class="p">,</span> <span class="ss">:header</span><span class="o">=&gt;</span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:item_id</span><span class="p">,</span> <span class="ss">:id</span><span class="p">)</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:description</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="s2">"==&gt; </span><span class="si">#{</span><span class="n">item</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
-  <span class="k">end</span>
+  r.add_table("TABLE_1", @list_of_items, header: true) do |t|
+    t.add_column(:item_id, :id)
+    t.add_column(:description) { |item| "==> #{item.description}" }
+  end
 
-<span class="k">end</span>
-</pre></div>
+end</code></pre>
 
 <p>and considering you have a table like this in your template</p>
 
-<img src="images/table1.png" />
+<table>
+  <tr><th>#ID</th><th>Description</th></tr>
+  <tr><td>[ITEM_ID]</td><td>[DESCRIPTION]</td></tr>
+</table>
 
-<p>and a collection <strong>@list_of_itens</strong>, it will be created one row for each item in the collection, and the replacement will take place accordingly.</p>
+<p>and a collection <code>@list_of_items</code>, it will create one row for each item in the collection, and the replacement will take place accordingly.</p>
 
 <p>Any format applied to the fields in the template will be preserved.</p>
 
-<h3>
-<a name="images" class="anchor" href="#images"><span class="octicon octicon-link"></span></a>Images</h3>
+<h4>Sections</h4>
 
-<p>You must put a mock image in your odt template and give it a name. That name will be used to replace the mock image for the actual image.
+<p>Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. You can make a Section in your template and use it in these situations. Creating a Section in OpenOffice is as easy as selecting menu <em>Insert</em> and then <em>Section...</em>, and then choose a name for it.</p>
+
+<p>Sections are a lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. <em>But</em>, Sections can have anything inside them, even Tables <em>and nested Sections</em>, as long as you provide the appropriate data structure.</p>
+
+<p>Let's see an example:</p>
+
+<pre><code>  @invoices = Invoice.find(:all)
+
+  report = ODFReport::Report.new("reports/invoice.odt") do |r|
+
+    r.add_field(:title, "INVOICES REPORT")
+    r.add_field(:date, Date.today)
+
+    r.add_section("SC_INVOICE", @invoices) do |s|
+
+      s.add_field(:number) { |invoice| invoice.number.to_s.rjust(5, '0') }
+      s.add_field(:name,    :customer_name)
+      s.add_field(:address, :customer_address)
+
+      s.add_table("TB_ITEMS", :items, header: true) do |t|
+        t.add_column(:id)
+        t.add_column(:product) {|item| item.product.name }
+        t.add_column(:value, :product_value)
+      end
+
+      s.add_field(:total) do |invoice|
+        if invoice.status == 'CLOSED'
+          invoice.total
+        else
+          invoice.items.sum('product_value')
+        end
+      end
+
+      s.add_section("SUB_NOTES", :notes) do |s1|
+
+        s1.add_field(:note_title) { |n| n.title }
+
+        s1.add_table ...
+
+      end
+
+    end
+
+  end</code></pre>
+
+<p>Note that when you add a Table to a Section, you don't pass the collection itself, but the attribute of the item of that section that will return the collection for that particular Table. Sounds complicated, huh? But once you get it, it's quite straightforward.</p>
+
+<p>In the above example, <code>s.add_table("TB_ITEMS", :items, header: true) do |t|</code>, the <code>:items</code> thing refers to a <code>invoice.items</code>. Easy, right?</p>
+
+<h4>Images</h4>
+
+<p>You must put a mock image in your <code>.odt</code> template and give it a name. That name will be used to replace the mock image for the actual image.
 You can also assign any properties you want to the mock image and they will be kept once the image is replaced.</p>
 
 <p>An image replace would look like this:</p>
 
-<div class="highlight highlight-ruby"><pre><span class="n">report</span> <span class="o">=</span> <span class="no">ODFReport</span><span class="o">::</span><span class="no">Report</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"Users/john/my_template.odt"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
+<pre><code>report = ODFReport::Report.new("my_template.odt") do |r|
+  r.add_image :graphic1, "/path/to/the/image.jpg"
 
-  <span class="n">r</span><span class="o">.</span><span class="n">add_image</span> <span class="ss">:graphics1</span><span class="p">,</span> <span class="s2">"/path/to/the/image.jpg"</span>
+  r.add_table("TABLE_WITH_IMAGES", @items) do |t|
+    t.add_column(:id)
+    t.add_column(:product, :product_name)
+    t.add_image('PRODUCT_IMAGE') { |item| item.image_path }
+  end
+end</code></pre>
 
-<span class="k">end</span>
-</pre></div>
+<hr>
 
-<h3>
-<a name="sections" class="anchor" href="#sections"><span class="octicon octicon-link"></span></a>Sections</h3>
-
-<p>Sometimes, you have to repeat a whole chunk of a document, in a structure a lot more complex than a table. Now you can make a Section in your template and use it in this situations. Creating a Section in OpenOffice is as easy as select menu <em>Insert</em> and then <em>Section...</em>, and then choose a name for it.</p>
-
-<p><em>Section</em> 's are lot like Tables, in the sense that you can pass a collection and have that section repeated for each member of the collection. <em>But</em>, Sections can have anything inside it, even Tables <em>and nested Sections</em>, as long as you pass the appropriate data structure.</p>
-
-<p>Let's see an example:</p>
-
-<div class="highlight highlight-ruby"><pre>  <span class="vi">@invoices</span> <span class="o">=</span> <span class="no">Invoice</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span>
-
-  <span class="n">report</span> <span class="o">=</span> <span class="no">ODFReport</span><span class="o">::</span><span class="no">Report</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"reports/invoice.odt"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
-
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s2">"INVOICES REPORT"</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:date</span><span class="p">,</span> <span class="no">Date</span><span class="o">.</span><span class="n">today</span><span class="p">)</span>
-
-    <span class="n">r</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s2">"SC_INVOICE"</span><span class="p">,</span> <span class="vi">@invoices</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
-
-      <span class="n">s</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:number</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">invoice</span><span class="o">|</span> <span class="n">invoice</span><span class="o">.</span><span class="n">number</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">'0'</span><span class="p">)</span> <span class="p">}</span>
-      <span class="n">s</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span>    <span class="ss">:customer_name</span><span class="p">)</span>
-      <span class="n">s</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:address</span><span class="p">,</span> <span class="ss">:customer_address</span><span class="p">)</span>
-
-      <span class="n">s</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="s2">"TB_ITEMS"</span><span class="p">,</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">:header</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:id</span><span class="p">)</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:product</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">item</span><span class="o">.</span><span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="p">}</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:value</span><span class="p">,</span> <span class="ss">:product_value</span><span class="p">)</span>
-      <span class="k">end</span>
-
-      <span class="n">s</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:total</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">invoice</span><span class="o">|</span>
-        <span class="k">if</span> <span class="n">invoice</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">'CLOSED'</span>
-          <span class="n">invoice</span><span class="o">.</span><span class="n">total</span>
-        <span class="k">else</span>
-          <span class="n">invoice</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">'product_value'</span><span class="p">)}</span>
-        <span class="k">end</span>
-      <span class="k">end</span>
-
-      <span class="n">s</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s2">"SUB_NOTES"</span><span class="p">,</span> <span class="ss">:notes</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">s1</span><span class="o">|</span>
-
-        <span class="n">s1</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:note_title</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">title</span> <span class="p">}</span>
-
-        <span class="n">s1</span><span class="o">.</span><span class="n">add_table</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-
-      <span class="k">end</span>
-
-    <span class="k">end</span>
-
-  <span class="k">end</span>
-</pre></div>
-
-<p>Note that when you add a Table to a Section, you don't pass the collection itself, but the attribute of the item of that section that's gonna return the collection for that particular Table. Sounds complicated, huh? But once you get it, it's quite straightforward.</p>
-
-<p>In the above example, <code>s.add_table("TB_ITEMS", :items, :header =&gt; true) do |t|</code>, the <code>:items</code> thing refers to a <code>invoice.items</code>. Easy, right?</p>
-
-<hr><h3>
-<a name="step-2------generating-the-document" class="anchor" href="#step-2------generating-the-document"><span class="octicon octicon-link"></span></a>Step 2  --  generating the document</h3>
+<h3>Step 2 &mdash; generating the document</h3>
 
 <p>It's fairly simple to generate the document. You can use this inside a Rails application or in a standalone script.</p>
 
-<h4>
-<a name="generating-a-document-in-a-rails-application" class="anchor" href="#generating-a-document-in-a-rails-application"><span class="octicon octicon-link"></span></a>Generating a document in a Rails application</h4>
+<h4>Generating a document in a Rails application</h4>
 
 <p>In a controller, you can have a code like this:</p>
 
-<div class="highlight highlight-ruby"><pre><span class="k">def</span> <span class="nf">print</span>
+<pre><code>def print
 
-  <span class="vi">@ticket</span> <span class="o">=</span> <span class="no">Ticket</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+  @ticket = Ticket.find(params[:id])
 
-  <span class="n">report</span> <span class="o">=</span> <span class="no">ODFReport</span><span class="o">::</span><span class="no">Report</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'app'</span><span class="p">,</span> <span class="s1">'reports'</span><span class="p">,</span> <span class="s1">'ticket.odt'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
+  report = ODFReport::Report.new(Rails.root.join("/app/reports/ticket.odt")) do |r|
 
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:id</span><span class="p">,</span>         <span class="vi">@ticket</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:created_by</span><span class="p">,</span> <span class="vi">@ticket</span><span class="o">.</span><span class="n">created_by</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:created_at</span><span class="p">,</span> <span class="vi">@ticket</span><span class="o">.</span><span class="n">created_at</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%d/%m/%Y - %H:%M"</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:type</span><span class="p">,</span>       <span class="vi">@ticket</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span>     <span class="vi">@ticket</span><span class="o">.</span><span class="n">status_text</span><span class="p">)</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:date</span><span class="p">,</span>       <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%d/%m/%Y - %H:%M"</span><span class="p">))</span>
-    <span class="n">r</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span><span class="ss">:solution</span><span class="p">,</span>   <span class="p">(</span><span class="vi">@ticket</span><span class="o">.</span><span class="n">solution</span> <span class="o">||</span> <span class="s1">''</span><span class="p">))</span>
+    r.add_field(:id,         @ticket.id.to_s)
+    r.add_field(:created_by, @ticket.created_by)
+    r.add_field(:created_at, @ticket.created_at.strftime("%d/%m/%Y - %H:%M"))
+    r.add_field(:type,       @ticket.type.name)
+    r.add_field(:status,     @ticket.status_text)
+    r.add_field(:date,       Time.now.strftime("%d/%m/%Y - %H:%M"))
+    r.add_field(:solution,   (@ticket.solution || ''))
 
-    <span class="n">r</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="s2">"OPERATORS"</span><span class="p">,</span> <span class="vi">@ticket</span><span class="o">.</span><span class="n">operators</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-      <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:operator_name</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">op</span><span class="o">|</span> <span class="s2">"</span><span class="si">#{</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">op</span><span class="o">.</span><span class="n">department</span><span class="o">.</span><span class="n">short_name</span><span class="si">}</span><span class="s2">)"</span> <span class="p">}</span>
-    <span class="k">end</span>
+    r.add_table("OPERATORS", @ticket.operators) do |t|
+      t.add_column(:name) { |op| "#{op.name} (#{op.department.short_name})" }
+    end
 
-    <span class="n">r</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="s2">"FIELDS"</span><span class="p">,</span> <span class="vi">@ticket</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-      <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:field_name</span><span class="p">,</span> <span class="ss">:name</span><span class="p">)</span>
-      <span class="n">t</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="ss">:field_value</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">field</span><span class="o">|</span> <span class="n">field</span><span class="o">.</span><span class="n">text_value</span> <span class="o">||</span> <span class="s2">"Empty"</span> <span class="p">}</span>
-    <span class="k">end</span>
+    r.add_table("FIELDS", @ticket.fields) do |t|
+      t.add_column(:field_name, :name)
+      t.add_column(:field_value) { |field| field.text_value || "Empty" }
+    end
 
-  <span class="k">end</span>
+  end
 
-  <span class="n">send_data</span> <span class="n">report</span><span class="o">.</span><span class="n">generate</span><span class="p">,</span>
-             <span class="ss">type</span><span class="p">:</span> <span class="s1">'application/vnd.oasis.opendocument.text'</span><span class="p">,</span>
-             <span class="ss">disposition</span><span class="p">:</span> <span class="s1">'attachment'</span><span class="p">,</span>
-             <span class="ss">filename</span><span class="p">:</span> <span class="s1">'report.odt'</span>
+  send_data report.generate,
+            type: 'application/vnd.oasis.opendocument.text',
+            disposition: 'attachment',
+            filename: 'report.odt'
 
-<span class="k">end</span>
-</pre></div>
+end</code></pre>
 
-<h4>
-<a name="generating-a-document-in-a-standalone-script" class="anchor" href="#generating-a-document-in-a-standalone-script"><span class="octicon octicon-link"></span></a>Generating a document in a standalone script</h4>
+<h4>Generating a document in a standalone script</h4>
 
-<p>It's just the same as in a Rails app, but you can inform the filename where the document will be saved.</p>
+<p>It's very similar to a Rails app, but you can inform the path where the file will be saved.</p>
 
-<div class="highlight highlight-ruby"><pre><span class="n">report</span> <span class="o">=</span> <span class="no">ODFReport</span><span class="o">::</span><span class="no">Report</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"ticket.odt"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
+<pre><code>report = ODFReport::Report.new("ticket.odt") do |r|
+... populates the report ...
+end
 
-<span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="n">populates</span> <span class="n">the</span> <span class="n">report</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+report.generate("./documents/new_ticket.odt")</code></pre>
 
-<span class="k">end</span>
+<h4>Using a template stored in the database (or anywhere besides the file system)</h4>
 
-<span class="n">report</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">"./documents/ticket.odt"</span><span class="p">)</span>
-</pre></div>
+<p>You can provide an <code>io:</code> param, containing the actual file read into a String.</p>
 
-<hr><h3>
-<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>REQUIREMENTS</h3>
+<pre><code>report = ODFReport::Report.new(io: @template.attachment.read) do |r|</code></pre>
+
+<hr>
+
+<h4>REQUIREMENTS</h4>
 
 <ul>
-<li>
-<em>rubyzip</em>: for manipulating the contents of the odt file, since it's actually a zip file.</li>
-<li>
-<em>nokogiri</em>: for parsing and manipulating the document xml files.</li>
+  <li><strong>rubyzip</strong>: manipulating the contents of the odt file, since it's actually a zip file.</li>
+  <li><strong>nokogiri</strong>: parsing and manipulating the document xml files.</li>
+  <li><strong>mime-types</strong>: identify image MIME types.</li>
 </ul>
 
-  <a href="https://codeclimate.com/github/sandrods/odf-report"><img src="https://codeclimate.com/github/sandrods/odf-report.png" /></a>
+<h4>TROUBLESHOOTING</h4>
+
+<h5>Placeholder not replaced</h5>
+
+<p>If your placeholder is not being replaced, the problem might come from OpenOffice/LibreOffice which, when a placeholder is edited, adds some markup that prevents odf-report from identifying the placeholder.</p>
+
+<p>The golden rule is: NEVER edit the placeholders. If you want to change one, delete it and write again, including the <code>[]</code>.
+Example: if you have, say, <code>[USER]</code> in your template and you want to change to <code>[USERNAME]</code>, you should not edit and type NAME.
+Delete the PLACEHOLDER <code>[USER]</code> and type <code>[USERNAME]</code>.</p>
+
+<h5>Word found unreadable content</h5>
+
+<ul>
+  <li>Symptom: You prepare your template file in eg. LibreOffice, and when you open the template in Word it says "Word found unreadable content"</li>
+  <li>Solution: Open your template in LibreOffice, save as <code>.docx</code>, quit LibreOffice. Open the <code>.docx</code> in LibreOffice, save as <code>.odt</code>.</li>
+  <li>Hypothesis: Word does not support all ODT features. Saving as <code>.docx</code> removes those features of the document.</li>
+</ul>
 
       </section>
     </div>
@@ -262,16 +265,5 @@ You can also assign any properties you want to the mock image and they will be k
       <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
     </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-35945147-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
   </body>
 </html>
