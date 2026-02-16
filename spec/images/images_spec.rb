@@ -10,7 +10,7 @@ RSpec.describe "Images" do
       @list << OpenStruct.new({name: "IMG - [1, 3]", path: "spec/images/image_1.jpg", path2: "spec/images/image_3.jpg"})
       @list << OpenStruct.new({name: "IMG - [2, 2]", path: "spec/images/image_2.jpg", path2: "spec/images/image_2.jpg"})
 
-      report = ODFReport::Report.new("spec/templates/images.odt") do |r|
+      report = ODFReport::Report.new("spec/templates/images/images.odt") do |r|
         r.add_image("IMAGE_01", "spec/images/rails.png")
         r.add_image("IMAGE_02", "spec/images/piriapolis.jpg")
 
@@ -27,9 +27,9 @@ RSpec.describe "Images" do
         end
       end
 
-      report.generate("spec/result/images.odt")
+      report.generate("spec/result/images/images.odt")
 
-      @data = Inspector.new("spec/result/images.odt")
+      @data = Inspector.new("spec/result/images/images.odt")
     end
 
     it "simple image replacement" do
@@ -72,7 +72,7 @@ RSpec.describe "Images" do
       @list << OpenStruct.new({name: "IMG - 2 ok", path: nil, path2: "spec/images/image_3.jpg"})
       # @list << OpenStruct.new({ name: "IMG - 2 invalid", path: nil, path2: 'spec/images/invalid.jpg' })
 
-      report = ODFReport::Report.new("spec/templates/images.odt") do |r|
+      report = ODFReport::Report.new("spec/templates/images/images.odt") do |r|
         # r.add_image("IMAGE_01")
         r.add_image("IMAGE_02", nil)
 
@@ -89,9 +89,9 @@ RSpec.describe "Images" do
         end
       end
 
-      report.generate("spec/result/images.odt")
+      report.generate("spec/result/images/images.odt")
 
-      @data = Inspector.new("spec/result/images.odt")
+      @data = Inspector.new("spec/result/images/images.odt")
     end
 
     it "removes nil images in report" do

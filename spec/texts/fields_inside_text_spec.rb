@@ -13,7 +13,7 @@ RSpec.describe "Fields Inside Text" do
       <p>Additional paragraph with no placeholders.</p>
     HTML
 
-    report = ODFReport::Report.new("spec/templates/fields_inside_text.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/texts/fields_inside_text.odt") do |r|
       r.add_text(:body, html)
 
       r.add_field("EVENTO_TEXTO_CARTA", @evento)
@@ -24,9 +24,9 @@ RSpec.describe "Fields Inside Text" do
       r.add_field("ENDERECO_LOCAL", @endereco)
     end
 
-    report.generate("spec/result/fields_inside_text.odt")
+    report.generate("spec/result/texts/fields_inside_text.odt")
 
-    @data = Inspector.new("spec/result/fields_inside_text.odt")
+    @data = Inspector.new("spec/result/texts/fields_inside_text.odt")
   end
 
   it "replaces field placeholders inside text content" do

@@ -15,7 +15,7 @@ RSpec.describe "Nested Tables" do
       }
     ]
 
-    report = ODFReport::Report.new("spec/templates/nested_tables.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/tables/nested_tables.odt") do |r|
       r.add_field("TAG_01", "Test Tag 1")
       r.add_field("TAG_02", "Test Tag 2")
 
@@ -30,9 +30,9 @@ RSpec.describe "Nested Tables" do
       end
     end
 
-    report.generate("spec/result/nested_tables.odt")
+    report.generate("spec/result/tables/nested_tables.odt")
 
-    @data = Inspector.new("spec/result/nested_tables.odt")
+    @data = Inspector.new("spec/result/tables/nested_tables.odt")
   end
 
   it "renders outer table rows" do

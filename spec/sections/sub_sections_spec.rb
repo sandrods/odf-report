@@ -43,7 +43,7 @@ RSpec.describe "Sub Sections" do
       }
     ]
 
-    report = ODFReport::Report.new("spec/templates/sub_sections.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/sections/sub_sections.odt") do |r|
       r.add_field("TAG_01", "Sub Section Test")
       r.add_field("TAG_02", "TAG-2 value")
 
@@ -60,9 +60,9 @@ RSpec.describe "Sub Sections" do
       end
     end
 
-    report.generate("spec/result/sub_sections.odt")
+    report.generate("spec/result/sections/sub_sections.odt")
 
-    @data = Inspector.new("spec/result/sub_sections.odt")
+    @data = Inspector.new("spec/result/sections/sub_sections.odt")
   end
 
   it "renders top-level section for each item" do
