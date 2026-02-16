@@ -10,21 +10,9 @@ module ODFReport
 
     def generate(dest = nil)
       @template.update_content do |file|
-        file.update_files do |doc|
-          sections.each { |c| c.replace!(doc) }
-          tables.each { |c| c.replace!(doc) }
+        file.update_files { |doc| replace_placeholders!(doc) }
 
-          texts.each { |c| c.replace!(doc) }
-          fields.each { |c| c.replace!(doc) }
-
-          images.each { |c| c.replace!(doc) }
-        end
-
-        all_images.each { |i| Image.include_image_file(file, i) }
-
-        file.update_manifest do |content|
-          all_images.each { |i| Image.include_manifest_entry(content, i) }
-        end
+        include_images(file)
       end
 
       if dest
@@ -43,5 +31,23 @@ module ODFReport
     def value_key = :value
 
     def collection_key = :collection
+
+    def replace_placeholders!(doc)
+      sections.each { |c| c.replace!(doc) }
+      tables.each { |c| c.replace!(doc) }
+
+      texts.each { |c| c.replace!(doc) }
+      fields.each { |c| c.replace!(doc) }
+
+      images.each { |c| c.replace!(doc) }
+    end
+
+    def include_images(file)
+      all_images.each { |i| Image.include_image_file(file, i) }
+
+      file.update_manifest do |content|
+        all_images.each { |i| Image.include_manifest_entry(content, i) }
+      end
+    end
   end
 end
