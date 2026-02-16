@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="doc1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93C5FD"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="doc2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="ruby" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F87171"/>
+      <stop offset="100%" stop-color="#DC2626"/>
+    </linearGradient>
+    <filter id="s" x="-10%" y="-5%" width="120%" height="115%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0F172A" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Back doc (template) — slightly rotated -->
+  <g transform="rotate(-6, 50, 55)" filter="url(#s)" opacity="0.55">
+    <rect x="22" y="12" width="52" height="68" rx="4" fill="url(#doc1)"/>
+    <!-- Dashed placeholder lines -->
+    <line x1="32" y1="28" x2="62" y2="28" stroke="white" stroke-width="2" stroke-dasharray="4,3" opacity="0.5" stroke-linecap="round"/>
+    <line x1="32" y1="36" x2="56" y2="36" stroke="white" stroke-width="2" stroke-dasharray="4,3" opacity="0.4" stroke-linecap="round"/>
+    <line x1="32" y1="44" x2="59" y2="44" stroke="white" stroke-width="2" stroke-dasharray="4,3" opacity="0.3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Front doc (output) -->
+  <g transform="rotate(3, 50, 55)" filter="url(#s)">
+    <rect x="24" y="16" width="52" height="68" rx="4" fill="url(#doc2)"/>
+    
+    <!-- Folded corner -->
+    <path d="M60 16 L76 32 L60 32 Z" fill="#93C5FD" opacity="0.6"/>
+    
+    <!-- Solid content lines (filled data) -->
+    <rect x="33" y="40" width="30" height="2.5" rx="1.25" fill="white" opacity="0.85"/>
+    <rect x="33" y="47" width="24" height="2.5" rx="1.25" fill="white" opacity="0.65"/>
+    <rect x="33" y="54" width="27" height="2.5" rx="1.25" fill="white" opacity="0.5"/>
+    <rect x="33" y="61" width="22" height="2.5" rx="1.25" fill="white" opacity="0.4"/>
+    <rect x="33" y="68" width="26" height="2.5" rx="1.25" fill="white" opacity="0.3"/>
+  </g>
+
+  <!-- Ruby gem badge -->
+  <g transform="translate(64, 6)">
+    <polygon points="14,0 24,8 14,20 4,8" fill="url(#ruby)"/>
+    <polygon points="14,0 24,8 14,8" fill="white" opacity="0.2"/>
+  </g>
+</svg>

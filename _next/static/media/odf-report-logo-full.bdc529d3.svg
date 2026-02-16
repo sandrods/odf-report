@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" width="280" height="80">
+  <defs>
+    <linearGradient id="doc1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#93C5FD"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="doc2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="ruby" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F87171"/>
+      <stop offset="100%" stop-color="#DC2626"/>
+    </linearGradient>
+    <filter id="s" x="-10%" y="-5%" width="120%" height="115%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0F172A" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Icon group -->
+  <g transform="translate(8, 6)">
+    <!-- Back doc (template) — slightly rotated -->
+    <g transform="rotate(-6, 32, 38)" filter="url(#s)" opacity="0.55">
+      <rect x="8" y="6" width="44" height="58" rx="3.5" fill="url(#doc1)"/>
+      <line x1="16" y1="20" x2="42" y2="20" stroke="white" stroke-width="1.8" stroke-dasharray="3.5,2.5" opacity="0.5" stroke-linecap="round"/>
+      <line x1="16" y1="27" x2="37" y2="27" stroke="white" stroke-width="1.8" stroke-dasharray="3.5,2.5" opacity="0.4" stroke-linecap="round"/>
+      <line x1="16" y1="34" x2="39" y2="34" stroke="white" stroke-width="1.8" stroke-dasharray="3.5,2.5" opacity="0.3" stroke-linecap="round"/>
+    </g>
+
+    <!-- Front doc (output) -->
+    <g transform="rotate(3, 32, 38)" filter="url(#s)">
+      <rect x="10" y="10" width="44" height="58" rx="3.5" fill="url(#doc2)"/>
+      <!-- Folded corner -->
+      <path d="M40 10 L54 24 L40 24 Z" fill="#93C5FD" opacity="0.55"/>
+      <!-- Solid content lines -->
+      <rect x="17" y="30" width="26" height="2.2" rx="1.1" fill="white" opacity="0.85"/>
+      <rect x="17" y="36" width="20" height="2.2" rx="1.1" fill="white" opacity="0.65"/>
+      <rect x="17" y="42" width="23" height="2.2" rx="1.1" fill="white" opacity="0.5"/>
+      <rect x="17" y="48" width="18" height="2.2" rx="1.1" fill="white" opacity="0.4"/>
+      <rect x="17" y="54" width="22" height="2.2" rx="1.1" fill="white" opacity="0.3"/>
+    </g>
+
+    <!-- Ruby gem badge -->
+    <g transform="translate(46, 2)">
+      <polygon points="10,0 17,6 10,14 3,6" fill="url(#ruby)"/>
+      <polygon points="10,0 17,6 10,6" fill="white" opacity="0.2"/>
+    </g>
+  </g>
+
+  <!-- Text: ODF-Report -->
+  <text x="82" y="52" font-family="'Geist', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif" font-size="32" font-weight="700" letter-spacing="-0.5">
+    <tspan fill="#93C5FD">odf</tspan><tspan fill="#93C5FD" opacity="0.4">-</tspan><tspan fill="#E2E8F0">report</tspan>
+  </text>
+</svg>
