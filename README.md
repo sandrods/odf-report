@@ -38,6 +38,18 @@ end
 All occurrences of `[USER_NAME]` found in the file will be replaced by the value of `@user.name` whereas all `[ADDRESS]` 'es will contain `My new address`
 
 
+#### Texts (HTML formatted content)
+
+You can also use `add_text` to replace a placeholder with rich HTML content, which gets converted into ODF-formatted paragraphs with support for inline formatting (`<strong>`, `<em>`, `<u>`), headings, blockquotes, and line breaks.
+
+```ruby
+report = ODFReport::Report.new("my_template.odt") do |r|
+  r.add_text :description, '<p>A paragraph with <strong>bold</strong> and <em>italic</em> text.</p>'
+end
+```
+
+For full details on supported tags, required template styles, and examples, see the [Using add_text with HTML formatting](https://github.com/sandrods/odf-report/wiki/Using-add_text-with-HTML-formatting) wiki page.
+
 #### Tables
 
 To use table placeholders, you should create a Table in your document and give it a name. In OpenOffice, it's just a matter of right-clicking the table you just created, choose `Table Properties...` and type a name in the Name field.
