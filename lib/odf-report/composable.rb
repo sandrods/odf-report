@@ -38,14 +38,6 @@ module ODFReport
       yield(sec)
     end
 
-    def replace_with!(record, node)
-      tables.each { |t| t.set_source(record).replace!(node) }
-      sections.each { |s| s.set_source(record).replace!(node) }
-      texts.each { |t| t.set_source(record).replace!(node) }
-      fields.each { |f| f.set_source(record).replace!(node) }
-      images.each { |i| i.set_source(record).replace!(node) }
-    end
-
     def all_images
       (images.map(&:files) + sections.map(&:all_images) + tables.map(&:all_images)).flatten
     end
