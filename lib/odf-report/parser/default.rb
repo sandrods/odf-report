@@ -19,7 +19,7 @@ module ODFReport
     #
 
     class Default
-      attr_accessor :paragraphs
+      attr_reader :paragraphs
 
       def initialize(text, template_node)
         @text = text
@@ -28,6 +28,8 @@ module ODFReport
 
         parse
       end
+
+      private
 
       def parse
         html = Nokogiri::HTML5.fragment(@text)
@@ -49,8 +51,6 @@ module ODFReport
         @paragraphs << node
       end
 
-      private
-
       def parse_formatting(text)
         text.strip!
         text.gsub!(/<strong.*?>(.+?)<\/strong>/) { "<text:span text:style-name=\"bold\">#{$1}</text:span>" }
@@ -62,20 +62,9 @@ module ODFReport
       end
 
       def check_style(node)
-        style = nil
-
-        if /h\d/i.match?(node.name)
-          style = "title"
-
-        elsif node.parent && node.parent.name == "blockquote"
-          style = "quote"
-
-        elsif /margin/.match?(node["style"])
-          style = "quote"
-
-        end
-
-        style
+        return "title" if /h\d/i.match?(node.name)
+        return "quote" if node.parent&.name == "blockquote"
+        "quote" if /margin/.match?(node["style"])
       end
     end
   end
