@@ -21,7 +21,7 @@ module ODFReport
       end
 
       @data_source.each do |record|
-        new_node = get_next_row
+        new_node = next_row
 
         replace_with!(record, new_node)
 
@@ -29,27 +29,27 @@ module ODFReport
       end
 
       @template_rows.each_with_index do |r, i|
-        r.remove if (get_start_node..template_length) === i
+        r.remove if (start_index..template_length) === i
       end
     end # replace
 
     private
 
-    def get_next_row
-      @row_cursor = get_start_node unless defined?(@row_cursor)
+    def next_row
+      @row_cursor = start_index unless defined?(@row_cursor)
 
       row = @template_rows[@row_cursor]
-      @row_cursor = (@row_cursor + 1 < @template_rows.size) ? @row_cursor + 1 : get_start_node
+      @row_cursor = (@row_cursor + 1 < @template_rows.size) ? @row_cursor + 1 : start_index
 
       deep_clone(row)
     end
 
-    def get_start_node
+    def start_index
       @header ? 1 : 0
     end
 
     def template_length
-      @tl ||= @template_rows.size
+      @template_length ||= @template_rows.size
     end
 
     def find_table_node(doc)
