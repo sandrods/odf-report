@@ -4,7 +4,7 @@ require "faker"
 I18n.enforce_available_locales = false
 
 class Item
-  attr_accessor :id, :name, :subs
+  attr_accessor :id, :name, :sid, :children, :subs
   def initialize(id, name, subs = [])
     @name = name
     @id = id
