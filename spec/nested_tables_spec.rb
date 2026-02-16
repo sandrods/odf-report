@@ -15,7 +15,7 @@ RSpec.describe "Nested Tables" do
       }
     ]
 
-    report = ODFReport::Report.new("test/templates/test_nested_tables.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/nested_tables.odt") do |r|
       r.add_field("TAG_01", "Test Tag 1")
       r.add_field("TAG_02", "Test Tag 2")
 

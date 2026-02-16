@@ -13,7 +13,7 @@ RSpec.describe "Fields Inside Text" do
       <p>Additional paragraph with no placeholders.</p>
     HTML
 
-    report = ODFReport::Report.new("test/templates/test_fields_inside_text.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/fields_inside_text.odt") do |r|
       r.add_text(:body, html)
 
       r.add_field("EVENTO_TEXTO_CARTA", @evento)

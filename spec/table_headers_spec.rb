@@ -4,7 +4,7 @@ RSpec.describe "Table Headers" do
       Item.new(Faker::Number.number(digits: 5), Faker::Name.name)
     end
 
-    report = ODFReport::Report.new("test/templates/test_table_headers.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/table_headers.odt") do |r|
       r.add_table("TABLE_01", @items, header: true) do |s|
         s.add_column(:name)
         s.add_column(:id) { |i| i.id }

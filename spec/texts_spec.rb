@@ -53,7 +53,7 @@ RSpec.describe "Texts in sections and tables" do
 
     @items = Item.get_list(2)
 
-    report = ODFReport::Report.new("test/templates/test_text.odt") do |r|
+    report = ODFReport::Report.new("spec/templates/text.odt") do |r|
       r.add_field("TAG_01", "Tag One")
       r.add_field("TAG_02", "Tag Two")
 
