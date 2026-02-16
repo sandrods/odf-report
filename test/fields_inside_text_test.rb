@@ -1,9 +1,7 @@
-# coding: UTF-8
-require './lib/odf-report'
-require 'faker'
+require "./lib/odf-report"
+require "faker"
 
-
-    @html = <<-HTML
+@html = <<-HTML
       <p>Uniquely promote installed base total linkage via emerging deliverables com <strong>[EVENTO_TEXTO_CARTA]</strong>, unleash cross-media collaboration <strong>[FUNCAO]</strong> [EVENTO_NOME].</p>
 
       <p>Progressively fashion diverse portals nº <strong>[NUMERO_SECAO]</strong> do local <strong>[NOME_LOCAL]</strong>, situado na <strong>[ENDERECO_LOCAL]</strong> methodologies </p>
@@ -18,21 +16,18 @@ require 'faker'
 
       <p>Credibly enable multifunctional strategic theme areas and premium communities.</p>
 
-    HTML
+HTML
 
+report = ODFReport::Report.new("test/templates/test_fields_inside_text.odt") do |r|
+  r.add_text(:body, @html)
 
+  r.add_field("EVENTO_TEXTO_CARTA", Faker::Lorem.sentence)
+  r.add_field("FUNCAO", Faker::Lorem.word)
+  r.add_field("EVENTO_NOME", Faker::Company.name)
 
-    report = ODFReport::Report.new("test/templates/test_fields_inside_text.odt") do |r|
+  r.add_field("NUMERO_SECAO", Faker::Number.number(digits: 3))
+  r.add_field("NOME_LOCAL", Faker::Company.name)
+  r.add_field("ENDERECO_LOCAL", Faker::Address.street_address)
+end
 
-      r.add_text(:body, @html)
-
-      r.add_field('EVENTO_TEXTO_CARTA', Faker::Lorem.sentence)
-      r.add_field('FUNCAO', Faker::Lorem.word)
-      r.add_field('EVENTO_NOME', Faker::Company.name)
-
-      r.add_field('NUMERO_SECAO', Faker::Number.number(digits: 3))
-      r.add_field('NOME_LOCAL', Faker::Company.name)
-      r.add_field('ENDERECO_LOCAL', Faker::Address.street_address)
-    end
-
-    report.generate("test/result/test_fields_inside_text.odt")
+report.generate("test/result/test_fields_inside_text.odt")
