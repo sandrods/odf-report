@@ -1,7 +1,7 @@
 
 # ODF-REPORT
 
-Gem for generating .odt files by making string, image, table and section replacements in a previously created .odt file.
+Generate .odt documents by filling templates with dynamic content — fields, tables, sections, and images.
 
 For more detailed guides, examples, and API reference, check out the new **[Documentation Site](https://sandrods.github.io/odf-report/)**.
 
