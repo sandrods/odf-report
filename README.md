@@ -3,6 +3,8 @@
 
 Gem for generating .odt files by making string, image, table and section replacements in a previously created .odt file.
 
+### **[Full Documentation](https://sandrods.github.io/odf-report/)**
+
 ## INSTALL
 
 In your Gemfile
