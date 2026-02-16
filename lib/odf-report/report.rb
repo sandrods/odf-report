@@ -1,54 +1,13 @@
 module ODFReport
   class Report
+    include Composable
+
     def initialize(template_name = nil, io: nil)
       @template = ODFReport::Template.new(template_name, io: io)
 
-      @texts = []
-      @fields = []
-      @tables = []
-      @sections = []
-
-      @images = []
+      init_replacers
 
       yield(self) if block_given?
-    end
-
-    def add_field(field_tag, value = "")
-      opts = {name: field_tag, value: value}
-      field = Field.new(opts)
-      @fields << field
-    end
-
-    def add_text(field_tag, value = "")
-      opts = {name: field_tag, value: value}
-      text = Text.new(opts)
-      @texts << text
-    end
-
-    def add_table(table_name, collection, opts = {})
-      opts[:name] = table_name
-      opts[:collection] = collection
-
-      tab = Table.new(opts)
-      @tables << tab
-
-      yield(tab)
-    end
-
-    def add_section(section_name, collection, opts = {})
-      opts[:name] = section_name
-      opts[:collection] = collection
-
-      sec = Section.new(opts)
-      @sections << sec
-
-      yield(sec)
-    end
-
-    def add_image(image_name, value = nil)
-      opts = {name: image_name, value: value}
-      image = Image.new(opts)
-      @images << image
     end
 
     def generate(dest = nil)
@@ -78,7 +37,13 @@ module ODFReport
     end
 
     def all_images
-      @all_images ||= (@images.map(&:files) + @sections.map(&:all_images) + @tables.map(&:all_images)).flatten.uniq
+      @all_images ||= super.uniq
     end
+
+    private
+
+    def value_key = :value
+
+    def collection_key = :collection
   end
 end
