@@ -6,11 +6,7 @@ module ODFReport
       @data_source.each do |record|
         new_section = deep_clone(@section_node)
 
-        tables.each { |t| t.set_source(record).replace!(new_section) }
-        sections.each { |s| s.set_source(record).replace!(new_section) }
-        texts.each { |t| t.set_source(record).replace!(new_section) }
-        fields.each { |f| f.set_source(record).replace!(new_section) }
-        images.each { |i| i.set_source(record).replace!(new_section) }
+        replace_with!(record, new_section)
 
         @section_node.before(new_section.to_xml)
       end
