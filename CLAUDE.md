@@ -48,3 +48,41 @@ Test pattern: `before(:context)` generates an .odt file into `spec/result/`, the
 ## Code Style
 
 Uses **standardrb** (Ruby Standard). No custom rubocop config.
+
+## Documentation Site
+
+The documentation site is hosted on GitHub Pages from the `gh-pages` branch. The source is a Next.js static site based on the Tailwind Plus "Syntax" template.
+
+### Source location
+
+The docs source lives in `docs-src/` on the `gh-pages` branch (not on master). The Next.js `src/` directory is at `docs-src/src/`.
+
+### Deploy procedure
+
+All steps happen on the `gh-pages` branch. Do NOT switch to master during the process.
+
+```bash
+git checkout gh-pages
+cd docs-src
+npm install
+npm run build
+cd ..
+rm -rf _next docs 404.html favicon.ico index.html index.txt .nojekyll
+cp -r docs-src/out/* .
+touch .nojekyll
+git add -A
+git commit -m "Rebuild docs site"
+git push origin gh-pages
+git checkout master
+```
+
+### Key details
+
+- `next.config.mjs` uses `output: 'export'` and `basePath: '/odf-report'` for static export
+- `prismjs` is a required dependency (for Ruby syntax highlighting) — it's in `package.json`
+- Build output goes to `docs-src/out/` and gets copied to the gh-pages root
+- `.nojekyll` must exist at the root so GitHub Pages serves `_next/` files correctly
+- `docs-src/.gitignore` excludes `node_modules/`, `.next/`, and `out/` from git
+- Markdown content pages are in `docs-src/src/app/docs/*/page.md`
+- Navigation structure is in `docs-src/src/lib/navigation.js`
+- NEVER use `distDir` to output directly to the repo root — Next.js cleans the target directory first, which will delete `.git` and destroy the repo
