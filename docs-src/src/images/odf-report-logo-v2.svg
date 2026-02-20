@@ -29,10 +29,10 @@
   <!-- Front doc (output) -->
   <g transform="rotate(3, 50, 55)" filter="url(#s)">
     <rect x="24" y="16" width="52" height="68" rx="4" fill="url(#doc2)"/>
-    
+
     <!-- Folded corner -->
     <path d="M60 16 L76 32 L60 32 Z" fill="#93C5FD" opacity="0.6"/>
-    
+
     <!-- Solid content lines (filled data) -->
     <rect x="33" y="40" width="30" height="2.5" rx="1.25" fill="white" opacity="0.85"/>
     <rect x="33" y="47" width="24" height="2.5" rx="1.25" fill="white" opacity="0.65"/>
