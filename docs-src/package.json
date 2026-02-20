@@ -1,0 +1,40 @@
+{
+  "name": "tailwind-plus-syntax",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "browserslist": "defaults, not ie <= 11",
+  "dependencies": {
+    "@algolia/autocomplete-core": "^1.19.2",
+    "@headlessui/react": "^2.2.6",
+    "@markdoc/markdoc": "^0.5.2",
+    "@markdoc/next.js": "^0.5.0",
+    "@sindresorhus/slugify": "^2.2.1",
+    "@tailwindcss/postcss": "^4.1.15",
+    "@tailwindcss/typography": "^0.5.16",
+    "clsx": "^2.1.1",
+    "fast-glob": "^3.3.3",
+    "flexsearch": "^0.8.205",
+    "js-yaml": "^4.1.0",
+    "next": "^15.5.10",
+    "next-themes": "^0.4.6",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-highlight-words": "^0.21.0",
+    "simple-functional-loader": "^1.2.1",
+    "tailwindcss": "^4.1.15"
+  },
+  "devDependencies": {
+    "eslint": "^9.32.0",
+    "eslint-config-next": "^15",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "sharp": "0.34.3"
+  }
+}
