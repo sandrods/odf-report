@@ -39,31 +39,31 @@ check = lambda do |cond, msg|
 end
 
 # default is square brackets
-check.(ODFReport.delimiters == ["[", "]"], "default delimiters are square brackets")
+check.call(ODFReport.delimiters == ["[", "]"], "default delimiters are square brackets")
 out = render("<text:p>[NAME]</text:p>") { |r| r.add_field(:name, "Acme") }
-check.(out.include?("Acme") && !out.include?("[NAME]"), "[NAME] replaced by default")
+check.call(out.include?("Acme") && !out.include?("[NAME]"), "[NAME] replaced by default")
 
 # curly preset, end to end
 ODFReport.delimiters = :curly
-check.(ODFReport.delimiters == ["{{", "}}"], ":curly preset sets {{ }}")
+check.call(ODFReport.delimiters == ["{{", "}}"], ":curly preset sets {{ }}")
 out = render("<text:p>{{NAME}}</text:p>") { |r| r.add_field(:name, "Acme") }
-check.(out.include?("Acme") && !out.include?("{{NAME}}"), "{{NAME}} replaced when :curly")
+check.call(out.include?("Acme") && !out.include?("{{NAME}}"), "{{NAME}} replaced when :curly")
 # square no longer matches while curly active
 out = render("<text:p>[NAME]</text:p>") { |r| r.add_field(:name, "Acme") }
-check.(out.include?("[NAME]"), "[NAME] left intact while curly active")
+check.call(out.include?("[NAME]"), "[NAME] left intact while curly active")
 ODFReport.delimiters = :square # reset
 
 # custom pair (must be XML-safe)
 ODFReport.delimiters = ["((", "))"]
 out = render("<text:p>((NAME))</text:p>") { |r| r.add_field(:name, "Acme") }
-check.(out.include?("Acme"), "custom ((NAME)) pair works")
+check.call(out.include?("Acme"), "custom ((NAME)) pair works")
 ODFReport.delimiters = :square
 
 # block scoping restores previous value
 ODFReport.with_delimiters(:curly) do
-  check.(ODFReport.delimiters == ["{{", "}}"], "with_delimiters switches inside block")
+  check.call(ODFReport.delimiters == ["{{", "}}"], "with_delimiters switches inside block")
 end
-check.(ODFReport.delimiters == ["[", "]"], "with_delimiters restores after block")
+check.call(ODFReport.delimiters == ["[", "]"], "with_delimiters restores after block")
 
 # validation
 invalid = [:nope, "x", ["only-one"], 42, ["a", ""], ["<<", ">>"], ["'", "'"], ['"', '"']]
@@ -71,7 +71,7 @@ bad = 0
 invalid.each do |v|
   begin; ODFReport.delimiters = v; rescue ArgumentError; bad += 1; end
 end
-check.(bad == invalid.size, "invalid delimiter values (incl. XML/XPath-unsafe) raise ArgumentError")
+check.call(bad == invalid.size, "invalid delimiter values (incl. XML/XPath-unsafe) raise ArgumentError")
 ODFReport.delimiters = :square
 
 abort("\n#{failures} failure(s)") unless failures.zero?
