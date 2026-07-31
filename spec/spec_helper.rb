@@ -1,7 +1,17 @@
 require "./lib/odf-report"
 require "faker"
+require "fileutils"
 
 I18n.enforce_available_locales = false
+
+# Specs write generated .odt files under spec/result/, mirroring the spec
+# category subdirs (spec/images -> spec/result/images, etc.). This dir is
+# gitignored, so recreate it (and its subdirs) on each run.
+FileUtils.mkdir_p("./spec/result")
+Dir.glob("./spec/*/").each do |dir|
+  name = File.basename(dir)
+  FileUtils.mkdir_p("./spec/result/#{name}") unless name == "result"
+end
 
 class Item
   attr_accessor :id, :name, :sid, :children, :subs
