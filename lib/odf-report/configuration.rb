@@ -56,9 +56,11 @@ module ODFReport
         unless value.size == 2 && value.all? { |v| v.is_a?(String) && !v.empty? }
           raise ArgumentError, "delimiters must be a two-element array of non-empty strings, got #{value.inspect}"
         end
-        if value.any? { |v| v.match?(/[<>&]/) }
-          raise ArgumentError, "delimiters must not contain XML metacharacters (< > &); " \
-                               "they are escaped in the document and would never match"
+        if value.any? { |v| v.match?(/[<>&'"]/) }
+          raise ArgumentError, %(delimiters must not contain any of < > & ' "; the ) +
+                               "first three are escaped in the document (so they would " \
+                               "never match), and the quotes break the XPath lookup used " \
+                               "for text placeholders"
         end
         value.map(&:dup).freeze
       else

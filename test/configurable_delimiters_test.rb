@@ -66,11 +66,12 @@ end
 check.(ODFReport.delimiters == ["[", "]"], "with_delimiters restores after block")
 
 # validation
+invalid = [:nope, "x", ["only-one"], 42, ["a", ""], ["<<", ">>"], ["'", "'"], ['"', '"']]
 bad = 0
-[:nope, "x", ["only-one"], 42, ["a", ""], ["<<", ">>"]].each do |v|
+invalid.each do |v|
   begin; ODFReport.delimiters = v; rescue ArgumentError; bad += 1; end
 end
-check.(bad == 6, "invalid delimiter values (incl. XML-unsafe) raise ArgumentError")
+check.(bad == invalid.size, "invalid delimiter values (incl. XML/XPath-unsafe) raise ArgumentError")
 ODFReport.delimiters = :square
 
 abort("\n#{failures} failure(s)") unless failures.zero?
