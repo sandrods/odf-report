@@ -1,6 +1,5 @@
 module ODFReport
   class Field
-    DELIMITERS = %w([ ])
 
     def initialize(opts, &block)
       @name = opts[:name]
@@ -23,7 +22,8 @@ module ODFReport
     private
 
     def to_placeholder
-      "#{DELIMITERS[0]}#{@name.to_s.upcase}#{DELIMITERS[1]}"
+      open, close = ODFReport.delimiters
+      "#{open}#{@name.to_s.upcase}#{close}"
     end
 
     def sanitize(txt)

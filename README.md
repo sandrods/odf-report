@@ -41,6 +41,35 @@ There are five kinds of substitutions available:
 - **Sections** — repeat entire document sections with nested content
 - **Images** — swap placeholder images with actual image files
 
+## Configurable delimiters
+
+By default, placeholders are wrapped in square brackets (`[NAME]`). You can switch
+to double curly braces or supply your own pair:
+
+```ruby
+ODFReport.delimiters = :square       # [NAME]   (default)
+ODFReport.delimiters = :curly        # {{NAME}}
+ODFReport.delimiters = ["((", "))"]  # ((NAME))
+```
+
+Set it once (for example, in an initializer). To scope a choice to a single report,
+use the block form, which restores the previous value afterwards:
+
+```ruby
+ODFReport.with_delimiters(:curly) do
+  ODFReport::Report.new("template.odt") { |r| r.add_field(:name, "Acme") }.generate("out.odt")
+end
+```
+
+Notes:
+
+- Placeholder names are still upper-cased, so under `:curly` the template token for
+  `add_field(:name)` is `{{NAME}}`, not `{{name}}`.
+- Delimiters must not contain the XML characters `<`, `>`, or `&` — they are escaped
+  inside the document and would never match, so such values raise an `ArgumentError`.
+- The setting is process-global and not thread-safe for concurrently rendering reports
+  that need *different* delimiters; choose one consistent value in that case.
+
 ## Documentation
 
 - [Installation](https://sandrods.github.io/odf-report/docs/installation) — setup and requirements
