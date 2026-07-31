@@ -36,7 +36,7 @@ report.generate("output.odt")
 There are five kinds of substitutions available:
 
 - **Fields** — replace `[PLACEHOLDER]` text with values
-- **Texts** — replace placeholders with HTML-formatted content
+- **Texts** — replace placeholders with HTML-formatted content (paragraphs, headings, inline `strong`/`em`/`u`, and `ul`/`ol` lists, including nested lists)
 - **Tables** — repeat table rows for each item in a collection
 - **Sections** — repeat entire document sections with nested content
 - **Images** — swap placeholder images with actual image files

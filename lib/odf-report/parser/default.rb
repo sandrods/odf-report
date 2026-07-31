@@ -2,24 +2,31 @@ module ODFReport
   module Parser
     # Default HTML parser
     #
-    # sample HTML
+    # Converts an HTML fragment into ODF nodes. Supported:
+    #   - <p>, <h1>..<h6>                -> paragraphs (headings use "title")
+    #   - <blockquote>                   -> paragraphs use the "quote" style
+    #   - <ul>, <ol>, <li>               -> ODF lists (text:list / text:list-item),
+    #                                       including nested lists
+    #   - <strong>/<b>, <em>/<i>, <u>    -> styled text:span
+    #   - <br>                           -> text:line-break
     #
-    # <p> first paragraph </p>
-    # <p> second <strong>paragraph</strong> </p>
-    # <blockquote>
-    #     <p> first <em>quote paragraph</em> </p>
-    #     <p> first quote paragraph </p>
-    #     <p> first quote paragraph </p>
-    # </blockquote>
-    # <p> third <strong>paragraph</strong> </p>
+    # Any other element is unwrapped: its tags are dropped and its text kept.
+    # This guarantees only ODF elements end up in content.xml — foreign HTML
+    # tags (e.g. <a>, <span>, <div>) embedded verbatim would otherwise make
+    # LibreOffice reject the document with a "Format error".
     #
-    # <p style="margin: 100px"> fourth <em>paragraph</em> </p>
-    # <p style="margin: 120px"> fifth paragraph </p>
-    # <p> sixth <strong>paragraph</strong> </p>
-    #
-
     class Default
       attr_reader :paragraphs
+
+      LIST_TAGS = %w[ul ol].freeze
+
+      STYLE_TAGS = {
+        "strong" => "bold",  "b" => "bold",
+        "em"     => "italic", "i" => "italic",
+        "u"      => "underline", "ins" => "underline"
+      }.freeze
+
+      XML_ESCAPE = { "&" => "&amp;", "<" => "&lt;", ">" => "&gt;" }.freeze
 
       def initialize(text, template_node)
         @text = text
@@ -33,12 +40,26 @@ module ODFReport
 
       def parse
         html = Nokogiri::HTML5.fragment(@text)
+        process(html.children)
+      end
 
-        html.css("p", "h1", "h2").each do |p|
-          style = check_style(p)
-          text = parse_formatting(p.inner_html)
-
-          add_paragraph(text, style)
+      # Walk top-level nodes in document order so lists interleave correctly
+      # with paragraphs. Unknown container elements (e.g. <div>) are descended
+      # into, preserving the behaviour where nested paragraphs were picked up.
+      def process(nodes)
+        nodes.each do |node|
+          case node.name
+          when "p"
+            add_paragraph(inline_content(node), check_style(node))
+          when "h1", "h2", "h3", "h4", "h5", "h6"
+            add_paragraph(inline_content(node), "title")
+          when "ul", "ol"
+            @paragraphs << build_list(node)
+          when "text"
+            add_paragraph(escape(node.content), nil) unless node.text.strip.empty?
+          else
+            process(node.children) if node.element?
+          end
         end
       end
 
@@ -51,19 +72,58 @@ module ODFReport
         @paragraphs << node
       end
 
-      def parse_formatting(text)
-        text.strip!
-        text.gsub!(/<strong.*?>(.+?)<\/strong>/) { "<text:span text:style-name=\"bold\">#{$1}</text:span>" }
-        text.gsub!(/<em.*?>(.+?)<\/em>/) { "<text:span text:style-name=\"italic\">#{$1}</text:span>" }
-        text.gsub!(/<u.*?>(.+?)<\/u>/) { "<text:span text:style-name=\"underline\">#{$1}</text:span>" }
-        text.gsub!(/<br\/?>/, "<text:line-break/>")
-        text.delete!("\n")
-        text
+      # Build an ODF list as an in-context XML string (text: prefixes resolve
+      # against the document namespaces when inserted before the placeholder).
+      def build_list(node)
+        items = node.children.select { |c| c.name == "li" }.map { |li| build_list_item(li) }.join
+        %(<text:list>#{items}</text:list>)
+      end
+
+      def build_list_item(li)
+        inner  = ""
+        nested = []
+
+        li.children.each do |child|
+          if LIST_TAGS.include?(child.name)
+            nested << child
+          else
+            inner << inline_node(child)
+          end
+        end
+
+        body = %(<text:p>#{inner}</text:p>) + nested.map { |n| build_list(n) }.join
+        %(<text:list-item>#{body}</text:list-item>)
+      end
+
+      # Convert the inline children of an element into an ODF inline XML string.
+      def inline_content(node)
+        node.children.map { |child| inline_node(child) }.join
+      end
+
+      def inline_node(node)
+        if node.text?
+          escape(node.content)
+        elsif node.name == "br"
+          "<text:line-break/>"
+        elsif (style = STYLE_TAGS[node.name])
+          %(<text:span text:style-name="#{style}">#{inline_content(node)}</text:span>)
+        elsif node.element?
+          inline_content(node) # unwrap unknown/foreign tags, keep their text
+        else
+          "" # comments, processing instructions, etc.
+        end
+      end
+
+      # Decoded text -> well-formed, ODF-safe XML text. HTML entities have
+      # already been decoded to real characters by the HTML5 parser; we only
+      # need to escape the XML metacharacters and drop stray newlines.
+      def escape(text)
+        text.delete("\n").gsub(/[&<>]/, XML_ESCAPE)
       end
 
       def check_style(node)
-        return "title" if /h\d/i.match?(node.name)
         return "quote" if node.parent&.name == "blockquote"
+
         "quote" if /margin/.match?(node["style"])
       end
     end
