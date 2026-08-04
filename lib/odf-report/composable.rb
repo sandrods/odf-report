@@ -8,6 +8,10 @@ module ODFReport
       texts << Text.new({name: name, value: value}, &block)
     end
 
+    def add_checklist(name, items, opts = {})
+      texts << Checklist.new(opts.merge(name: name, value: items))
+    end
+
     def add_image(name, value = nil, &block)
       images << Image.new({name: name, value: value}, &block)
     end

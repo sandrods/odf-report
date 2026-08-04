@@ -40,6 +40,7 @@ There are five kinds of substitutions available:
 - **Tables** — repeat table rows for each item in a collection
 - **Sections** — repeat entire document sections with nested content
 - **Images** — swap placeholder images with actual image files
+- **Checklists** — render a list of items with checked/unchecked boxes
 
 ## Documentation
 
